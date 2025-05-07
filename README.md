@@ -19,3 +19,9 @@
 create comouns
 
 ## Bibliografy 
+
+
+## How to contribute
+si es obert
+
+## Authors
