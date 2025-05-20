@@ -1,0 +1,39 @@
+
+{% extends "base.html" %}
+{% block title %}Inici{% endblock %}
+
+{% block content %}
+<div class="section d-flex align-items-center justify-content-center min-vh-80 p-0 p-md-3">
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 ml-auto mr-auto">
+                    <h2 class="title text-center">Robocat CarPay</h2>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-pricing" data-color="blue">
+                        <div class="card-body">
+                            <div class="p-2 col-12">
+                                <a href="/mapa" class="col-10 btn btn-neutral btn-round ml-3 mr-3">Mapa Estacionaments</a>
+                            </div>
+                            <div class="p-2">
+                                <a href="/gestions" class="col-10 btn btn-neutral btn-round ml-3 mr-3">Gestions</a>
+                            </div>
+                            <div class="p-2">
+                                <a href="/cotxes" class="col-10 btn btn-neutral btn-round ml-3 mr-3">Cotxes Guardats</a>
+                            </div>
+                            <div class="p-2">
+                                <a href="/pagaments" class="col-10 btn btn-neutral btn-round ml-3 mr-3">Registre Pagaments</a>
+                            </div>
+                            <div class="p-2">
+                                <a href="/registre" class="col-4 btn btn-neutral btn-round ml-3 mr-3">Registre</a>
+                                <a href="/login" class="col-4 btn btn-neutral btn-round ml-3 mr-3">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
