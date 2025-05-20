@@ -21,7 +21,7 @@ def play_effect(filename):
 
 def say_emotion(emotion):
     mapping = {
-        "neutral": "neutral_1_clean.wav",
+        "default": "neutral_1_clean.wav",
         "happy": "cute_1_clean.wav",
         "sad": "sick_1_clean.wav",
         "angry": "angry_1_clean.wav",

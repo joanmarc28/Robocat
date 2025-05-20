@@ -12,10 +12,10 @@ WIDTH = config.OLED_WIDTH
 HEIGHT = config.OLED_HEIGHT
 
 
-serial = i2c(port=3, address=0x3C)
+serial = i2c(port=config.I2C_BUS_OLED_LEFT, address=0x3C)
 left_eye = ssd1306(serial, width=config.OLED_WIDTH, height=config.OLED_HEIGHT)
 
-serial2 = i2c(port=4, address=0x3C)
+serial2 = i2c(port=config.I2C_BUS_OLED_RIGHT, address=0x3C)
 right_eye = ssd1306(serial2, width=config.OLED_WIDTH, height=config.OLED_HEIGHT)
 
 # Crea imatge en blanc una vegada
