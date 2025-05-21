@@ -13,17 +13,75 @@
                 <div class="col-12 ml-auto mr-auto">
                     <h2 class="title">Mapa D'estacionaments Disponibles</h2>
                 </div>
-                <div class="col-lg-3 col-md-6">
+                <div class="col-12">
                     <div class="card card-pricing" data-color="green">
                         <div class="card-body">
+                            <div id="map" style="height: 500px; width: 100%; border: 1px solid #ccc;"></div>
                             <div class="card-footer">
                                 <a href="" class="btn btn-neutral btn-round ml-3 mr-3">En Construcció</a>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-12">
+                  <form method="post" action="/guardar-zona" class="mt-4">
+                    <div class="form-group">
+                      <label>Nom de la zona:</label>
+                      <input type="text" name="nom" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Coordenades:</label>
+                      <textarea id="coords" name="coords" class="form-control" rows="5" readonly></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar zona</button>
+                  </form>
+                </div>
             </div>
         </div>
     </div>
+    
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+  let drawingManager;
+  let selectedShape;
+
+  function initMap() {
+    const centre = { lat: 41.387, lng: 2.170 };
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 14,
+      center: centre,
+    });
+
+    // Activar eina de dibuix
+    drawingManager = new google.maps.drawing.DrawingManager({
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingControl: true,
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_CENTER,
+        drawingModes: ['polygon']
+      },
+    });
+    drawingManager.setMap(map);
+
+    // Captura quan es dibuixa una figura
+    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+      if (event.type === 'polygon') {
+        selectedShape = event.overlay;
+        const path = selectedShape.getPath().getArray();
+        const coords = path.map(coord => ({
+          lat: coord.lat(),
+          lng: coord.lng()
+        }));
+        document.getElementById("coords").value = JSON.stringify(coords, null, 2);
+      }
+    });
+  }
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap&libraries=drawing">
+</script>
+
 {% endblock %}
