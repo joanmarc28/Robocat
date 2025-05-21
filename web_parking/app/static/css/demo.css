@@ -12,6 +12,46 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.btn-disabled{
+    box-sizing: border-box;
+    border-width: 2px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: .5rem 18px;
+    line-height: 1.75;
+    text-align: center;
+    text-transform: uppercase;
+}
+.custom-radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #5f9eff;
+  accent-color: #5f9eff;
+  cursor: pointer;
+  margin-right: 5px;
+  outline: none;  /* 🔥 Elimina la vora negra */
+}
+
+.custom-radio:focus {
+  outline: none;
+  box-shadow: none; /* Per si el navegador afegeix ombra */
+}
+.form-check-label{
+  padding-left: 5px !important;
+  margin-right: 10px !important;
+}
+
+.input-class{
+  border-radius: 50px;
+  border: 3px solid#94b9ff;
+  padding-left: 20px;
+}
+.btn-disabled:hover{
+  color: #fff !important;
+}
+.btn-round2{
+  border-radius: 10px;
+}
 .section{
   background-color: transparent;
 }

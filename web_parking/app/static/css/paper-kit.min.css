@@ -8012,7 +8012,7 @@ textarea.form-control {
 }
 
 video {
-    position: absolute;
+    /*position: absolute;*/
     width: 102%
 }
 
@@ -8565,7 +8565,7 @@ video {
 .card[data-color] a:not(.btn),
 .card[data-color] small,
 .card[data-color] ul li b {
-    color: #fff !important
+    color: black !important
 }
 
 .card[data-background=color] a:not(.btn):focus,

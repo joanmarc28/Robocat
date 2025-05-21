@@ -5,9 +5,13 @@ import os
 from dotenv import load_dotenv
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from fastapi import Form
+from fastapi import Form, Request
 from fastapi.responses import RedirectResponse
 import json
+from google.cloud import vision
+import base64
+import io
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -15,6 +19,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 load_dotenv()
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "app/robocat-user-app-5d2b35bd5c22.json"
 
 @app.get("/")
 def home(request: Request):
@@ -24,13 +29,96 @@ def home(request: Request):
         "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
 
+@app.get("/login")
+def parking(request: Request):
+    return templates.TemplateResponse("login.html", {
+        "request": request
+    })
+
+@app.get("/registre")
+def parking(request: Request):
+    return templates.TemplateResponse("registre.html", {
+        "request": request
+    })
+
+@app.get("/welcome")
+def parking(request: Request):
+    return templates.TemplateResponse("welcome.html", {
+        "request": request
+    })
+@app.get("/parking")
+def parking(request: Request):
+    return templates.TemplateResponse("parking.html", {
+        "request": request
+    })
+"""
+@app.post("/parking-data", response_class=HTMLResponse)
+async def parking(request: Request, plate: str = Form(...), model: str = Form(...), capturedImage: str = Form(None)):
+    text_detected = "No s'ha detectat text"
+    
+    if capturedImage:
+        image_data = base64.b64decode(capturedImage.split(",")[1])
+        client = vision.ImageAnnotatorClient()
+        image = vision.Image(content=image_data)
+        response = client.text_detection(image=image)
+        texts = response.text_annotations
+        if texts:
+            text_detected = texts[0].description.strip()
+
+    return templates.TemplateResponse("resultat.html", {
+        "request": request,
+        "plate": plate,
+        "model": model,
+        "text_detectat": text_detected
+    })
+"""
+@app.post("/extract-plate")
+async def analitzar_matricula(capturedImage: str = Form(...)):
+    try:
+        image_data = base64.b64decode(capturedImage.split(",")[1])
+        client = vision.ImageAnnotatorClient()
+        image = vision.Image(content=image_data)
+        response = client.text_detection(image=image)
+
+        texts = response.text_annotations
+        if texts:
+            text_detected = texts[0].description.strip().replace("\n", "")
+        else:
+            text_detected = ""
+
+        return JSONResponse(content={"plate": text_detected})
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@app.get("/historial")
+def parking(request: Request):
+    return templates.TemplateResponse("historial.html", {
+        "request": request
+    })
+@app.get("/paymentzones")
+def parking(request: Request):
+    return templates.TemplateResponse("paymentzones.html", {
+        "request": request
+    })
+@app.get("/cars")
+def parking(request: Request):
+    return templates.TemplateResponse("cars.html", {
+        "request": request
+    })
+@app.get("/perfil")
+def parking(request: Request):
+    return templates.TemplateResponse("perfil.html", {
+        "request": request
+    })
+
+
 @app.get("/mapa")
 def parking(request: Request):
     return templates.TemplateResponse("mapa.html", {
         "request": request,
         "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
-
+"""
 @app.post("/guardar-zona")
 async def guardar_zona(nom: str = Form(...), coords: str = Form(...)):
     zona = {
@@ -42,3 +130,4 @@ async def guardar_zona(nom: str = Form(...), coords: str = Form(...)):
         f.write(json.dumps(zona) + "\n")
 
     return RedirectResponse(url="/mapa", status_code=303)
+"""
