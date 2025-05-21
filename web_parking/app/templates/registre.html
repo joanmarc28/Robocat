@@ -1,23 +1,59 @@
 
-<!--<div class="wrapper">-->
-<div class="section d-flex align-items-center justify-content-center min-vh-80 p-0 p-md-3">
+{% extends "base.html" %}
+{% block title %}Registre{% endblock %}
 
-    <div class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 ml-auto mr-auto">
-                    <h2 class="title">Registre</h2>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card card-pricing" data-color="green">
-                        <div class="card-body">
-                            <div class="card-footer">
-                                <a href="" class="btn btn-neutral btn-round ml-3 mr-3">En Construcció</a>
+{% block content %}
+<div class="section" style="z-index: 2; position: relative;padding-top: 0px !important;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="card" data-color="white">
+                    <div class="card-body">
+                        <form id="login-form" method="POST" action="/login">
+                            <div class="form-group">
+                                <div class="col-12 btn-disabled btn-neutral btn-round2">Registre</div>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control input-class" id="name" name="name" placeholder="Introdueix el Nom" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control input-class" id="surname" name="surname" placeholder="Introdueix el Cognom" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold d-block" style="color:#66615b;">Ets Policia?</label>
+                                
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input custom-radio" type="radio" name="policia" id="policia-si" value="si">
+                                    <label class="form-check-label" for="policia-si">Sí</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input custom-radio" type="radio" name="policia" id="policia-no" value="no" checked>
+                                    <label class="form-check-label" for="policia-no">No</label>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <input type="text" class="form-control input-class" id="placa" name="placa" placeholder="Introdueix Numero de Placa" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" size="9" class="form-control input-class" id="phone" name="phone" placeholder="Introdueix el Telefon" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control input-class mb-2" id="password" name="password" placeholder="Introdueix la Contrasenya" required>
+                                <input type="password" class="form-control input-class" id="password2" name="password2" placeholder="Repeteix la Contrasenya" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-neutral btn-round btn-block">Enviar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+{% endblock %}
