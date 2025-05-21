@@ -3,37 +3,99 @@
 {% block title %}Inici{% endblock %}
 
 {% block content %}
-<div class="section d-flex align-items-center justify-content-center min-vh-80 p-0 p-md-3">
-    <div class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 ml-auto mr-auto">
-                    <h2 class="title text-center">Robocat CarPay</h2>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card card-pricing" data-color="blue">
-                        <div class="card-body">
-                            <div class="p-2 col-12">
-                                <a href="/mapa" class="col-10 btn btn-neutral btn-round ml-3 mr-3">Mapa Estacionaments</a>
-                            </div>
-                            <div class="p-2">
-                                <a href="/gestions" class="col-10 btn btn-neutral btn-round ml-3 mr-3">Gestions</a>
-                            </div>
-                            <div class="p-2">
-                                <a href="/cotxes" class="col-10 btn btn-neutral btn-round ml-3 mr-3">Cotxes Guardats</a>
-                            </div>
-                            <div class="p-2">
-                                <a href="/pagaments" class="col-10 btn btn-neutral btn-round ml-3 mr-3">Registre Pagaments</a>
-                            </div>
-                            <div class="p-2">
-                                <a href="/registre" class="col-4 btn btn-neutral btn-round ml-3 mr-3">Registre</a>
-                                <a href="/login" class="col-4 btn btn-neutral btn-round ml-3 mr-3">Login</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- MAPA AMB BANNER PLE -->
+<div id="map" class="rounded-bottom shadow" style="
+margin-top: 6.5em!important;
+  height: 400px;
+  width: 100%;
+  border: none;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+">
 </div>
+
+<!-- CONTINGUT CENTRAT DINS CONTAINER -->
+<div class="section" style="z-index: 2; position: relative;padding-top: 20px !important;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="card card-pricing" data-color="white">
+          <div class="card-body">
+
+            <div class="p-2">
+              <a href="/login" class="col-12 btn btn-neutral btn-round">Iniciar Sessió</a>
+            </div>
+            <div class="p-2">
+              <a href="/registre" class="col-12 btn btn-neutral btn-round">Registre</a>
+            </div>
+            <div class="p-2">
+              <a href="/mapa" class="col-12 btn btn-neutral btn-round">Gemini</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+  function initMap() {
+    // Si el navegador suporta geolocalització
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 16,
+            center: userLocation
+          });
+
+          new google.maps.Marker({
+            position: userLocation,
+            map: map,
+            title: "Ets aquí!"
+          });
+        },
+        function(error) {
+          console.warn("No s’ha pogut obtenir la ubicació:", error.message);
+          mostrarMapaPerDefecte();
+        }
+      );
+    } else {
+      console.warn("El navegador no suporta geolocalització.");
+      mostrarMapaPerDefecte();
+    }
+  }
+
+  function mostrarMapaPerDefecte() {
+    const fallback = { lat: 41.387, lng: 2.170 }; // Barcelona
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 14,
+      center: fallback
+    });
+
+    new google.maps.Marker({
+      position: fallback,
+      map: map,
+      title: "Centre per defecte"
+    });
+  }
+</script>
+
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap">
+</script>
+
 {% endblock %}
