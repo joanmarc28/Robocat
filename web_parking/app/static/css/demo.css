@@ -12,6 +12,21 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
+@media screen and (max-width: 991px) {
+  .navbar-collapse:after {
+    background-color: white;
+  }
+  .navbar-collapse {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media (max-width: 767px) {
+    .navbar-nav {
+        margin: 0px;
+    }
+}
+    
 .btn-disabled{
     box-sizing: border-box;
     border-width: 2px;
@@ -31,7 +46,17 @@ body {
   margin-right: 5px;
   outline: none;  /* 🔥 Elimina la vora negra */
 }
-
+.btn-green {
+    background-color: #7ed957;
+    border-color: #7ed957;
+    color: #fff;
+    opacity: 1;
+    filter: alpha(opacity=100);
+}
+.line{
+  border-bottom: 2px solid #94b9ff;
+  padding-bottom: 10px;
+}
 .custom-radio:focus {
   outline: none;
   box-shadow: none; /* Per si el navegador afegeix ombra */
@@ -40,11 +65,16 @@ body {
   padding-left: 5px !important;
   margin-right: 10px !important;
 }
-
+.div-color{
+  border: 2px solid #94b9ff;
+  border-radius: 10px;
+  height: 100%;
+}
 .input-class{
   border-radius: 50px;
   border: 3px solid#94b9ff;
   padding-left: 20px;
+  padding-right: 10px !important
 }
 .btn-disabled:hover{
   color: #fff !important;
