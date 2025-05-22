@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, Form, Response
 from fastapi.templating import Jinja2Templates
 import os
 from dotenv import load_dotenv
@@ -15,6 +15,10 @@ import requests
 from passlib.context import CryptContext
 from app import auth
 from app.database import Base, engine
+from app.session import get_user_from_cookie
+from app.database import get_db
+from sqlalchemy.orm import Session
+from app.models import Usuari
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -30,23 +34,39 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth.router)
 
 @app.get("/")
-def home(request: Request):
-    usuari = {"nom": "Joan Marc"}
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
-    })
+def index(request: Request, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)
+    if not user_id:
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
+        })
 
+    # Si està loguejat, redirigeix a welcome
+    return RedirectResponse(url="/welcome", status_code=303)
 
 @app.get("/welcome")
-def parking(request: Request):
+def welcome(request: Request, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)
+    if not user_id:
+        return RedirectResponse(url="/login", status_code=303)
+
+    user = db.query(Usuari).get(user_id)
     return templates.TemplateResponse("welcome.html", {
-        "request": request
+        "request": request,
+        "user": user
     })
+
 @app.get("/parking")
-def parking(request: Request):
+def parking(request: Request, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)
+    if not user_id:
+        return RedirectResponse(url="/login", status_code=303)
+
+    user = db.query(Usuari).get(user_id)
     return templates.TemplateResponse("parking.html", {
-        "request": request
+        "request": request,
+        "user": user
     })
 
 @app.post("/extract-plate")
@@ -68,19 +88,19 @@ async def analitzar_matricula(capturedImage: str = Form(...)):
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
 @app.get("/historial")
-def parking(request: Request):
+def historial(request: Request):
     return templates.TemplateResponse("historial.html", {
         "request": request
     })
 
 @app.get("/paymentzones")
-def parking(request: Request):
+def paymentzones(request: Request):
     return templates.TemplateResponse("paymentzones.html", {
         "request": request
     })
 
 @app.get("/cars")
-def parking(request: Request):
+def cars(request: Request):
     plate = "1234ABC"
     model = "Prius"
     brand = "Toyota"
@@ -132,9 +152,6 @@ def cercar_imatges(query):
         resultats = response.json().get('items', [])
         return resultats[0]['link'] if resultats else None
     return None
-
-
-
 
 """
 @app.post("/guardar-zona")
