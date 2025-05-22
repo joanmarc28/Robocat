@@ -1,10 +1,14 @@
-from fastapi import APIRouter, Request, Form, Depends
+from fastapi import APIRouter, Response, Request, Form, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.crud_users import create_user
 from fastapi.responses import RedirectResponse
 from passlib.context import CryptContext
 from fastapi.templating import Jinja2Templates
+from app.models import Usuari
+from app.session import create_session_cookie
+from app.session import clear_session_cookie
+
 
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -43,8 +47,6 @@ async def processar_registre(
     )
     return RedirectResponse(url="/login", status_code=303)
 
-
-
 @router.get("/login")
 def parking(request: Request):
     return templates.TemplateResponse("login.html", {
@@ -56,3 +58,25 @@ def parking(request: Request):
     return templates.TemplateResponse("registre.html", {
         "request": request
     })
+
+@router.post("/login")
+def login(
+    response: Response,
+    email: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    user = db.query(Usuari).filter(Usuari.email == email).first()
+    if not user or not pwd_context.verify(password, user.password):
+        return RedirectResponse(url="/login?error=1", status_code=303)
+    
+    session_cookie = create_session_cookie(user.id)
+    response = RedirectResponse(url="/welcome", status_code=303)
+    response.set_cookie(key="session", value=session_cookie, httponly=True)
+    return response
+
+@router.get("/logout")
+def logout():
+    response = RedirectResponse(url="/login", status_code=303)
+    clear_session_cookie(response)
+    return response
