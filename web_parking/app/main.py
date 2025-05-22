@@ -1,4 +1,3 @@
-# ~/web-robocat/main.py
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 import os
@@ -13,6 +12,9 @@ import base64
 import io
 from fastapi.responses import JSONResponse
 import requests
+from passlib.context import CryptContext
+from app import auth
+from app.database import Base, engine
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -22,6 +24,11 @@ templates = Jinja2Templates(directory="app/templates")
 load_dotenv()
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "app/robocat-user-app-5d2b35bd5c22.json"
 
+Base.metadata.create_all(bind=engine)
+
+# Importa i registra rutes de auth
+app.include_router(auth.router)
+
 @app.get("/")
 def home(request: Request):
     usuari = {"nom": "Joan Marc"}
@@ -30,17 +37,6 @@ def home(request: Request):
         "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
 
-@app.get("/login")
-def parking(request: Request):
-    return templates.TemplateResponse("login.html", {
-        "request": request
-    })
-
-@app.get("/registre")
-def parking(request: Request):
-    return templates.TemplateResponse("registre.html", {
-        "request": request
-    })
 
 @app.get("/welcome")
 def parking(request: Request):
@@ -52,27 +48,7 @@ def parking(request: Request):
     return templates.TemplateResponse("parking.html", {
         "request": request
     })
-"""
-@app.post("/parking-data", response_class=HTMLResponse)
-async def parking(request: Request, plate: str = Form(...), model: str = Form(...), capturedImage: str = Form(None)):
-    text_detected = "No s'ha detectat text"
-    
-    if capturedImage:
-        image_data = base64.b64decode(capturedImage.split(",")[1])
-        client = vision.ImageAnnotatorClient()
-        image = vision.Image(content=image_data)
-        response = client.text_detection(image=image)
-        texts = response.text_annotations
-        if texts:
-            text_detected = texts[0].description.strip()
 
-    return templates.TemplateResponse("resultat.html", {
-        "request": request,
-        "plate": plate,
-        "model": model,
-        "text_detectat": text_detected
-    })
-"""
 @app.post("/extract-plate")
 async def analitzar_matricula(capturedImage: str = Form(...)):
     try:

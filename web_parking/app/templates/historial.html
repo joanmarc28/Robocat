@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+{% block title %}Cotxes{% endblock %}
+
+{% block content %}
+
+<!--<div class="wrapper">-->
+<div class="section" style="z-index: 2; position: relative;padding-top: 0px !important;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="card" data-color="white">
+                    <div class="card-body">
+                        <div class="col-12 btn-disabled btn-neutral btn-round2">Cotxes</div>
+                        <div class="col-12 mb-3 mt-3 line">
+                            <div class="row">
+                                <div class="col-5">
+                                    <img src="{{ image_car if image_car else '/static/img/logo.png' }}" alt="Vehicle" class="img-fluid rounded mt-2 mb-2">
+
+                                </div>
+                                <div class="col-7">
+                                    <div class="col-12 p-2">
+                                        <h5 class="font-weight-bold">21/05/2025 12:35</h5>
+                                        <p>Matrícula: 15679MFC</p>
+                                        <p>Any:  {{ year }}</p>
+                                        <p>Marca:  {{ brand }}</p>
+                                        <p>Model:  {{ model }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}
