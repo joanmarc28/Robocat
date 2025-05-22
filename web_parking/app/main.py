@@ -12,6 +12,7 @@ from google.cloud import vision
 import base64
 import io
 from fastapi.responses import JSONResponse
+import requests
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -95,15 +96,33 @@ def parking(request: Request):
     return templates.TemplateResponse("historial.html", {
         "request": request
     })
+
 @app.get("/paymentzones")
 def parking(request: Request):
     return templates.TemplateResponse("paymentzones.html", {
         "request": request
     })
+
 @app.get("/cars")
 def parking(request: Request):
+    plate = "1234ABC"
+    model = "Prius"
+    brand = "Toyota"
+    year = 2003
+    color = "Blue"
+    # Aquí podries fer una consulta a la base de dades per obtenir la matrícula i el model
+    image_link = cercar_imatges(brand+" "+model+" "+color+" "+str(year))
+
     return templates.TemplateResponse("cars.html", {
-        "request": request
+        "request": request,
+        "plate": plate,
+        "model": model,
+        "year": 2020,
+        "color": color,
+        "brand": brand,
+        "fuel": "diesel",
+        "dgt": "b",
+        "image_car": image_link
     })
 @app.get("/perfil")
 def parking(request: Request):
@@ -111,13 +130,36 @@ def parking(request: Request):
         "request": request
     })
 
-
 @app.get("/mapa")
 def parking(request: Request):
     return templates.TemplateResponse("mapa.html", {
         "request": request,
         "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
+
+def cercar_imatges(query):
+    url = 'https://www.googleapis.com/customsearch/v1'
+    params = {
+        'q': query,
+        'cx': os.getenv("CSE_ID"),
+        'key': os.getenv("API_KEY"),
+        'searchType': 'image',
+        'num': 1
+    }
+    print(f"Buscant: {query}")
+    response = requests.get(url, params=params)
+    print("URL final:", response.url)
+    print("Codi resposta:", response.status_code)
+    print("Resposta:", response.text)
+
+    if response.status_code == 200:
+        resultats = response.json().get('items', [])
+        return resultats[0]['link'] if resultats else None
+    return None
+
+
+
+
 """
 @app.post("/guardar-zona")
 async def guardar_zona(nom: str = Form(...), coords: str = Form(...)):
