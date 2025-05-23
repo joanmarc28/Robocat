@@ -1,6 +1,6 @@
 # main.py
 import threading
-from movement.motors import moure_4_potes, set_servo_angle,sweep_servo
+from movement.motors import caminar_quadruped, moure_4_potes, set_servo_angle,sweep_servo
 #from sensors.gps import read_gps, read_heading
 #from modes.human import prova
 #from interface.display import display_message,clear_displays
@@ -69,13 +69,16 @@ def main():
     # Loop principal
     try:
         while True:
-            """print("🔻 Baixant...")
+            print("🔻 Baixant...")
             moure_4_potes("lower", 1)
-            time.sleep(2)
+            time.sleep(0.5)
             print("🔼 Tornant a normal...")
-            moure_4_potes("normal", 1)"""
-            servos_prova(7)
-            time.sleep(2)
+            moure_4_potes("normal", 1)
+            time.sleep(0.5)
+            #print("???? Tornant a caminar ?????...")
+            #caminar_quadruped(0.5)
+            #servos_prova(7)
+            #time.sleep(2)
     except KeyboardInterrupt:
         print("🛑 Aturat per teclat.")
 
