@@ -8,6 +8,7 @@ async def create_user(
     password: str,
     data_naixement: str,
     ciutat: str,
+    pais: str,
     es_policia: bool,
     dni: str = None,
     nom: str = None,
@@ -29,11 +30,11 @@ async def create_user(
     db.refresh(nou_usuari)
 
     if es_policia:
-        nova_policia = Policia(
+        nou_policia = Policia(
             user_id=nou_usuari.id,
             placa=placa
         )
-        db.add(nova_policia)
+        db.add(nou_policia)
     else:
         nou_client = Client(
             user_id=nou_usuari.id,
