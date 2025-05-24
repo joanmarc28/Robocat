@@ -28,28 +28,39 @@
       </div>
 
     </div>
-    <div class="collapse navbar-collapse justify-content-end" id="navigation"style="padding-left: 0px;">
+    <div class="collapse navbar-collapse justify-content-end" id="navigation" style="padding-left: 0px;">
       <ul class="navbar-nav">
-
-        <li class="p-2">
-          <a href="/parking" class="col-12 btn btn-neutral btn-round">Nou Aparcament</a>
-        </li>
-        <li class="p-2">
+        {% if user_id %}
+        {% if role == "policia" %}
+        <div class="p-2">
+          <a href="/zones" class="col-12 btn btn-neutral btn-round">Zones de Pagament</a>
+        </div>
+        {% else %}
+        <div class="p-2">
+          <a href="/parking" class="col-12 btn btn-neutral btn-round">Registrar Aparcament</a>
+        </div>
+        <div class="p-2">
           <a href="/historial" class="col-12 btn btn-neutral btn-round">Historial</a>
-        </li>
-        <li class="p-2">
-          <a href="/paymentzones" class="col-12 btn btn-neutral btn-round">Zones de Pagament</a>
-        </li>
-        <li class="p-2">
+        </div>
+        <div class="p-2">
           <a href="/cars" class="col-12 btn btn-neutral btn-round">Els Meus Cotxes</a>
-        </li>
-        <li class="p-2">
-          <a href="/perfil" class="col-12 btn btn-neutral btn-round">Perfil</a>
-        </li>
-        <li class="p-2">
-          <a href="/mapa" class="col-12 btn btn-neutral btn-round">Sortir</a>
-        </li>
+        </div>
+        <div class="p-2">
+          <a href="/mapa" class="col-12 btn btn-neutral btn-round">Perfil</a>
+        </div>
+        <div class="p-2">
+          <a href="/logout" class="col-12 btn btn-neutral btn-round">Sortir</a>
+        </div>
+        {% endif %}
+        {% else %}
 
+        <!--<li class="p-2">
+            <a href="/registre" class="col-12 btn btn-neutral btn-round">Registre</a>
+          </li>
+          <li class="p-2">
+            <a href="/login" class="col-12 btn btn-neutral btn-round">Login</a>
+          </li>-->
+        {% endif %}
       </ul>
     </div>
   </div>

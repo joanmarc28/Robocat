@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% block title %}Inici{% endblock %}
 
@@ -12,6 +11,16 @@
       <div class="col-12 col-md-10 col-lg-8">
         <div class="card card-pricing" data-color="white">
           <div class="card-body">
+            <div class="p-2">
+              {% if user %}
+              <a href="/welcome" class="col-12 btn btn-primary btn-round2">Benvingut, {{ user.nom or user.email }}</a>
+              {% endif %}
+            </div>
+            {% if role == "policia" %}
+            <div class="p-2">
+              <a href="/zones" class="col-12 btn btn-neutral btn-round">Zones de Pagament</a>
+            </div>
+            {% else %}
             <div class="p-2">
               <a href="/parking" class="col-12 btn btn-neutral btn-round">Registrar Aparcament</a>
             </div>
@@ -27,6 +36,7 @@
             <div class="p-2">
               <a href="/logout" class="col-12 btn btn-neutral btn-round">Sortir</a>
             </div>
+            {% endif %}
           </div>
         </div>
       </div>

@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% block title %}Registrar Aparcament{% endblock %}
 
@@ -13,27 +12,61 @@
                     <div class="card-body">
                         <form id="plate-form" method="POST" action="/extract-plate" enctype="multipart/form-data">
                             <div class="form-group">
-                                <div class="col-12 btn-disabled btn-neutral btn-round2">Entrar al Sistema</div>
+                                <div class="col-12 btn-disabled btn-neutral btn-round2">Registrar nou Aparcament</div>
                             </div>
-                            <div class="form-group text-center">
-                                <video id="video" autoplay playsinline class="rounded" style="width: 100%; max-height: 300px; border: 2px #94b9ff solid;"></video>
-                                <canvas id="canvas" style="display:none;"></canvas>
-                                <img id="photo" class="mt-3" src="" alt="Foto capturada" style="display:none; width: 100%; border-radius: 12px;" />
+                            <div id="part-1">
+                                <div id="map" class="rounded"
+                                    style="height: 500px; width: 100%;  border: 2px #94b9ff solid; "></div>
+                                <div class="mt-3 form-group">
+                                    <a id="seguent_part" href="" class="col-12 btn btn-neutral btn-round">Iniciar Aparcament</a>
+                                </div>
+
                             </div>
-                            <button type="button" class="btn col-12 btn-neutral btn-round" onclick="startCamera()">Activar Càmera</button>
-                            <div class="mt-2 form-group text-center">
-                                <button type="button" class="btn btn-warning btn-sm" onclick="takePhoto()">Capturar</button>
-                                <button type="button" class="btn btn-danger btn-sm" onclick="deletePhoto()">Eliminar Captura</button>
+                            <div id="part-2" style="display: none;">
+                                <div class="form-group text-center">
+                                    <video id="video" autoplay playsinline class="rounded"
+                                        style="width: 100%; max-height: 600px; border: 2px #94b9ff solid;"></video>
+                                    <canvas id="canvas" style="display:none;"></canvas>
+                                    <img id="photo" class="mt-3" src="" alt="Foto capturada"
+                                        style="display:none; width: 100%; border-radius: 12px;" />
+                                </div>
+                                <button type="button" class="btn col-12 btn-neutral btn-round"
+                                    onclick="startCamera()">Activar Càmera</button>
+                                <div class="mt-2 form-group text-center">
+                                    <button type="button" class="btn btn-warning btn-sm"
+                                        onclick="takePhoto()">Capturar</button>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="deletePhoto()">Eliminar
+                                        Captura</button>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-class" id="plate" name="plate"
+                                        placeholder="Matricula" required>
+                                </div>
+                                <div class="form-group container row">
+                                    <input type="number" class="col-8 form-control input-class" id="minuts"
+                                        name="minuts" min="0" max="3060" placeholder="0" required>
+                                    <label class="font-weight-bold m-auto col-4" style="color:#66615b;"> Minuts</label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold d-block" style="color:#66615b;">Preu: <span
+                                            id="preu-zona">1,5</span>€ / hora</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="data_final" class="font-weight-bold d-block"
+                                        style="color:#66615b;">Fins: </label>
+                                    <input type="date" class="form-control input-class" id="data_final"
+                                        name="data_final" dissabled style="background-color: #f8f9fa;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold d-block" style="color:#66615b;">Total a Pagar: <span
+                                            id="date">0</span> €</label>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-neutral btn-round btn-block">Iniciar
+                                        Aparcament</button>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control input-class" id="plate" name="plate" placeholder="Matricula" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control input-class" id="model" name="model" placeholder="Model" required>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-neutral btn-round btn-block">Iniciar Aparcament</button>
-                            </div>
+
                         </form>
                     </div>
                 </div>
@@ -45,89 +78,187 @@
 {% endblock %}
 {% block scripts %}
 <script>
-let stream; // Per guardar el MediaStream globalment
+    let map;
+    let userCircle;
 
-function startCamera() {
-  const video = document.getElementById('video');
-  navigator.mediaDevices.getUserMedia({
-    video: { facingMode: { exact: "environment" } }
-  })
-  .then(mediaStream => {
-    stream = mediaStream;
-    video.srcObject = mediaStream;
-  })
-  .catch(error => {
-    console.error("No s’ha pogut accedir a la càmera del darrere:", error);
-    // Si falla, fem servir la càmera per defecte
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(mediaStream => {
-        stream = mediaStream;
-        video.srcObject = mediaStream;
-      });
-  });
-}
+    function initMap() {
+        const fallback = { lat: 41.387, lng: 2.170 };
 
-function deletePhoto() {
-  const photo = document.getElementById('photo');
-  const video = document.getElementById('video');
-  const hiddenInput = document.getElementById('imageInput');
-
-  // Esborrem la foto i tornem a mostrar el vídeo
-  photo.src = '';
-  photo.style.display = 'none';
-  video.style.display = 'block';
-
-  // Eliminem el valor del camp hidden (si existeix)
-  if (hiddenInput) {
-    hiddenInput.value = '';
-  }
-
-  // Reengeguem la càmera si s’ha apagat abans
-  if (!video.srcObject) {
-    startCamera();
-  }
-}
-async function takePhoto() {
-    const video = document.getElementById("video");
-    const canvas = document.createElement("canvas");
-    const photo = document.getElementById('photo');
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    const imageData = canvas.toDataURL("image/png");
-
-    // 👉 Mostra la imatge de seguida
-    photo.src = imageData;
-    photo.style.display = 'block';
-    video.style.display = 'none';
-
-    // 👉 Atura la càmera immediatament
-    if (stream) stream.getTracks().forEach(track => track.stop());
-
-    // 👉 Envia la imatge al backend
-    const formData = new FormData();
-    formData.append("capturedImage", imageData);
-
-    try {
-        const response = await fetch("/extract-plate", {
-            method: "POST",
-            body: formData
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: fallback,
+            zoom: 17,
+            mapTypeControl: false,
+            fullscreenControl: false,
         });
 
-        const result = await response.json();
-        if (result.plate) {
-            document.getElementById("plate").value = result.plate;
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+
+                    // Si ja tenim el cercle, només el movem
+                    if (userCircle) {
+                        userCircle.setCenter(pos);
+                    } else {
+                        // Punt blau estil Google Maps
+                        userCircle = new google.maps.Circle({
+                            strokeColor: "#1E90FF",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: "#1E90FF",
+                            fillOpacity: 0.35,
+                            map: map,
+                            center: pos,
+                            radius: 8, // mida del cercle (ajustable)
+                        });
+                    }
+
+                    map.setCenter(pos);
+                },
+                (error) => {
+                    console.warn("❌ Error obtenint ubicació:", error.message);
+                    alert("No s’ha pogut obtenir la teva ubicació.");
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
         } else {
-            alert("No s'ha pogut detectar cap matrícula.");
+            alert("⚠️ El teu navegador no suporta geolocalització.");
         }
-    } catch (error) {
-        console.error("Error en enviar la imatge:", error);
     }
-}
 
 
+    document.getElementById('seguent_part').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const part1 = document.getElementById('part-1');
+        const part2 = document.getElementById('part-2');
+
+        if (map) {
+            part1.style.display = 'none';
+            part2.style.display = 'block';
+            startCamera();
+        } else {
+            alert("El mapa no s'ha carregat correctament. Si us plau, torna a intentar-ho.");
+        }
+    });
+
+
+    const preuPerHora = parseFloat((document.getElementById('preu-zona').innerText || '1.5').replace(',', '.'));
+    const preuPerMinut = preuPerHora / 60;
+
+
+    document.getElementById('minuts').addEventListener('input', function () {
+        const minuts = parseInt(this.value) || 0;
+
+        // Calcula preu
+        const preuTotal = (minuts * preuPerMinut).toFixed(2);
+        document.getElementById('date').innerText = `${preuTotal}`;
+
+        // Calcula hora final
+        const ara = new Date();
+        ara.setMinutes(ara.getMinutes() + minuts);
+        const horaFiStr = ara.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Mostra la nova hora
+        document.querySelector('label[for="data_final"]').innerText = `Fins (hora): ${horaFiStr}`;
+
+        // Opcional: si vols posar la data al <input> date (només el dia, no l’hora)
+        const yyyy = ara.getFullYear();
+        const mm = String(ara.getMonth() + 1).padStart(2, '0');
+        const dd = String(ara.getDate()).padStart(2, '0');
+        document.getElementById('data_final').value = `${yyyy}-${mm}-${dd}`;
+    });
+
+
+
+    let stream; // Per guardar el MediaStream globalment
+
+    function startCamera() {
+        const video = document.getElementById('video');
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { exact: "environment" } }
+        })
+            .then(mediaStream => {
+                stream = mediaStream;
+                video.srcObject = mediaStream;
+            })
+            .catch(error => {
+                console.error("No s’ha pogut accedir a la càmera del darrere:", error);
+                // Si falla, fem servir la càmera per defecte
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(mediaStream => {
+                        stream = mediaStream;
+                        video.srcObject = mediaStream;
+                    });
+            });
+    }
+
+    function deletePhoto() {
+        const photo = document.getElementById('photo');
+        const video = document.getElementById('video');
+        const hiddenInput = document.getElementById('imageInput');
+
+        // Esborrem la foto i tornem a mostrar el vídeo
+        photo.src = '';
+        photo.style.display = 'none';
+        video.style.display = 'block';
+
+        // Eliminem el valor del camp hidden (si existeix)
+        if (hiddenInput) {
+            hiddenInput.value = '';
+        }
+
+        // Reengeguem la càmera si s’ha apagat abans
+        if (!video.srcObject) {
+            startCamera();
+        }
+    }
+    async function takePhoto() {
+        const video = document.getElementById("video");
+        const canvas = document.createElement("canvas");
+        const photo = document.getElementById('photo');
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const imageData = canvas.toDataURL("image/png");
+
+        // 👉 Mostra la imatge de seguida
+        photo.src = imageData;
+        photo.style.display = 'block';
+        video.style.display = 'none';
+
+        // 👉 Atura la càmera immediatament
+        if (stream) stream.getTracks().forEach(track => track.stop());
+
+        // 👉 Envia la imatge al backend
+        const formData = new FormData();
+        formData.append("capturedImage", imageData);
+
+        try {
+            const response = await fetch("/extract-plate", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.plate) {
+                document.getElementById("plate").value = result.plate;
+            } else {
+                alert("No s'ha pogut detectar cap matrícula.");
+            }
+        } catch (error) {
+            console.error("Error en enviar la imatge:", error);
+        }
+    }
 </script>
-
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap"></script>
 {% endblock %}

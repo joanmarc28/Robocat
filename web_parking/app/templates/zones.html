@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block title %}Zones d'Aparcament{% endblock %}
+
+{% block content %}
+
+<!--<div class="wrapper">-->
+<div class="section" style="z-index: 2; position: relative;padding-top: 0px !important;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="card" data-color="white">
+          <div class="card-body">
+            <div class="form-group">
+              <div class="col-12 btn-disabled btn-neutral btn-round2">Zones de Pagament</div>
+            </div>
+            <div id="map" class="rounded" style="height: 500px; width: 100%;  border: 2px #94b9ff solid; "></div>
+            <div class="mt-3 form-group">
+              <a id="nova_zona" href="" class="col-12 btn btn-neutral btn-round">Nova Zona</a>
+            </div>
+            <div id="nova_zona_form" style="display: none;">
+              <div class="col-12">
+                <p class="text-center">Dibuixa un polígon al mapa per definir la zona d'aparcament.</p>
+              </div>
+              <form method="post" action="/guardar-zona" class="pr-4 pl-4 mt-4">
+                <div class="form-group">
+                  <label>Nom de la zona:</label>
+                  <input type="text" name="nom" class="form-control input-class" required>
+                </div>
+                <div class="form-group">
+                  <label for="data_final" class="font-weight-bold d-block" style="color:#66615b;">Ciutat: </label>
+                  <input type="text" class="form-control input-class" id="ciutat" name="ciutat" dissabled
+                    style="background-color: #f8f9fa;">
+                </div>
+                <div class="form-group">
+                  <label>Coordenades:</label>
+                  <textarea id="coords" name="coords" class="form-control" rows="5" style="border-radius: 30px; border: 3px solid #94b9ff;" readonly></textarea>
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="col-12 m-auto btn btn-green btn-round">Guardar zona</button>
+                </div>
+              </form>
+            </div>
+            <div class="mt-3 form-group">
+              <a id="eliminar_zona" href="" class="col-12 btn btn-neutral btn-round">Eliminar Zona</a>
+            </div>
+            <div id="eliminar_zona_form" style="display: none;">
+              <div class="col-12">
+                <p class="text-center">--------------------</p>
+              </div>
+
+            </div>
+            <div class="mt-3 form-group">
+              <a id="canviar_zona" href="" class="col-12 btn btn-neutral btn-round">Canviar Zona</a>
+            </div>
+            <div id="canviar_zona_form" style=" display: none;">
+              <div class="col-12">
+                <p class="text-center">-----------</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+
+<script>
+  document.getElementById('nova_zona').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const nova_zona_form = document.getElementById('nova_zona_form');
+    const eliminar_zona_form = document.getElementById('eliminar_zona_form');
+    const canviar_zona_form = document.getElementById('canviar_zona_form');
+
+    // Mostra el formulari de nova zona
+    nova_zona_form.style.display = 'block';
+    eliminar_zona_form.style.display = 'none';
+    canviar_zona_form.style.display = 'none';
+  });
+
+  document.getElementById('eliminar_zona').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const nova_zona_form = document.getElementById('nova_zona_form');
+    const eliminar_zona_form = document.getElementById('eliminar_zona_form');
+    const canviar_zona_form = document.getElementById('canviar_zona_form');
+
+    // Mostra el formulari d'eliminació de zona
+    nova_zona_form.style.display = 'none';
+    eliminar_zona_form.style.display = 'block';
+    canviar_zona_form.style.display = 'none';
+  });
+
+  document.getElementById('canviar_zona').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const nova_zona_form = document.getElementById('nova_zona_form');
+    const eliminar_zona_form = document.getElementById('eliminar_zona_form');
+    const canviar_zona_form = document.getElementById('canviar_zona_form');
+
+    // Mostra el formulari de canvi de zona
+    nova_zona_form.style.display = 'none';
+    eliminar_zona_form.style.display = 'none';
+    canviar_zona_form.style.display = 'block';
+  });
+
+
+
+
+  let map;
+  let drawingManager;
+  let selectedShape;
+
+  function initMap() {
+    const geocoder = new google.maps.Geocoder();
+    const ciutat = "{{ user.ciutat }}";
+    document.getElementById("ciutat").value = ciutat;
+
+    // Busca les coordenades de la ciutat
+    geocoder.geocode({ address: ciutat }, function (results, status) {
+      if (status === "OK") {
+        const centre = results[0].geometry.location;
+        map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 14,
+          center: centre,
+        });
+
+        // Configura el dibuix
+        drawingManager = new google.maps.drawing.DrawingManager({
+          drawingMode: null,
+          drawingControl: false,
+          polygonOptions: { editable: true, draggable: true },
+        });
+        drawingManager.setMap(map);
+
+        // Captura polígon dibuixat
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
+          if (selectedShape) selectedShape.setMap(null);  // Elimina antic
+          selectedShape = event.overlay;
+          updateCoords();
+        });
+      } else {
+        alert("No s'ha pogut trobar la ciutat: " + status);
+      }
+    });
+  }
+
+  function updateCoords() {
+    if (selectedShape) {
+      const path = selectedShape.getPath().getArray();
+      const coords = path.map(coord => ({
+        lat: coord.lat(),
+        lng: coord.lng()
+      }));
+      document.getElementById("coords").value = JSON.stringify(coords, null, 2);
+    }
+  }
+
+  document.getElementById("nova_zona").addEventListener("click", function (e) {
+    e.preventDefault();
+    drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+  });
+
+  document.getElementById("eliminar_zona").addEventListener("click", function (e) {
+    e.preventDefault();
+    if (selectedShape) {
+      selectedShape.setMap(null);
+      selectedShape = null;
+      document.getElementById("coords").value = "";
+    }
+  });
+
+  document.getElementById("canviar_zona").addEventListener("click", function (e) {
+    e.preventDefault();
+    if (selectedShape) {
+      selectedShape.setEditable(true);
+      selectedShape.setDraggable(true);
+      google.maps.event.addListener(selectedShape.getPath(), 'set_at', updateCoords);
+      google.maps.event.addListener(selectedShape.getPath(), 'insert_at', updateCoords);
+    }
+  });
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap&libraries=drawing">
+  </script>
+
+{% endblock %}
