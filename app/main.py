@@ -52,15 +52,7 @@ def altres():
             time.sleep(0.5)
 """
 def servos_prova(num):
-            set_servo_angle(num, 0)
-            time.sleep(0.5)
-            set_servo_angle(num, 15)
-            time.sleep(0.5)
-            set_servo_angle(num, 30)
-            time.sleep(0.5)
-            set_servo_angle(num, 90)
-            time.sleep(0.5)
-            set_servo_angle(num, 120)
+            set_servo_angle(num, 40)
             time.sleep(0.5)
             set_servo_angle(num, 180)
             time.sleep(0.5)
@@ -70,15 +62,21 @@ def main():
     try:
         while True:
             print("🔻 Baixant...")
-            moure_4_potes("lower", 1)
+            moure_4_potes("normal", 0.5)
             time.sleep(0.5)
             print("🔼 Tornant a normal...")
-            moure_4_potes("normal", 1)
-            time.sleep(0.5)
+            moure_4_potes("up", 0.5)
+            #time.sleep(0.5)
             #print("???? Tornant a caminar ?????...")
             #caminar_quadruped(0.5)
-            #servos_prova(7)
-            #time.sleep(2)
+            #servos_prova(12)
+            time.sleep(0.5)
+            """servos_prova_2(4)
+            time.sleep(2)
+            servos_prova(8)
+            time.sleep(2)
+            servos_prova(12)
+            time.sleep(2)"""
     except KeyboardInterrupt:
         print("🛑 Aturat per teclat.")
 

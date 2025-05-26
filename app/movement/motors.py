@@ -24,12 +24,16 @@ class Pota:
         self.estats = estats
 
     def moure(self, angle_cadera, angle_genoll, duracio=1):
-        t1 = threading.Thread(target=moure_suau, args=(self.cadera, self.cadera.angle or 90, angle_cadera, duracio))
-        t2 = threading.Thread(target=moure_suau, args=(self.genoll, self.genoll.angle or 90, angle_genoll, duracio))
-        t1.start()
+        """        t2 = threading.Thread(target=moure_suau, args=(self.genoll, self.genoll.angle or 90, angle_genoll, duracio))
         t2.start()
-        t1.join()
         t2.join()
+
+        t1 = threading.Thread(target=moure_suau, args=(self.cadera, self.cadera.angle or 90, angle_cadera, duracio))
+        t1.start()
+        t1.join()"""
+        moure_suau(self.genoll, self.genoll.angle or 90, angle_genoll, duracio)
+        moure_suau(self.cadera, self.cadera.angle or 90, angle_cadera, duracio)
+     
 
     def canvia_estat(self, estat, duracio=1):
         if estat not in self.estats:
@@ -51,27 +55,43 @@ def moure_suau(servo, angle_inicial, angle_final, duracio):
 
 # Crear potes (ajusta els canals segons com els tinguis connectats)
 potes = [
-    Pota(servos[11], servos[10], {
-    "lower": (0, 0),
-    "normal": (30, 90),
-    "step_1": (50, 30),
-    "step_2": (10, 60)
-    }),
-    Pota(servos[15], servos[14], {
-    "lower": (0, 0),
-    "normal": (30, 90),
-    "step_1": (50, 30),
-    "step_2": (10, 60)
-    }),
+    # Cama - Cuixa
     Pota(servos[0], servos[1], {
+        "prova": (0, 180),
         "lower": (180, 180),
-        "normal": (150, 90),
+        "normal": (130, 120),
+        "up": (100, 160),
+        "strech": (90, 140),
+        "step_1": (50, 30),
+        "step_2": (10, 60)
+    }),
+
+    Pota(servos[4], servos[5], {
+        "prova": (0, 180),
+        "lower": (180, 180),
+        "normal": (130, 120),
+        "up": (100, 160),
+        "strech": (130, 120),
         "step_1": (130, 150),
         "step_2": (170, 110)
     }),
-    Pota(servos[6], servos[7], {
-        "lower": (180, 180),
-        "normal": (150, 90),
+
+    Pota(servos[8], servos[9], {
+        "prova": (180, 0),
+        "lower": (0, 0),
+        "normal": (50, 60),
+        "up": (80, 20),
+        "strech": (90, 40),
+        "step_1": (50, 30),
+        "step_2": (10, 60)
+    }),
+
+    Pota(servos[12], servos[13], {
+        "prova": (180, 0),
+        "lower": (0, 0),
+        "normal": (30, 50),
+        "up": (70, 20),
+        "strech": (90, 40),
         "step_1": (130, 150),
         "step_2": (170, 110)
     }),
@@ -124,10 +144,24 @@ def sweep_servo(index, delay=0.01):
 # Funció per moure totes les potes en paral·lel
 def moure_4_potes(estat, duracio):
     threads = []
-    for pota in potes:
+    """ for pota in potes:
         t = threading.Thread(target=pota.canvia_estat, args=(estat, duracio))
         threads.append(t)
-        t.start()
+        t.start()"""
+    t = threading.Thread(target=potes[1].canvia_estat, args=(estat, duracio))
+    threads.append(t)
+    t.start()
+    t = threading.Thread(target=potes[2].canvia_estat, args=(estat, duracio))
+    threads.append(t)
+    t.start()
+
+    time.sleep(0.07)
+    t = threading.Thread(target=potes[0].canvia_estat, args=(estat, duracio))
+    threads.append(t)
+    t.start()
+    t = threading.Thread(target=potes[3].canvia_estat, args=(estat, duracio))
+    threads.append(t)
+    t.start()
     for t in threads:
         t.join()
 
