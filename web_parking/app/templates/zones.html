@@ -334,6 +334,8 @@
     const eliminar_zona_form = document.getElementById('eliminar_zona_form');
     const canviar_zona_form = document.getElementById('editar_zona_form');
 
+    drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+
     // Mostra el formulari de nova zona
     nova_zona_form.style.display = 'block';
     eliminar_zona_form.style.display = 'none';
@@ -347,6 +349,11 @@
     const eliminar_zona_form = document.getElementById('editar_zona_form');
     const canviar_zona_form = document.getElementById('editar_zona_form');
 
+    if (selectedShape) {
+      selectedShape.setMap(null);
+      selectedShape = null;
+      document.getElementById("coords").value = "";
+    }
     // Mostra el formulari d'eliminació de zona
     nova_zona_form.style.display = 'none';
     eliminar_zona_form.style.display = 'block';
@@ -360,6 +367,13 @@
     const eliminar_zona_form = document.getElementById('eliminar_zona_form');
     const canviar_zona_form = document.getElementById('editar_zona_form');
 
+    if (selectedShape) {
+      selectedShape.setEditable(true);
+      selectedShape.setDraggable(true);
+      google.maps.event.addListener(selectedShape.getPath(), 'set_at', updateCoords);
+      google.maps.event.addListener(selectedShape.getPath(), 'insert_at', updateCoords);
+    }
+    
     // Mostra el formulari de canvi de zona
     nova_zona_form.style.display = 'none';
     eliminar_zona_form.style.display = 'none';
@@ -464,29 +478,6 @@
     }
   }
 
-  document.getElementById("nova_zona").addEventListener("click", function (e) {
-    e.preventDefault();
-    drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
-  });
-
-  document.getElementById("eliminar_zona").addEventListener("click", function (e) {
-    e.preventDefault();
-    if (selectedShape) {
-      selectedShape.setMap(null);
-      selectedShape = null;
-      document.getElementById("coords").value = "";
-    }
-  });
-
-  document.getElementById("canviar_zona").addEventListener("click", function (e) {
-    e.preventDefault();
-    if (selectedShape) {
-      selectedShape.setEditable(true);
-      selectedShape.setDraggable(true);
-      google.maps.event.addListener(selectedShape.getPath(), 'set_at', updateCoords);
-      google.maps.event.addListener(selectedShape.getPath(), 'insert_at', updateCoords);
-    }
-  });
 </script>
 
 <script async defer
