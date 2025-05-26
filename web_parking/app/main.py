@@ -13,12 +13,13 @@ import io
 from fastapi.responses import JSONResponse
 import requests
 from passlib.context import CryptContext
-from app import auth
+from app import auth, zones, cars
 from app.database import Base, engine
 from app.session import get_user_from_cookie
 from app.database import get_db
 from sqlalchemy.orm import Session
 from app.models import Usuari,Policia, Client
+from datetime import datetime
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -32,6 +33,8 @@ Base.metadata.create_all(bind=engine)
 
 # Importa i registra rutes de auth
 app.include_router(auth.router)
+app.include_router(zones.router)
+app.include_router(cars.router)
 
 @app.get("/")
 def index(request: Request, db: Session = Depends(get_db)):
@@ -71,13 +74,18 @@ def parking(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/login", status_code=303)
 
     user = db.query(Usuari).get(user_id)
-    if db.query(Policia).filter_by(user_id=user.id).first():
+    client = db.query(Client).filter_by(user_id=user.id).first()
+    if not client:
         return RedirectResponse(url="/welcome", status_code=303)
+
+    any_actual = datetime.now().year
 
     return templates.TemplateResponse("parking.html", {
         "request": request,
         "user_id": user_id,
         "user": user,
+        "client": client,
+        "any_actual": any_actual,
         "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
 
@@ -90,7 +98,7 @@ def parking(request: Request, db: Session = Depends(get_db)):
     user = db.query(Usuari).get(user_id)
     if db.query(Client).filter_by(user_id=user.id).first():
         return RedirectResponse(url="/welcome", status_code=303)
-        
+
     role = "policia"
     return templates.TemplateResponse("zones.html", {
         "request": request,
@@ -115,7 +123,7 @@ def parking(request: Request, db: Session = Depends(get_db)):
         "user_id": user_id,
         "user": user
     })
-
+"""
 @app.get("/cars")
 def cars(request: Request):
     plate = "1234ABC"
@@ -136,7 +144,46 @@ def cars(request: Request):
         "fuel": "diesel",
         "dgt": "b",
         "image_car": image_link
+    })"""
+
+@app.get("/cars")
+def cars(request: Request, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)
+
+    if not user_id:
+        return RedirectResponse(url="/login", status_code=303)
+
+    user = db.query(Usuari).get(user_id)
+    if db.query(Policia).filter_by(user_id=user.id).first():
+        return RedirectResponse(url="/welcome", status_code=303)
+
+
+    client = db.query(Client).filter_by(user_id=user.id).first()
+
+    cotxes = []
+    print(f"Client: {client}")
+    print(f"Cotxes del client: {client.cotxes}")
+    for cotxe in client.cotxes:
+        image_link = cercar_imatges(f"{cotxe.marca} {cotxe.model} {cotxe.color} {cotxe.any_matriculacio}")
+        cotxes.append({
+            "matricula": cotxe.matricula,
+            "model": cotxe.model,
+            "marca": cotxe.marca,
+            "any": cotxe.any_matriculacio,
+            "color": cotxe.color,
+            "combustible": cotxe.combustible,
+            "dgt": cotxe.dgt,
+            "image_car": image_link
+        })
+
+    return templates.TemplateResponse("cars.html", {
+        "request": request,
+        "user_id": user_id,
+        "user": user,
+        "client": client,
+        "cotxes": cotxes
     })
+
 
 @app.get("/perfil")
 def welcome(request: Request, db: Session = Depends(get_db)):

@@ -66,9 +66,30 @@ body {
   margin-right: 10px !important;
 }
 .div-color{
-  border: 2px solid #94b9ff;
   border-radius: 10px;
   height: 100%;
+}
+.blue{
+  background-color: #94a6ff !important;
+}
+.green{
+  background-color: #94ffa0 !important;
+}
+.orange{
+  background-color: #ffd494 !important;
+}
+.yellow{
+  background-color: #fffa94 !important;
+}
+.red{
+  background-color: #ff9494 !important;
+}
+.black{
+  background-color: rgb(58, 55, 55) !important;
+}
+.white{
+  background-color: white !important;
+  border: 2px solid #94b9ff;
 }
 .input-class{
   border-radius: 50px;
