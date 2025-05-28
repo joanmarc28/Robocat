@@ -65,7 +65,7 @@ def read_heading():
         heading += 360
     return heading
 
-if __name__ == "__main__":
+def read_gps_info():
     while True:
         try:
             print("🔍 Llegint GPS i brúixola...")
@@ -86,3 +86,9 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"[ERROR] {e}")
             time.sleep(0.5)
+
+if __name__ == "__main__":
+    try:
+        read_gps_info()
+    except Exception as e:
+        print(f"[ERROR] {e}")

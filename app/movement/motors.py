@@ -23,28 +23,138 @@ class Pota:
         self.genoll = genoll
         self.estats = estats
 
-    def moure(self, angle_cadera, angle_genoll, duracio=1):
-        """        t2 = threading.Thread(target=moure_suau, args=(self.genoll, self.genoll.angle or 90, angle_genoll, duracio))
+    def moure_a_la_vegada_cama(self, angle_cadera, angle_genoll, duracio=1):
+        t1 = threading.Thread(target=moure_suau, args=(self.genoll, self.genoll.angle or 90, angle_genoll, duracio))
+        t1.start()
+        t1.join()
+
+        t2 = threading.Thread(target=moure_suau, args=(self.cadera, self.cadera.angle or 90, angle_cadera, duracio))
         t2.start()
         t2.join()
-
-        t1 = threading.Thread(target=moure_suau, args=(self.cadera, self.cadera.angle or 90, angle_cadera, duracio))
-        t1.start()
-        t1.join()"""
+     
+    def moure_a_parts_cama(self, angle_cadera, angle_genoll, duracio=1):
         moure_suau(self.genoll, self.genoll.angle or 90, angle_genoll, duracio)
         moure_suau(self.cadera, self.cadera.angle or 90, angle_cadera, duracio)
-     
 
     def canvia_estat(self, estat, duracio=1):
         if estat not in self.estats:
             raise ValueError(f"[ERROR] Estat '{estat}' no definit per la pota.")
         angle_cadera, angle_genoll = self.estats[estat]
-        self.moure(angle_cadera, angle_genoll, duracio)
+        self.moure_a_parts_cama(angle_cadera, angle_genoll, duracio)
 
+class EstructuraPotes:
+    """Classe per gestionar les potes del quadrúpede."""
+    def __init__(self):
+        # Cama - Cuixa
+        #Pota Davant Esquerra
+        self.pota_davant_esquerra = Pota(servos[13], servos[12], {
+            "prova": (0, 180),
+            "lower": (180, 180),
+            "normal": (130, 120),
+            "up": (100, 160),
+            "strech": (130, 120),
+            "step_1": (100, 100),  # avança
+            "step_2": (160, 140)   # recull
+        })
+
+        self.pota_darrera_esquerra = Pota(servos[5], servos[4], {
+            "prova": (0, 180),
+            "lower": (180, 180),
+            "normal": (130, 120),
+            "up": (100, 160),
+            "strech": (100, 160),
+            "step_1": (100, 100),
+            "step_2": (160, 140)
+        })
+
+        self.pota_darrera_dreta = Pota(servos[1], servos[0], {
+            "prova": (180, 0),
+            "lower": (0, 0),
+            "normal": (50, 60),
+            "up": (80, 20),
+            "strech": (80, 20),
+            "step_1": (80, 80),
+            "step_2": (20, 40)
+        })
+
+        self.pota_davant_dreta = Pota(servos[9], servos[8], {
+            "prova": (180, 0),
+            "lower": (0, 0),
+            "normal": (30, 50),
+            "up": (70, 20),
+            "strech": (30, 50),
+            "step_1": (60, 70),
+            "step_2": (0, 30)
+        })
+
+        self.potes = [
+            self.pota_davant_esquerra,
+            self.pota_darrera_esquerra,
+            self.pota_darrera_dreta,
+            self.pota_davant_dreta
+        ]
+    def moure(self, estat, duracio=1):
+        for pota in self.potes:
+            pota.canvia_estat(estat, duracio)
+
+    # Funció per moure totes les potes en paral·lel
+    def moure_4_potes(self,estat, duracio):
+        threads = []
+        """ for pota in potes:
+            t = threading.Thread(target=pota.canvia_estat, args=(estat, duracio))
+            threads.append(t)
+            t.start()"""
+        t = threading.Thread(target=self.pota_darrera_esquerra.canvia_estat, args=(estat, duracio))
+        threads.append(t)
+        t.start()
+        t = threading.Thread(target=self.pota_darrera_dreta.canvia_estat, args=(estat, duracio))
+        threads.append(t)
+        t.start()
+
+        time.sleep(0.07)
+        t = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=(estat, duracio))
+        threads.append(t)
+        t.start()
+        t = threading.Thread(target=self.pota_davant_dreta.canvia_estat, args=(estat, duracio))
+        threads.append(t)
+        t.start()
+        for t in threads:
+            t.join()
+
+    def ajupir(self, duracio=0.5):
+        print("🔻 Baixant totes les potes")
+        self.moure_4_potes("lower", duracio)
+
+    def estirament(self, duracio=0.5):
+        print("🤸 Estirant potes")
+        self.potes[0].canvia_estat("strech", duracio)
+        self.potes[1].canvia_estat("strech", duracio)
+        self.potes[2].canvia_estat("strech", duracio)
+        self.potes[3].canvia_estat("strech", duracio)
+
+    def saluda_amb_davant_dreta(self, duracio=1):
+        self.pota_davant_dreta.canvia_estat("up", duracio)
+        time.sleep(duracio)
+        self.pota_davant_dreta.canvia_estat("normal", duracio)
+
+    def caminar_1(estructura, duracio=0.5):
+        print("🔄 Pas 1: aixecant davant esquerra + darrere dreta")
+        t1 = threading.Thread(target=estructura.pota_darrera_dreta.canvia_estat, args=("step_1", duracio))
+        t2 = threading.Thread(target=estructura.pota_darrera_esquerra.canvia_estat, args=("step_1", duracio))
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+
+"""        t1 = threading.Thread(target=estructura.pota_darrera_dreta.canvia_estat, args=("step_2", duracio))
+        t2 = threading.Thread(target=estructura.pota_darrera_esquerra.canvia_estat, args=("step_2", duracio))
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()"""
 
 # Moviment suau (simula velocitat)
-def moure_suau(servo, angle_inicial, angle_final, duracio):
-    passos = 4
+def moure_suau(servo, angle_inicial, angle_final, duracio, passos=30):
     pas = (angle_final - angle_inicial) / passos
     delay = duracio / passos
 
@@ -54,69 +164,6 @@ def moure_suau(servo, angle_inicial, angle_final, duracio):
         time.sleep(delay)
 
 # Crear potes (ajusta els canals segons com els tinguis connectats)
-potes = [
-    # Cama - Cuixa
-    Pota(servos[0], servos[1], {
-        "prova": (0, 180),
-        "lower": (180, 180),
-        "normal": (130, 120),
-        "up": (100, 160),
-        "strech": (90, 140),
-        "step_1": (50, 30),
-        "step_2": (10, 60)
-    }),
-
-    Pota(servos[4], servos[5], {
-        "prova": (0, 180),
-        "lower": (180, 180),
-        "normal": (130, 120),
-        "up": (100, 160),
-        "strech": (130, 120),
-        "step_1": (130, 150),
-        "step_2": (170, 110)
-    }),
-
-    Pota(servos[8], servos[9], {
-        "prova": (180, 0),
-        "lower": (0, 0),
-        "normal": (50, 60),
-        "up": (80, 20),
-        "strech": (90, 40),
-        "step_1": (50, 30),
-        "step_2": (10, 60)
-    }),
-
-    Pota(servos[12], servos[13], {
-        "prova": (180, 0),
-        "lower": (0, 0),
-        "normal": (30, 50),
-        "up": (70, 20),
-        "strech": (90, 40),
-        "step_1": (130, 150),
-        "step_2": (170, 110)
-    }),
-
-
-]
-"""
-    Pota(servos[0], servos[1],{"lower": (0, 0),"normal": (30, 50),"step_1": (30, 50),"step_2": (30, 50)}),
-    Pota(servos[7], servos[6],{"lower": (0, 0),"normal": (30, 50),"step_1": (30, 50),"step_2": (30, 50)}),
-    Pota(servos[11], servos[10],{"lower": (180, 180),"normal": (150, 130),"step_1": (30, 50),"step_2": (30, 50)}),
-    Pota(servos[15], servos[14],{"lower": (180, 180),"normal": (150, 130),"step_1": (30, 50),"step_2": (30, 50)}),
-
-"""
-
-"""
-
-    Pota(servos[11], servos[10],{"normal": (90, 90),"lower": (120, 60)}),
-    Pota(servos[15], servos[14],{"normal": (180, 180),"lower": (120, 120)}),
-potes = [
-    Pota(servos[0], servos[1],{"normal": (90, 0),"lower": (120, 60)}),
-    Pota(servos[11], servos[10],{"normal": (90, 90),"lower": (120, 60)}),
-    Pota(servos[15], servos[14],{"normal": (180, 180),"lower": (120, 120)}),
-    Pota(servos[7], servos[6],{"normal": (120, 90),"lower": (120, 120)}),
-]
-"""
 
 def set_servo_angle(index, angle):
     """Posa un servo concret a un angle determinat."""
@@ -140,60 +187,3 @@ def sweep_servo(index, delay=0.01):
     for angle in range(180, -1, -1):
         servos[index].angle = angle
         time.sleep(delay)
-
-# Funció per moure totes les potes en paral·lel
-def moure_4_potes(estat, duracio):
-    threads = []
-    """ for pota in potes:
-        t = threading.Thread(target=pota.canvia_estat, args=(estat, duracio))
-        threads.append(t)
-        t.start()"""
-    t = threading.Thread(target=potes[1].canvia_estat, args=(estat, duracio))
-    threads.append(t)
-    t.start()
-    t = threading.Thread(target=potes[2].canvia_estat, args=(estat, duracio))
-    threads.append(t)
-    t.start()
-
-    time.sleep(0.07)
-    t = threading.Thread(target=potes[0].canvia_estat, args=(estat, duracio))
-    threads.append(t)
-    t.start()
-    t = threading.Thread(target=potes[3].canvia_estat, args=(estat, duracio))
-    threads.append(t)
-    t.start()
-    for t in threads:
-        t.join()
-
-def caminar_quadruped(duracio=0.5):
-    # Fase 1: mou simultàniament pota 0 (frontal esquerra) i pota 3 (darrera dreta)
-    t1 = threading.Thread(target=potes[0].canvia_estat, args=("step_1", duracio))
-    t2 = threading.Thread(target=potes[3].canvia_estat, args=("step_1", duracio))
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
-
-    # Baixa-les a posició normal (o "lower" si vols pes)
-    t3 = threading.Thread(target=potes[0].canvia_estat, args=("normal", duracio))
-    t4 = threading.Thread(target=potes[3].canvia_estat, args=("normal", duracio))
-    t3.start()
-    t4.start()
-    t3.join()
-    t4.join()
-
-    # Fase 2: mou simultàniament pota 1 (frontal dreta) i pota 2 (darrera esquerra)
-    t5 = threading.Thread(target=potes[1].canvia_estat, args=("step_1", duracio))
-    t6 = threading.Thread(target=potes[2].canvia_estat, args=("step_1", duracio))
-    t5.start()
-    t6.start()
-    t5.join()
-    t6.join()
-
-    # Baixa-les també
-    t7 = threading.Thread(target=potes[1].canvia_estat, args=("normal", duracio))
-    t8 = threading.Thread(target=potes[2].canvia_estat, args=("normal", duracio))
-    t7.start()
-    t8.start()
-    t7.join()
-    t8.join()

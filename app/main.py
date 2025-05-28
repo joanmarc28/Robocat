@@ -1,15 +1,15 @@
 # main.py
 import threading
-from movement.motors import caminar_quadruped, moure_4_potes, set_servo_angle,sweep_servo
-#from sensors.gps import read_gps, read_heading
+from movement.motors import EstructuraPotes
+#from sensors.gps import read_gps, read_heading, read_gps_info
 #from modes.human import prova
-#from interface.display import display_message,clear_displays
+from interface.display import display_message,clear_displays
 import config
 import time
 from utils.helpers import check_internet
 from multiprocessing import Process
 
-"""
+
 def start_system():
     display_message("Loading Robocat ........", line=0)
     time.sleep(0.5)
@@ -26,7 +26,7 @@ def start_system():
     time.sleep(0.5)
     display_message(f"Welcome ", line=5)
 
-def altres():
+"""def altres():
     start_system()
     time.sleep(0.5)
     #prova()
@@ -51,32 +51,32 @@ def altres():
             print(f"[ERROR] {e}")
             time.sleep(0.5)
 """
-def servos_prova(num):
-            set_servo_angle(num, 40)
-            time.sleep(0.5)
-            set_servo_angle(num, 180)
-            time.sleep(0.5)
 
 def main():
     # Loop principal
+    estructura = EstructuraPotes()
+    start_system()
+    """    t2 = threading.Thread(target=read_gps_info, args=(10))
+    t2.start()
+    t2.join()"""
     try:
         while True:
-            print("🔻 Baixant...")
-            moure_4_potes("normal", 0.5)
+
             time.sleep(0.5)
-            print("🔼 Tornant a normal...")
-            moure_4_potes("up", 0.5)
-            #time.sleep(0.5)
-            #print("???? Tornant a caminar ?????...")
-            #caminar_quadruped(0.5)
-            #servos_prova(12)
+            print("🔄 Iniciant moviment de les potes...")
+            estructura.ajupir()
             time.sleep(0.5)
-            """servos_prova_2(4)
-            time.sleep(2)
-            servos_prova(8)
-            time.sleep(2)
-            servos_prova(12)
-            time.sleep(2)"""
+            estructura.moure_4_potes("normal", 0.3)
+            time.sleep(0.5)
+            estructura.moure_4_potes("up", 0.3)
+            time.sleep(0.5)
+            estructura.moure_4_potes("strech", 0.3)
+            time.sleep(0.5)
+            estructura.moure_4_potes("up", 0.3)
+            time.sleep(0.5)
+            #estructura.caminar_1()
+            #print("✅ Moviment de les potes completat.")
+            #time.sleep(1)
     except KeyboardInterrupt:
         print("🛑 Aturat per teclat.")
 
