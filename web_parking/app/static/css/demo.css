@@ -69,6 +69,17 @@ body {
   border-radius: 10px;
   height: 100%;
 }
+.alert-primary{
+  background-color: #51cbce !important;
+}
+.titols{
+  background-color: white;
+  color: #51cbce;
+  border-radius: 0px;
+  font-size: x-large;
+  border-bottom: 4px solid #51cbce;
+}
+
 .blue{
   background-color: #94a6ff !important;
 }

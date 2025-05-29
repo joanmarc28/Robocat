@@ -11,7 +11,7 @@
                 <div class="card" data-color="white">
                     <div class="card-body">
                         <div class="form-group">
-                            <div class="col-12 btn-disabled btn-neutral btn-round2">Registrar nou Aparcament</div>
+                            <div class="col-12 btn-disabled titols">Registrar nou Aparcament</div>
                         </div>
                         <div id="part-1">
                             <div id="map" class="rounded"
@@ -190,7 +190,7 @@
             .then(zones => {
                 zones.forEach(zona => {
                     const polygonCoords = zona.coordenades.map(coord => ({ lat: coord.lat, lng: coord.lng }));
-                    const color = zona.tipus === "blava" ? "#0000FF" :
+                    const color = zona.tipus === "blava" ? "#009cff" :
                         zona.tipus === "verda" ? "#00FF00" :
                             zona.tipus === "taronja" ? "#FFA500" : "#FF0000";
 
@@ -481,9 +481,12 @@ async function iniciarAparcament() {
     const minuts = parseInt(document.getElementById("minuts").value);
     const preuTotal = parseFloat(document.getElementById("date").innerText.replace(',', '.'));
     const dataInici = new Date().toISOString();
-    const dataFinalInput = document.getElementById("data_final").value;
-    const dataFinal = dataFinalInput ? new Date(dataFinalInput).toISOString() : null;
-
+    /*    const dataFinalInput = document.getElementById("data_final").value;
+    const dataFinal = dataFinalInput ? new Date(dataFinalInput).toISOString() : null;*/
+    const ara = new Date();
+    ara.setMinutes(ara.getMinutes() + minuts);
+    const dataFinal = ara.toISOString();
+    
     if (!matricula || !idZona || !minuts || !preuTotal) {
         alert("Si us plau, omple tots els camps per registrar l’aparcament.");
         return;

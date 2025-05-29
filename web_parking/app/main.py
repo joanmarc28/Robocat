@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends, Form, Response
+from fastapi import FastAPI, Request, Depends, Form, Response, HTTPException
 from fastapi.templating import Jinja2Templates
 import os
 from dotenv import load_dotenv
@@ -13,12 +13,12 @@ import io
 from fastapi.responses import JSONResponse
 import requests
 from passlib.context import CryptContext
-from app import auth, zones, cars
+from app import auth, zones, cars, assistent
 from app.database import Base, engine
 from app.session import get_user_from_cookie
 from app.database import get_db
 from sqlalchemy.orm import Session
-from app.models import Usuari,Policia, Client
+from app.models import Usuari,Policia, Client, Cotxe, Estada, Zona
 from datetime import datetime
 
 app = FastAPI()
@@ -26,15 +26,18 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 templates = Jinja2Templates(directory="app/templates")
 
+# Carrega les variables d'entorn des del fitxer .env
 load_dotenv()
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "app/robocat-user-app-5d2b35bd5c22.json"
 
+# Configuració de la base de dades
 Base.metadata.create_all(bind=engine)
 
 # Importa i registra rutes de auth
 app.include_router(auth.router)
 app.include_router(zones.router)
 app.include_router(cars.router)
+app.include_router(assistent.router)
 
 @app.get("/")
 def index(request: Request, db: Session = Depends(get_db)):
@@ -49,7 +52,7 @@ def index(request: Request, db: Session = Depends(get_db)):
     # Si està loguejat, redirigeix a welcome
     return RedirectResponse(url="/welcome", status_code=303)
 
-@app.get("/welcome")
+"""@app.get("/welcome")
 def welcome(request: Request, db: Session = Depends(get_db)):
     user_id = get_user_from_cookie(request)
     if not user_id:
@@ -65,6 +68,30 @@ def welcome(request: Request, db: Session = Depends(get_db)):
         "user_id": user_id,
         "role": role,
         "user": user
+    })"""
+
+@app.get("/welcome")
+def welcome(request: Request, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)
+    if not user_id:
+        return RedirectResponse(url="/login", status_code=303)
+
+    user = db.query(Usuari).get(user_id)
+    role = "client"
+    if db.query(Policia).filter_by(user_id=user.id).first():
+        role = "policia"
+
+    estada_activa = None
+    if role == "client":
+        estada_activa = db.query(Estada).filter_by(dni_usuari=user.client.dni, activa=True).first()
+
+    return templates.TemplateResponse("welcome.html", {
+        "request": request,
+        "user_id": user_id,
+        "role": role,
+        "user": user,
+        "estada_activa": estada_activa,
+        "datetime": datetime  # 👉 afegim el mòdul aquí!
     })
 
 @app.get("/parking")
@@ -108,21 +135,6 @@ def parking(request: Request, db: Session = Depends(get_db)):
         "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
 
-@app.get("/historial")
-def parking(request: Request, db: Session = Depends(get_db)):
-    user_id = get_user_from_cookie(request)
-    if not user_id:
-        return RedirectResponse(url="/login", status_code=303)
-
-    user = db.query(Usuari).get(user_id)
-    if db.query(Policia).filter_by(user_id=user.id).first():
-        return RedirectResponse(url="/welcome", status_code=303)
-
-    return templates.TemplateResponse("historial.html", {
-        "request": request,
-        "user_id": user_id,
-        "user": user
-    })
 """
 @app.get("/cars")
 def cars(request: Request):
@@ -185,27 +197,6 @@ def cars(request: Request, db: Session = Depends(get_db)):
     })
 
 
-@app.get("/perfil")
-def welcome(request: Request, db: Session = Depends(get_db)):
-    user_id = get_user_from_cookie(request)
-    if not user_id:
-        return RedirectResponse(url="/login", status_code=303)
-
-    user = db.query(Usuari).get(user_id)
-    policia = db.query(Policia).filter_by(user_id=user.id).first()
-    client = db.query(Client).filter_by(user_id=user.id).first()
-
-    if policia:
-        return RedirectResponse(url="/welcome", status_code=303)
-
-    return templates.TemplateResponse("perfil.html", {
-        "request": request,
-        "user_id": user_id,
-        "user": user,
-        "client": client
-    })
-    
-
 @app.post("/extract-plate")
 async def analitzar_matricula(capturedImage: str = Form(...)):
     try:
@@ -223,7 +214,6 @@ async def analitzar_matricula(capturedImage: str = Form(...)):
         return JSONResponse(content={"plate": text_detected})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-
 
 def cercar_imatges(query):
     url = 'https://www.googleapis.com/customsearch/v1'
@@ -245,6 +235,61 @@ def cercar_imatges(query):
         return resultats[0]['link'] if resultats else None
     return None
 
+
+@app.get("/historial")
+def veure_historial(request: Request, db: Session = Depends(get_db)):
+
+    user_id = get_user_from_cookie(request)
+    if not user_id:
+        return RedirectResponse(url="/login", status_code=303)
+
+    usuari = db.query(Usuari).get(user_id)
+    if db.query(Policia).filter_by(user_id=usuari.id).first():
+        return RedirectResponse(url="/welcome", status_code=303)
+
+    estades = db.query(Estada).filter(Estada.dni_usuari == usuari.client.dni).all()
+    client = db.query(Client).filter_by(user_id=usuari.id).first()
+
+    dades = []
+    for estada in estades:
+        zona = db.query(Zona).filter(Zona.id == estada.id_zona).first()
+        cotxe = db.query(Cotxe).filter_by(matricula=estada.matricula_cotxe).first()
+        image_link = cercar_imatges(f"{cotxe.marca} {cotxe.model} {cotxe.color} {cotxe.any_matriculacio}")
+
+        dades.append({
+            "id": estada.id,
+            "data_inici": estada.data_inici,
+            "data_final": estada.data_final,
+            "matricula": estada.matricula_cotxe,
+            "zona": zona.tipus,
+            "carrer": zona.carrer,
+            "ciutat": zona.ciutat,
+            "preu": estada.preu,
+            "activa": estada.activa,
+            "image_car": image_link
+        })
+    dades.reverse()
+
+    return templates.TemplateResponse("historial.html", {
+        "request": request,
+        "estades": dades,
+        "user_id": user_id,
+        "user": usuari,
+        "client": client
+    })
+
+@app.post("/finalitzar-estada")
+async def finalitzar_estada(estada_id: int = Form(...), db: Session = Depends(get_db)):
+    estada = db.query(Estada).filter(Estada.id == estada_id).first()
+    if not estada:
+        raise HTTPException(status_code=404, detail="Estada no trobada")
+
+    estada.activa = False
+    db.commit()
+
+    return RedirectResponse(url="/historial", status_code=303)
+
+
 """
 @app.post("/guardar-zona")
 async def guardar_zona(nom: str = Form(...), coords: str = Form(...)):
@@ -258,3 +303,4 @@ async def guardar_zona(nom: str = Form(...), coords: str = Form(...)):
 
     return RedirectResponse(url="/mapa", status_code=303)
 """
+

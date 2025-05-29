@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Form, Request, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import Zona, Estada
+from app.models import Zona, Estada, Policia, Usuari, Client, Cotxe
 import json
 from fastapi.responses import RedirectResponse
+from app.session import get_user_from_cookie
+from fastapi.templating import Jinja2Templates
+templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter()
 

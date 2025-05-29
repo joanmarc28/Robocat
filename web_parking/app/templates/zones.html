@@ -11,7 +11,7 @@
         <div class="card" data-color="white">
           <div class="card-body">
             <div class="form-group">
-              <div class="col-12 btn-disabled btn-neutral btn-round2">Zones de Pagament</div>
+              <div class="col-12 btn-disabled titols">Zones de Pagament</div>
             </div>
             <div id="map" class="rounded" style="height: 500px; width: 100%;  border: 2px #94b9ff solid; "></div>
             <div class="mt-3 form-group">
@@ -162,7 +162,7 @@
       // 🔥 Dibuixa la nova zona al mapa
       const zona = result.zona;  // Assegura't que el backend retorna la zona nova amb coordenades
       const polygonCoords = JSON.parse(zona.coordenades).map(coord => ({ lat: coord.lat, lng: coord.lng }));
-      const color = zona.tipus === "blava" ? "#0000FF" :
+      const color = zona.tipus === "blava" ? "#009cff" :
         zona.tipus === "verda" ? "#00FF00" :
           zona.tipus === "taronja" ? "#FFA500" : "#FF0000";
 
@@ -263,7 +263,7 @@
       // 🔥 Dibuixa la nova zona al mapa
       const zona = result.zona;  // Assegura't que el backend retorna la zona nova amb coordenades
       const polygonCoords = JSON.parse(zona.coordenades).map(coord => ({ lat: coord.lat, lng: coord.lng }));
-      const color = zona.tipus === "blava" ? "#0000FF" :
+      const color = zona.tipus === "blava" ? "#009cff" :
         zona.tipus === "verda" ? "#00FF00" :
           zona.tipus === "taronja" ? "#FFA500" : "#FF0000";
 
@@ -412,7 +412,7 @@
           .then(zones => {
             zones.forEach(zona => {
               const polygonCoords = zona.coordenades.map(coord => ({ lat: coord.lat, lng: coord.lng }));
-              const color = zona.tipus === "blava" ? "#0000FF" :
+              const color = zona.tipus === "blava" ? "#009cff" :
                 zona.tipus === "verda" ? "#00FF00" :
                   zona.tipus === "taronja" ? "#FFA500" : "#FF0000";
 

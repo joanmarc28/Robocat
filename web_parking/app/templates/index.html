@@ -61,7 +61,7 @@
       .then(zones => {
         zones.forEach(zona => {
           const polygonCoords = zona.coordenades.map(coord => ({ lat: coord.lat, lng: coord.lng }));
-          const color = zona.tipus === "blava" ? "#0000FF" :
+          const color = zona.tipus === "blava" ? "#009cff" :
                         zona.tipus === "verda" ? "#00FF00" :
                         zona.tipus === "taronja" ? "#FFA500" : "#FF0000";
 

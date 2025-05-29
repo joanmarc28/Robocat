@@ -10,3 +10,5 @@ sqlalchemy
 psycopg2-binary
 alembic
 datetime
+google-cloud-speech
+google-generativeai
