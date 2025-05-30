@@ -7,7 +7,7 @@ I2C_BUS_GPS = 5
 
 # Pins de sensors, motors, etc.
 ULTRASONIC_TRIG = 8
-ULTRASONIC_ECHO = 7
+ULTRASONIC_ECHO = 23
 
 #SERVO_PIN_FRONT_LEFT = 17
 

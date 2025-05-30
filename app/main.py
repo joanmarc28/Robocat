@@ -1,7 +1,8 @@
 # main.py
 import threading
+from sensors.ultrasonic import ModulUltrasons
 from movement.motors import EstructuraPotes
-#from sensors.gps import read_gps, read_heading, read_gps_info
+from sensors.gps import thread_gps, thread_heading
 #from modes.human import prova
 from interface.display import display_message,clear_displays
 import config
@@ -51,14 +52,29 @@ def start_system():
             print(f"[ERROR] {e}")
             time.sleep(0.5)
 """
+def thread_ultrasons(ultrasons):
+    while True:
+        ultrasons.mesura_distancia_auto()
+        time.sleep(0.5)
 
 def main():
     # Loop principal
     estructura = EstructuraPotes()
     start_system()
-    """    t2 = threading.Thread(target=read_gps_info, args=(10))
-    t2.start()
-    t2.join()"""
+    ultrasons = ModulUltrasons()
+
+    t_ultra = threading.Thread(target=thread_ultrasons, args=(ultrasons,))
+    t_ultra.daemon = True
+    t_ultra.start()
+
+    t_compas = threading.Thread(target=thread_heading, args=())
+    t_compas.daemon = True
+    t_compas.start()
+
+    t_gps = threading.Thread(target=thread_gps, args=())
+    t_gps.daemon = True
+    t_gps.start()
+
     try:
         while True:
 

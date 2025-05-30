@@ -87,8 +87,19 @@ def read_gps_info():
             print(f"[ERROR] {e}")
             time.sleep(0.5)
 
-if __name__ == "__main__":
-    try:
-        read_gps_info()
-    except Exception as e:
-        print(f"[ERROR] {e}")
+def thread_gps():
+    while True:
+        print("🔍 Llegint GPS ...")
+        lat, lon = read_gps(timeout=10)
+
+        if lat is not None and lon is not None:
+            print(f"📍 Latitud: {lat:.6f}, Longitud: {lon:.6f}")
+        else:
+            print("❗️ Sense fix GPS actualment")
+        time.sleep(1)
+def thread_heading():
+    while True:
+        print("🔍 Llegint brúixola...")
+        heading = read_heading()
+        print(f"Bruixola: {heading:.1f}°")
+        time.sleep(1)

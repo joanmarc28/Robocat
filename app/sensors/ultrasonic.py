@@ -30,13 +30,8 @@ class ModulUltrasons:
         distance = (duration * 34300) / 2  # velocitat so = 34300 cm/s
 
         return distance
-
-try:
-    while True:
-        dist = ModulUltrasons().mesura_distancia
+    
+    def mesura_distancia_auto(self):
+        dist = self.mesura_distancia()
         print(f"Distància: {dist:.2f} cm")
-        time.sleep(1)
 
-except KeyboardInterrupt:
-    print("Sortint...")
-    GPIO.cleanup()

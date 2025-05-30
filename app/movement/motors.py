@@ -47,17 +47,17 @@ class EstructuraPotes:
     def __init__(self):
         # Cama - Cuixa
         #Pota Davant Esquerra
-        self.pota_davant_esquerra = Pota(servos[13], servos[12], {
+        self.pota_davant_esquerra = Pota(servos[12], servos[13], {
             "prova": (0, 180),
             "lower": (180, 180),
             "normal": (130, 120),
-            "up": (100, 160),
+            "up": (100, 165),
             "strech": (130, 120),
             "step_1": (100, 100),  # avança
             "step_2": (160, 140)   # recull
         })
 
-        self.pota_darrera_esquerra = Pota(servos[5], servos[4], {
+        self.pota_darrera_esquerra = Pota(servos[6], servos[7], {
             "prova": (0, 180),
             "lower": (180, 180),
             "normal": (130, 120),
@@ -67,21 +67,21 @@ class EstructuraPotes:
             "step_2": (160, 140)
         })
 
-        self.pota_darrera_dreta = Pota(servos[1], servos[0], {
+        self.pota_darrera_dreta = Pota(servos[2], servos[3], {
             "prova": (180, 0),
             "lower": (0, 0),
             "normal": (50, 60),
-            "up": (80, 20),
+            "up": (70, 20),
             "strech": (80, 20),
             "step_1": (80, 80),
             "step_2": (20, 40)
         })
 
-        self.pota_davant_dreta = Pota(servos[9], servos[8], {
+        self.pota_davant_dreta = Pota(servos[10], servos[11], {
             "prova": (180, 0),
             "lower": (0, 0),
             "normal": (30, 50),
-            "up": (70, 20),
+            "up": (60, 20),
             "strech": (30, 50),
             "step_1": (60, 70),
             "step_2": (0, 30)
