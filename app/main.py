@@ -13,14 +13,15 @@ from multiprocessing import Process
 
 def start_system(mode, ultrasons=None, heading=None, gps=None):
     """Inicia el sistema Robocat, comprova la connexió a Internet i els sistemes bàsics."""
+    temps=0.5
     clear_displays()  # Esborrem la pantalla i el buffer
 
     display_message("Loading Robocat ........")
-    time.sleep(0.1)
+    time.sleep(temps)
     display_message(f"Actual Mode: {mode}")
-    time.sleep(0.1)
+    time.sleep(temps)
     display_message(f"Checking Systems ........")
-    time.sleep(0.1)
+    time.sleep(temps)
 
     errors = 0
 
@@ -30,7 +31,7 @@ def start_system(mode, ultrasons=None, heading=None, gps=None):
     else:
         display_message(f"  Internet ..... Fail")
         errors += 1
-    time.sleep(0.1)
+    time.sleep(temps)
 
     # Check Ultrasons
     if ultrasons and ultrasons.mesura_distancia():
@@ -38,33 +39,33 @@ def start_system(mode, ultrasons=None, heading=None, gps=None):
     else:
         display_message(f"  Ultrasons ..... Fail")
         errors += 1
-    time.sleep(0.1)
+    time.sleep(temps)
 
     # Check Ultrasons
     if heading:
         display_message(f"  Heading ..... ok")
     else:
         display_message(f"  Heading ..... Fail")
-        errors += 1
-    time.sleep(0.1)
+        #errors += 1
+    time.sleep(temps)
 
     # Check Ultrasons
     if gps:
         display_message(f"  GPS ..... ok")
     else:
         display_message(f"  GPS ..... Not Found")
-        errors += 1
-    time.sleep(0.1)
+        #errors += 1
+    time.sleep(temps)
 
     # Summary
     if errors == 0:
         display_message(f"All Systems Ready")
-        time.sleep(0.1)
+        time.sleep(temps)
         display_message(f"Welcome ")
         return True
     else:
         display_message(f"Errors Found: {errors}")
-        time.sleep(0.1)
+        time.sleep(temps)
         display_message(f"Please Check")
         return False
 
@@ -114,10 +115,10 @@ def main():
         estructura = None
 
     # Aquí comprovem si hi ha errors
-    system_ok = start_system(config.DEFAULT_MODE, ultrasons, None, None)
+    """system_ok = start_system(config.DEFAULT_MODE, ultrasons, None, None)
     if not system_ok:
         print("Errors crítics detectats. Aturant el sistema.")
-        return  # surt del main
+        return  # surt del main"""
 
     t_ultra = threading.Thread(target=thread_ultrasons, args=(ultrasons,))
     t_ultra.daemon = True
@@ -132,6 +133,44 @@ def main():
     t_gps.start()
 
     try:
+        while True:
+            """print("🔄 Executant moviment Ajupir ...")
+            estructura.ajupir()
+            time.sleep(0.5)
+
+            print("🔄 Executant moviment normal 90graus...")
+            estructura.moure_4_potes("normal", 0.3)
+            time.sleep(0.5)
+
+            print("🔄 Executant moviment up...")
+            estructura.moure_4_potes("up", 0.3)
+            time.sleep(0.5)
+
+            print("🔄 Executant moviment strech...")
+            estructura.moure_4_potes("strech", 0.3)
+            time.sleep(0.5)"""
+
+            print("🔄 Executant moviment up...")
+            estructura.moure_4_potes("up", 0.1)
+            time.sleep(0.05)
+
+            print("🔄 Executant moviment Caminant_1...")
+            estructura.caminar_1()
+            time.sleep(0.05)
+
+            print("🔄 Executant moviment up...")
+            estructura.moure_4_potes("up", 0.1)
+            time.sleep(0.05)
+
+            print("🔄 Executant moviment Caminant_2...")
+            estructura.caminar_2()
+            time.sleep(0.05)
+
+
+    except KeyboardInterrupt:
+        print("🛑 Aturat per teclat (Ctrl+C).")
+
+    """    try:
         while True:
             time.sleep(0.5)
             print("🔄 Iniciant moviment de les potes...")
@@ -149,7 +188,7 @@ def main():
             #print("✅ Moviment de les potes completat.")
             #time.sleep(1)
     except KeyboardInterrupt:
-        print("🛑 Aturat per teclat.")
+        print("🛑 Aturat per teclat.")"""
 
 
 if __name__ == "__main__":

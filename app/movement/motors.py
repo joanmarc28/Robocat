@@ -56,8 +56,8 @@ class EstructuraPotes:
             "normal": (130, 120),
             "up": (100, 165),
             "strech": (130, 120),
-            "step_1": (100, 100),  # avança
-            "step_2": (160, 140)   # recull
+            "step_1": (70, 120),
+            "step_2": (100, 165)
         })
 
         self.pota_darrera_esquerra = Pota(servos[6], servos[7], {
@@ -66,8 +66,8 @@ class EstructuraPotes:
             "normal": (130, 120),
             "up": (100, 160),
             "strech": (100, 160),
-            "step_1": (100, 100),
-            "step_2": (160, 140)
+            "step_1": (70, 165),
+            "step_2": (70, 120)
         })
 
         self.pota_darrera_dreta = Pota(servos[2], servos[3], {
@@ -76,8 +76,8 @@ class EstructuraPotes:
             "normal": (50, 60),
             "up": (70, 20),
             "strech": (80, 20),
-            "step_1": (80, 80),
-            "step_2": (20, 40)
+            "step_1": (50, 60),
+            "step_2": (70, 20)
         })
 
         self.pota_davant_dreta = Pota(servos[10], servos[11], {
@@ -86,8 +86,8 @@ class EstructuraPotes:
             "normal": (30, 50),
             "up": (60, 20),
             "strech": (30, 50),
-            "step_1": (60, 70),
-            "step_2": (0, 30)
+            "step_1": (40, 20),
+            "step_2": (90, 50)
         })
 
         self.potes = [
@@ -99,9 +99,9 @@ class EstructuraPotes:
     def moure(self, estat, duracio=1):
         """Mou totes les potes a un estat concret."""
         # Protecio de distància
-        if self.ultrasons and self.ultrasons.mesura_distancia() < config.LLINDAR_ULTRASONIC:
+        """if self.ultrasons and self.ultrasons.mesura_distancia() < config.LLINDAR_ULTRASONIC:
             print("🚨 Distància perillosa detectada, no es mouen les potes!")
-            return
+            return"""
 
         for pota in self.potes:
             pota.canvia_estat(estat, duracio)
@@ -110,9 +110,9 @@ class EstructuraPotes:
     def moure_4_potes(self,estat, duracio):
         """Mou totes les potes a un estat concret en paral·lel."""
         # Protecio de distància
-        if self.ultrasons and self.ultrasons.mesura_distancia() < config.LLINDAR_ULTRASONIC:
+        """        if self.ultrasons and self.ultrasons.mesura_distancia() < config.LLINDAR_ULTRASONIC:
             print("🚨 Distància perillosa detectada, no es mouen les potes!")
-            return
+            return"""
         
         threads = []
         """ for pota in potes:
@@ -152,20 +152,34 @@ class EstructuraPotes:
         time.sleep(duracio)
         self.pota_davant_dreta.canvia_estat("normal", duracio)
 
-    def caminar_1(estructura, duracio=0.5):
+    def caminar_1(self, duracio=0.5):
         print("🔄 Pas 1: aixecant davant esquerra + darrere dreta")
-        t1 = threading.Thread(target=estructura.pota_darrera_dreta.canvia_estat, args=("step_1", duracio))
-        t2 = threading.Thread(target=estructura.pota_darrera_esquerra.canvia_estat, args=("step_1", duracio))
+        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_1", duracio))
         t1.start()
-        t2.start()
         t1.join()
+        t1 = threading.Thread(target=self.pota_davant_dreta.canvia_estat, args=("step_1", duracio))
+        t1.start()
+        t1.join()
+        """t2 = threading.Thread(target=self.pota_darrera_dreta.canvia_estat, args=("step_1", duracio))
+        t2.start()
         t2.join()
-
-"""        t1 = threading.Thread(target=estructura.pota_darrera_dreta.canvia_estat, args=("step_2", duracio))
-        t2 = threading.Thread(target=estructura.pota_darrera_esquerra.canvia_estat, args=("step_2", duracio))
-        t1.start()
+        t2 = threading.Thread(target=self.pota_darrera_esquerra.canvia_estat, args=("step_1", duracio))
         t2.start()
+        t2.join()"""
+
+    def caminar_2(self, duracio=0.5):
+        print("🔄 Pas 1: aixecant davant esquerra + darrere dreta")
+        t1 = threading.Thread(target=self.pota_davant_dreta.canvia_estat, args=("step_2", duracio))
+        t1.start()
         t1.join()
+        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_2", duracio))
+        t1.start()
+        t1.join()
+        """t2 = threading.Thread(target=self.pota_darrera_esquerra.canvia_estat, args=("step_2", duracio))
+        t2.start()
+        t2.join()
+        t2 = threading.Thread(target=self.pota_darrera_dreta.canvia_estat, args=("step_2", duracio))
+        t2.start()
         t2.join()"""
 
 
