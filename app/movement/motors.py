@@ -153,6 +153,7 @@ class EstructuraPotes:
         t1.join()
         t2.join()"""
 
+
 # Moviment suau (simula velocitat)
 def moure_suau(servo, angle_inicial, angle_final, duracio, passos=30):
     pas = (angle_final - angle_inicial) / passos

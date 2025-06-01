@@ -11,7 +11,6 @@ from luma.oled.device import ssd1306
 WIDTH = config.OLED_WIDTH
 HEIGHT = config.OLED_HEIGHT
 
-
 serial = i2c(port=config.I2C_BUS_OLED_LEFT, address=0x3C)
 left_eye = ssd1306(serial, width=config.OLED_WIDTH, height=config.OLED_HEIGHT)
 
@@ -22,16 +21,39 @@ right_eye = ssd1306(serial2, width=config.OLED_WIDTH, height=config.OLED_HEIGHT)
 image = Image.new("1", (WIDTH, HEIGHT))
 draw = ImageDraw.Draw(image)
 
+# Calcula quantes línies caben segons altura i mida de lletra (~10 px per línia)
+MAX_LINES = HEIGHT // 10
+
+# Guarda les línies que es mostraran
+line_cache = []
+
 def clear_displays():
     draw.rectangle((0, 0, WIDTH, HEIGHT), outline=0, fill=0)
     left_eye.display(image)    
     right_eye.display(image)
 
-def display_message(text, line=0):
-    y = line * 10
-    draw.text((0, y), text, fill=255)
+def display_message(text):
+    global line_cache
+
+    # Afegeix la nova línia al final
+    line_cache.append(text)
+
+    # Si tenim més línies del que cap, elimina les més antigues
+    if len(line_cache) > MAX_LINES:
+        line_cache = line_cache[-MAX_LINES:]
+
+    # Esborra la imatge
+    draw.rectangle((0, 0, WIDTH, HEIGHT), outline=0, fill=0)
+
+    # Escriu totes les línies del buffer
+    for i, line in enumerate(line_cache):
+        y = i * 10
+        draw.text((0, y), line, fill=255)
+
+    # Actualitza les dues pantalles
     left_eye.display(image)
     right_eye.display(image)
+
 
 
 def show_frames(carpeta_frames):

@@ -97,6 +97,7 @@ def thread_gps():
         else:
             print("❗️ Sense fix GPS actualment")
         time.sleep(1)
+        
 def thread_heading():
     while True:
         print("🔍 Llegint brúixola...")

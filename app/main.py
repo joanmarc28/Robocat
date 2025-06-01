@@ -11,21 +11,60 @@ from utils.helpers import check_internet
 from multiprocessing import Process
 
 
-def start_system():
-    display_message("Loading Robocat ........", line=0)
-    time.sleep(0.5)
-    display_message(f"Actual Mode: {config.DEFAULT_MODE}", line=1)
-    time.sleep(0.5)
-    display_message(f"Checking Systems ........", line=2)
-    time.sleep(0.5)
+def start_system(mode, ultrasons=None, heading=None, gps=None):
+    """Inicia el sistema Robocat, comprova la connexió a Internet i els sistemes bàsics."""
+    clear_displays()  # Esborrem la pantalla i el buffer
+
+    display_message("Loading Robocat ........")
+    time.sleep(0.1)
+    display_message(f"Actual Mode: {mode}")
+    time.sleep(0.1)
+    display_message(f"Checking Systems ........")
+    time.sleep(0.1)
+
+    errors = 0
+
+    # Check Internet Connection
     if check_internet():
-        display_message(f"Internet ..... ok", line=3)
+        display_message(f"  Internet ..... ok")
     else:
-        display_message(f"Internet ..... Fail", line=3)
-    time.sleep(0.5)
-    display_message(f"All Systems Ready", line=4)
-    time.sleep(0.5)
-    display_message(f"Welcome ", line=5)
+        display_message(f"  Internet ..... Fail")
+        errors += 1
+    time.sleep(0.1)
+
+    # Check Ultrasons
+    if ultrasons and ultrasons.mesura_distancia():
+        display_message(f"  Ultrasons ..... ok")
+    else:
+        display_message(f"  Ultrasons ..... Fail")
+        errors += 1
+    time.sleep(0.1)
+
+    # Check Ultrasons
+    if heading:
+        display_message(f"  Heading ..... ok")
+    else:
+        display_message(f"  Heading ..... Fail")
+        errors += 1
+    time.sleep(0.1)
+
+    # Check Ultrasons
+    if gps:
+        display_message(f"  GPS ..... ok")
+    else:
+        display_message(f"  GPS ..... Not Found")
+        errors += 1
+    time.sleep(0.1)
+
+    # Summary
+    if errors == 0:
+        display_message(f"All Systems Ready")
+        time.sleep(0.1)
+        display_message(f"Welcome ")
+    else:
+        display_message(f"Errors Found: {errors}")
+        time.sleep(0.1)
+        display_message(f"Please Check")
 
 """def altres():
     start_system()
@@ -59,9 +98,21 @@ def thread_ultrasons(ultrasons):
 
 def main():
     # Loop principal
-    estructura = EstructuraPotes()
-    start_system()
-    ultrasons = ModulUltrasons()
+    
+    try:
+        ultrasons = ModulUltrasons()
+    except Exception as e:
+        print(f"[ERROR] No s'ha pogut inicialitzar el mòdul d'ultrasons: {e}")
+        ultrasons = None
+    
+    try:
+        estructura = EstructuraPotes()
+    except Exception as e:
+        print(f"[ERROR] No s'ha pogut inicialitzar els Motors: {e}")
+        estructura = None
+
+    start_system(config.DEFAULT_MODE,ultrasons, None, None)
+
 
     t_ultra = threading.Thread(target=thread_ultrasons, args=(ultrasons,))
     t_ultra.daemon = True
@@ -77,7 +128,6 @@ def main():
 
     try:
         while True:
-
             time.sleep(0.5)
             print("🔄 Iniciant moviment de les potes...")
             estructura.ajupir()
