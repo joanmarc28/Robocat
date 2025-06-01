@@ -10,6 +10,7 @@ ULTRASONIC_TRIG = 8
 ULTRASONIC_ECHO = 23
 
 #SERVO_PIN_FRONT_LEFT = 17
+LLINDAR_ULTRASONIC = 10  # Distància mínima per activar l'alerta d'obstacle
 
 # Pantalla OLED
 OLED_WIDTH = 128

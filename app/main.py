@@ -61,10 +61,12 @@ def start_system(mode, ultrasons=None, heading=None, gps=None):
         display_message(f"All Systems Ready")
         time.sleep(0.1)
         display_message(f"Welcome ")
+        return True
     else:
         display_message(f"Errors Found: {errors}")
         time.sleep(0.1)
         display_message(f"Please Check")
+        return False
 
 """def altres():
     start_system()
@@ -106,13 +108,16 @@ def main():
         ultrasons = None
     
     try:
-        estructura = EstructuraPotes()
+        estructura = EstructuraPotes(ultrasons)
     except Exception as e:
         print(f"[ERROR] No s'ha pogut inicialitzar els Motors: {e}")
         estructura = None
 
-    start_system(config.DEFAULT_MODE,ultrasons, None, None)
-
+    # Aquí comprovem si hi ha errors
+    system_ok = start_system(config.DEFAULT_MODE, ultrasons, None, None)
+    if not system_ok:
+        print("Errors crítics detectats. Aturant el sistema.")
+        return  # surt del main
 
     t_ultra = threading.Thread(target=thread_ultrasons, args=(ultrasons,))
     t_ultra.daemon = True

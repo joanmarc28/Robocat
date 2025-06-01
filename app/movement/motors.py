@@ -1,10 +1,12 @@
 import time
+import config
 import board
 import busio
 import numpy as np
 from adafruit_pca9685 import PCA9685
 from adafruit_motor import servo
 import threading
+from sensors.ultrasonic import ModulUltrasons
 
 # Inicialització del bus I2C i la controladora PCA9685
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -44,7 +46,8 @@ class Pota:
 
 class EstructuraPotes:
     """Classe per gestionar les potes del quadrúpede."""
-    def __init__(self):
+    def __init__(self,ultrasons=None):
+        self.ultrasons = ultrasons
         # Cama - Cuixa
         #Pota Davant Esquerra
         self.pota_davant_esquerra = Pota(servos[12], servos[13], {
@@ -94,11 +97,23 @@ class EstructuraPotes:
             self.pota_davant_dreta
         ]
     def moure(self, estat, duracio=1):
+        """Mou totes les potes a un estat concret."""
+        # Protecio de distància
+        if self.ultrasons and self.ultrasons.mesura_distancia() < config.LLINDAR_ULTRASONIC:
+            print("🚨 Distància perillosa detectada, no es mouen les potes!")
+            return
+
         for pota in self.potes:
             pota.canvia_estat(estat, duracio)
 
     # Funció per moure totes les potes en paral·lel
     def moure_4_potes(self,estat, duracio):
+        """Mou totes les potes a un estat concret en paral·lel."""
+        # Protecio de distància
+        if self.ultrasons and self.ultrasons.mesura_distancia() < config.LLINDAR_ULTRASONIC:
+            print("🚨 Distància perillosa detectada, no es mouen les potes!")
+            return
+        
         threads = []
         """ for pota in potes:
             t = threading.Thread(target=pota.canvia_estat, args=(estat, duracio))
