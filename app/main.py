@@ -1,10 +1,10 @@
 # main.py
 import threading
 from sensors.ultrasonic import ModulUltrasons
-from movement.motors import EstructuraPotes
+from movement.motors import EstructuraPotes,set_servo_angle,PotaIK
 from sensors.gps import thread_gps, thread_heading
 #from modes.human import prova
-from interface.display import display_message,clear_displays
+#from interface.display import display_message,clear_displays
 import config
 import time
 from utils.helpers import check_internet
@@ -131,9 +131,19 @@ def main():
     t_gps = threading.Thread(target=thread_gps, args=())
     t_gps.daemon = True
     t_gps.start()
-
+    
+    """t_gps = threading.Thread(target=prova, args=())
+    t_gps.daemon = True
+    t_gps.start()"""
+    
     try:
         while True:
+            """time.sleep(0.5)
+            set_servo_angle(0,50)
+            time.sleep(0.5)
+            set_servo_angle(0,90)
+            time.sleep(0.5)
+            set_servo_angle(0,130)"""
             """print("🔄 Executant moviment Ajupir ...")
             estructura.ajupir()
             time.sleep(0.5)
@@ -150,21 +160,28 @@ def main():
             estructura.moure_4_potes("strech", 0.3)
             time.sleep(0.5)"""
 
-            print("🔄 Executant moviment up...")
+            """print("🔄 Executant moviment up...")
             estructura.moure_4_potes("up", 0.1)
-            time.sleep(0.05)
+            time.sleep(0.05)"""
 
-            print("🔄 Executant moviment Caminant_1...")
+            """print("🔄 Executant moviment Caminant_1...")
             estructura.caminar_1()
-            time.sleep(0.05)
+            time.sleep(0.05)"""
 
-            print("🔄 Executant moviment up...")
-            estructura.moure_4_potes("up", 0.1)
-            time.sleep(0.05)
+            # Ex: longituds de la cuixa i cama en mm o cm segons el teu robot
+            pota_davant_esquerra = PotaIK(12, 13, None, L1=12, L2=9, invertir_cadera=True, invertir_genoll=True)
+            pota_darrera_esquerra = PotaIK(6, 7, None, L1=12, L2=9, invertir_cadera=True, invertir_genoll=True)
+            pota_darrera_dreta = PotaIK(2, 3, None, L1=12, L2=9, invertir_cadera=False, invertir_genoll=False)
+            pota_davant_dreta = PotaIK(10, 11, None, L1=12, L2=9, invertir_cadera=False, invertir_genoll=False)
 
-            print("🔄 Executant moviment Caminant_2...")
-            estructura.caminar_2()
-            time.sleep(0.05)
+            # Moure el peu a (x=10, y=5) controlant tota la pota
+
+            pota_davant_esquerra.moure_ik(6, 2, duracio=0.1, part='tot')
+            pota_darrera_esquerra.moure_ik(6, 2, duracio=0.1, part='tot')
+            pota_darrera_dreta.moure_ik(6, 2, duracio=0.1, part='tot')
+            pota_davant_dreta.moure_ik(6, 2, duracio=0.1, part='tot')
+            time.sleep(0.5)
+
 
 
     except KeyboardInterrupt:

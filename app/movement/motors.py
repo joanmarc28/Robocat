@@ -1,3 +1,4 @@
+import math
 import time
 import config
 import board
@@ -19,7 +20,7 @@ for i in range(16):
     s = servo.Servo(pca.channels[i], min_pulse=500, max_pulse=2500)
     servos.append(s)
 
-class Pota:
+"""class Pota:
     def __init__(self, cadera, genoll,estats):
         self.cadera = cadera
         self.genoll = genoll
@@ -42,7 +43,43 @@ class Pota:
         if estat not in self.estats:
             raise ValueError(f"[ERROR] Estat '{estat}' no definit per la pota.")
         angle_cadera, angle_genoll = self.estats[estat]
+        self.moure_a_parts_cama(angle_cadera, angle_genoll, duracio)"""
+class Pota:
+    def __init__(self, cadera, genoll, estats, invertir_cadera=False, invertir_genoll=False):
+        self.cadera = cadera
+        self.genoll = genoll
+        self.estats = estats
+        self.invertir_cadera = invertir_cadera
+        self.invertir_genoll = invertir_genoll
+
+    def aplica_inversio(self, angle, invertir):
+        return 180 - angle if invertir else angle
+
+    def moure_a_la_vegada_cama(self, angle_cadera, angle_genoll, duracio=1):
+        angle_cadera = self.aplica_inversio(angle_cadera, self.invertir_cadera)
+        angle_genoll = self.aplica_inversio(angle_genoll, self.invertir_genoll)
+
+        t1 = threading.Thread(target=moure_suau, args=(self.genoll, self.genoll.angle or 90, angle_genoll, duracio))
+        t1.start()
+        t1.join()
+
+        t2 = threading.Thread(target=moure_suau, args=(self.cadera, self.cadera.angle or 90, angle_cadera, duracio))
+        t2.start()
+        t2.join()
+     
+    def moure_a_parts_cama(self, angle_cadera, angle_genoll, duracio=1):
+        angle_cadera = self.aplica_inversio(angle_cadera, self.invertir_cadera)
+        angle_genoll = self.aplica_inversio(angle_genoll, self.invertir_genoll)
+
+        moure_suau(self.genoll, self.genoll.angle or 90, angle_genoll, duracio)
+        moure_suau(self.cadera, self.cadera.angle or 90, angle_cadera, duracio)
+
+    def canvia_estat(self, estat, duracio=1):
+        if estat not in self.estats:
+            raise ValueError(f"[ERROR] Estat '{estat}' no definit per la pota.")
+        angle_cadera, angle_genoll = self.estats[estat]
         self.moure_a_parts_cama(angle_cadera, angle_genoll, duracio)
+
 
 class EstructuraPotes:
     """Classe per gestionar les potes del quadrúpede."""
@@ -56,8 +93,12 @@ class EstructuraPotes:
             "normal": (130, 120),
             "up": (100, 165),
             "strech": (130, 120),
-            "step_1": (70, 120),
-            "step_2": (100, 165)
+            "step_1": (120, 160),
+            "step_2": (100, 165),
+            "step_3": (100, 165),
+            "step_4": (100, 165),
+            "step_5": (100, 165),
+            "step_6": (100, 165)
         })
 
         self.pota_darrera_esquerra = Pota(servos[6], servos[7], {
@@ -66,8 +107,12 @@ class EstructuraPotes:
             "normal": (130, 120),
             "up": (100, 160),
             "strech": (100, 160),
-            "step_1": (70, 165),
-            "step_2": (70, 120)
+            "step_1": (100, 160),
+            "step_2": (100, 160),
+            "step_3": (100, 160),
+            "step_4": (100, 160),
+            "step_5": (100, 160),
+            "step_6": (100, 160)
         })
 
         self.pota_darrera_dreta = Pota(servos[2], servos[3], {
@@ -76,8 +121,12 @@ class EstructuraPotes:
             "normal": (50, 60),
             "up": (70, 20),
             "strech": (80, 20),
-            "step_1": (50, 60),
-            "step_2": (70, 20)
+            "step_1": (70, 20),
+            "step_2": (70, 20),
+            "step_3": (70, 20),
+            "step_4": (70, 20),
+            "step_5": (70, 20),
+            "step_6": (70, 20)
         })
 
         self.pota_davant_dreta = Pota(servos[10], servos[11], {
@@ -86,8 +135,12 @@ class EstructuraPotes:
             "normal": (30, 50),
             "up": (60, 20),
             "strech": (30, 50),
-            "step_1": (40, 20),
-            "step_2": (90, 50)
+            "step_1": (60, 20),
+            "step_2": (60, 20),
+            "step_3": (60, 20),
+            "step_4": (60, 20),
+            "step_5": (60, 20),
+            "step_6": (60, 20)
         })
 
         self.potes = [
@@ -157,7 +210,19 @@ class EstructuraPotes:
         t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_1", duracio))
         t1.start()
         t1.join()
-        t1 = threading.Thread(target=self.pota_davant_dreta.canvia_estat, args=("step_1", duracio))
+        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_2", duracio))
+        t1.start()
+        t1.join()
+        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_3", duracio))
+        t1.start()
+        t1.join()
+        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_4", duracio))
+        t1.start()
+        t1.join()
+        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_5", duracio))
+        t1.start()
+        t1.join()
+        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_6", duracio))
         t1.start()
         t1.join()
         """t2 = threading.Thread(target=self.pota_darrera_dreta.canvia_estat, args=("step_1", duracio))
@@ -217,3 +282,50 @@ def sweep_servo(index, delay=0.01):
     for angle in range(180, -1, -1):
         servos[index].angle = angle
         time.sleep(delay)
+
+
+
+
+
+
+
+        
+class PotaIK(Pota):
+    def __init__(self, cadera, genoll, estats, L1, L2, invertir_cadera, invertir_genoll):
+        super().__init__(servos[cadera], servos[genoll], estats, invertir_cadera, invertir_genoll)
+        self.L1 = L1  # Longitud cuixa
+        self.L2 = L2  # Longitud cama
+
+    def calcula_angles_ik(self, x, y):
+        D = math.hypot(x, y)
+        if D > (self.L1 + self.L2):
+            raise ValueError("El punt està fora de l'abast de la pota!")
+
+        # Calcula valor del cosinus
+        cos_angle_genoll = (self.L1**2 + self.L2**2 - D**2) / (2 * self.L1 * self.L2)
+        cos_angle_genoll = max(-1, min(1, cos_angle_genoll))  # Clamp
+        
+        angle_genoll = math.acos(cos_angle_genoll)
+        angle_genoll_deg = math.degrees(angle_genoll)
+
+        angle_a = math.atan2(y, x)
+        cos_angle_b = (D**2 + self.L1**2 - self.L2**2) / (2 * self.L1 * D)
+        cos_angle_b = max(-1, min(1, cos_angle_b))  # Clamp
+
+        angle_b = math.acos(cos_angle_b)
+        angle_cuixa_deg = math.degrees(angle_a + angle_b)
+
+        return angle_cuixa_deg, angle_genoll_deg
+
+
+    def moure_ik(self, x, y, duracio=1, part='tot'):
+        angle_cuixa, angle_genoll = self.calcula_angles_ik(x, y)
+
+        if part == 'tot':
+            self.moure_a_parts_cama(angle_cuixa, angle_genoll, duracio)
+        elif part == 'cuixa':
+            self.moure_a_parts_cama(angle_cuixa, self.genoll.angle or 90, duracio)
+        elif part == 'cama':
+            self.moure_a_parts_cama(self.cadera.angle or 90, angle_genoll, duracio)
+        else:
+            raise ValueError("Part desconeguda, usa 'tot', 'cuixa' o 'cama'.")
