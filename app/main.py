@@ -16,7 +16,8 @@ import websockets
 import json
 import socket
 import random
-
+# Variable global per accedir a l'estructura de potes
+estructura = None
 
 def start_system(mode, ultrasons=None, heading=None, gps=None):
     """Inicia el sistema Robocat, comprova la connexió a Internet i els sistemes bàsics."""
@@ -108,20 +109,34 @@ def thread_ultrasons(ultrasons):
         telemetria_data["dist"] = dist
         time.sleep(0.5)
 
+# Funció per inicialitzar tot el sistema físic
 def main():
     # Loop principal
-    
+    global estructura
+
     try:
         ultrasons = ModulUltrasons()
     except Exception as e:
-        print(f"[ERROR] No s'ha pogut inicialitzar el mòdul d'ultrasons: {e}")
+        print(f"[ERROR] Ultrasons: {e}")
         ultrasons = None
-    
+
     try:
         estructura = EstructuraPotes(ultrasons)
     except Exception as e:
-        print(f"[ERROR] No s'ha pogut inicialitzar els Motors: {e}")
+        print(f"[ERROR] Motors: {e}")
         estructura = None
+
+    # Threads sensors
+    if ultrasons:
+        t_ultra = threading.Thread(target=thread_ultrasons, args=(ultrasons,), daemon=True)
+        t_ultra.start()
+
+    t_compas = threading.Thread(target=thread_heading, daemon=True)
+    t_compas.start()
+
+    t_gps = threading.Thread(target=thread_gps, daemon=True)
+    t_gps.start()
+
 
     # Aquí comprovem si hi ha errors
     """system_ok = start_system(config.DEFAULT_MODE, ultrasons, None, None)
@@ -178,7 +193,7 @@ def main():
             time.sleep(0.05)"""
 
             # Ex: longituds de la cuixa i cama en mm o cm segons el teu robot
-            pota_davant_esquerra = PotaIK(12, 13, None, L1=12, L2=9, invertir_cadera=True, invertir_genoll=True)
+            """pota_davant_esquerra = PotaIK(12, 13, None, L1=12, L2=9, invertir_cadera=True, invertir_genoll=True)
             pota_darrera_esquerra = PotaIK(6, 7, None, L1=12, L2=9, invertir_cadera=True, invertir_genoll=True)
             pota_darrera_dreta = PotaIK(2, 3, None, L1=12, L2=9, invertir_cadera=False, invertir_genoll=False)
             pota_davant_dreta = PotaIK(10, 11, None, L1=12, L2=9, invertir_cadera=False, invertir_genoll=False)
@@ -189,7 +204,7 @@ def main():
             pota_darrera_esquerra.moure_ik(6, 2, duracio=0.1, part='tot')
             pota_darrera_dreta.moure_ik(6, 2, duracio=0.1, part='tot')
             pota_davant_dreta.moure_ik(6, 2, duracio=0.1, part='tot')
-            time.sleep(0.5)
+            time.sleep(0.5)"""
 
 
 
@@ -216,7 +231,7 @@ def main():
     except KeyboardInterrupt:
         print("🛑 Aturat per teclat.")"""
 
-# Simular dades de telemetria (pots substituir-ho per sensors reals)
+# Enviar dades reals de telemetria
 def obtenir_telemetria():
     return {
         "robot_id": config.ROBOT_ID,
@@ -227,24 +242,41 @@ def obtenir_telemetria():
         "dist": telemetria_data.get("dist", 0)
     }
 
-# Executar WebSocket
+# Connectar amb servidor i escoltar comandes
 async def connectar():
-    uri = f"ws://{config.SERVER_IP}:{config.SERVER_PORT}/ws/telemetria"
+    uri = f"wss://{config.SERVER_IP}/ws/telemetria"
+    global estructura
     try:
         async with websockets.connect(uri) as websocket:
             print("✅ Connectat al servidor")
             while True:
-                # Enviar dades cada 0.5s
                 dades = obtenir_telemetria()
                 await websocket.send(json.dumps(dades))
                 print("📤 Enviat:", dades)
 
-                # Esperar comandes (no bloquejant)
                 try:
                     resposta = await asyncio.wait_for(websocket.recv(), timeout=0.5)
                     comanda = json.loads(resposta)
                     print("📥 Comanda rebuda:", comanda)
-                    # Aquí crides funcions reals per moure motors
+
+                    if estructura:
+                        accio = comanda.get("moviment")
+                        if accio == "ajupir":
+                            estructura.ajupir()
+                            time.sleep(0.5)
+                        elif accio == "endavant":
+                            estructura.caminar_1()
+                            time.sleep(0.5)
+                        elif accio == "normal":
+                            estructura.moure_4_potes("normal", 0.3)
+                            time.sleep(0.5)
+                        elif accio == "up":
+                            estructura.moure_4_potes("up", 0.3)
+                            time.sleep(0.5)
+                        elif accio == "strech":
+                            estructura.moure_4_potes("strech", 0.3)
+                            time.sleep(0.5)
+
                 except asyncio.TimeoutError:
                     pass
     except Exception as e:
@@ -252,7 +284,8 @@ async def connectar():
         await asyncio.sleep(5)
         await connectar()
 
+# Llançar `main()` i WebSocket en paral·lel
 if __name__ == "__main__":
+    threading.Thread(target=main, daemon=True).start()
     asyncio.run(connectar())
-    main()
-    
+

@@ -2,7 +2,6 @@
 
 ROBOT_ID = "robocat001"  # Canvia si tens múltiples robots
 SERVER_IP = "robocat.jmprojects.cat"  # IP del servidor web (on hi ha FastAPI)
-SERVER_PORT = 80
 
 # I2C pins 
 I2C_BUS_OLED_LEFT = 3
