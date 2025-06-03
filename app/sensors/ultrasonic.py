@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 import config
-
+from telemetria_shared import telemetria_data
 
 class ModulUltrasons:
     """Classe per gestionar les potes del quadrúpede."""

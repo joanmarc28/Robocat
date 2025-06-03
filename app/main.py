@@ -7,8 +7,15 @@ from sensors.gps import thread_gps, thread_heading
 #from interface.display import display_message,clear_displays
 import config
 import time
-from utils.helpers import check_internet
+from utils.helpers import check_internet,get_local_ip
 from multiprocessing import Process
+
+from telemetria_shared import telemetria_data
+import asyncio
+import websockets
+import json
+import socket
+import random
 
 
 def start_system(mode, ultrasons=None, heading=None, gps=None):
@@ -97,6 +104,8 @@ def start_system(mode, ultrasons=None, heading=None, gps=None):
 def thread_ultrasons(ultrasons):
     while True:
         ultrasons.mesura_distancia_auto()
+        dist = ultrasons.mesura_distancia()
+        telemetria_data["dist"] = dist
         time.sleep(0.5)
 
 def main():
@@ -207,6 +216,43 @@ def main():
     except KeyboardInterrupt:
         print("🛑 Aturat per teclat.")"""
 
+# Simular dades de telemetria (pots substituir-ho per sensors reals)
+def obtenir_telemetria():
+    return {
+        "robot_id": config.ROBOT_ID,
+        "ip": get_local_ip(),
+        "lat": telemetria_data.get("lat", 0.0),
+        "lon": telemetria_data.get("lon", 0.0),
+        "heading": telemetria_data.get("heading", 0.0),
+        "dist": telemetria_data.get("dist", 0)
+    }
+
+# Executar WebSocket
+async def connectar():
+    uri = f"ws://{config.SERVER_IP}:{config.SERVER_PORT}/ws/telemetria"
+    try:
+        async with websockets.connect(uri) as websocket:
+            print("✅ Connectat al servidor")
+            while True:
+                # Enviar dades cada 0.5s
+                dades = obtenir_telemetria()
+                await websocket.send(json.dumps(dades))
+                print("📤 Enviat:", dades)
+
+                # Esperar comandes (no bloquejant)
+                try:
+                    resposta = await asyncio.wait_for(websocket.recv(), timeout=0.5)
+                    comanda = json.loads(resposta)
+                    print("📥 Comanda rebuda:", comanda)
+                    # Aquí crides funcions reals per moure motors
+                except asyncio.TimeoutError:
+                    pass
+    except Exception as e:
+        print("❌ Error de connexió:", e)
+        await asyncio.sleep(5)
+        await connectar()
 
 if __name__ == "__main__":
+    asyncio.run(connectar())
     main()
+    

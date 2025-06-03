@@ -3,7 +3,7 @@ import time
 #import config
 import smbus2
 import math
-
+from telemetria_shared import telemetria_data
 # --- GPS Setup (UART) ---
 gps_serial = serial.Serial("/dev/serial0", baudrate=9600, timeout=1)
 
@@ -94,6 +94,8 @@ def thread_gps():
 
         if lat is not None and lon is not None:
             print(f"📍 Latitud: {lat:.6f}, Longitud: {lon:.6f}")
+            telemetria_data["lat"] = lat
+            telemetria_data["lon"] = lon
         else:
             print("❗️ Sense fix GPS actualment")
         time.sleep(1)
@@ -102,5 +104,6 @@ def thread_heading():
     while True:
         print("🔍 Llegint brúixola...")
         heading = read_heading()
+        telemetria_data["heading"] = heading
         print(f"Bruixola: {heading:.1f}°")
         time.sleep(1)
