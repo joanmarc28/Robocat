@@ -1,9 +1,10 @@
 from sqlalchemy import (
     Column, Integer, String, Date, ForeignKey, Boolean,
-    DECIMAL, Interval, TIMESTAMP, Table
+    DECIMAL, Interval, TIMESTAMP, Table, DateTime
 )
 from sqlalchemy.orm import relationship
 from app.database import Base
+from datetime import datetime
 
 # Taula associativa Possessio (Client ↔ Cotxe)
 possessio_table = Table(
@@ -12,6 +13,15 @@ possessio_table = Table(
     Column("dni_usuari", String, ForeignKey("client.dni"), primary_key=True),
     Column("matricula_cotxe", String, ForeignKey("cotxe.matricula"), primary_key=True),
 )
+
+class Robot(Base):
+    __tablename__ = "robot"
+    id = Column(Integer, primary_key=True, index=True)
+    nom = Column(String)
+    identificador = Column(String, unique=True, index=True)
+    ip = Column(String)
+    estat = Column(String)  # "online" o "offline"
+    ultima_connexio = Column(DateTime, default=datetime.utcnow)
 
 
 class Usuari(Base):

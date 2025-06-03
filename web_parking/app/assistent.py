@@ -81,17 +81,17 @@ async def assistente_gemini(pregunta: PreguntaModel, db: Session = Depends(get_d
     resposta_text = None
 
     text = pregunta.pregunta.lower()
-    if "quants cotxes" in text or "quants estacionats" in text:
+    if "quants estacionats" in text:
         count = db.query(Estada).filter(Estada.activa == True).count()
         resposta_text = f"Tens {count} cotxe(s) aparcat(s) ara mateix."
 
-    elif "quins models" in text or "quins cotxes" in text:
+    elif "quins models" in text:
         cotxes = db.query(Cotxe).join(Estada).filter(Estada.activa == True).all()
         noms = [f"{c.marca} {c.model}" for c in cotxes]
         llista = ", ".join(noms) if noms else "Cap cotxe aparcat."
         resposta_text = f"Els models que tens ara mateix aparcats són: {llista}"
 
-    elif "quins cotxes registrats" in text or "models registrats" in text:
+    elif "quins cotxes" in text or "models registrats" in text:
         cotxes = db.query(Cotxe).all()
         noms = [f"{c.marca} {c.model}" for c in cotxes]
         llista = ", ".join(noms) if noms else "No tens cap cotxe registrat."

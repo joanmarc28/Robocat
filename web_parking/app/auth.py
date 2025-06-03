@@ -71,6 +71,10 @@ def parking(request: Request):
 
 @router.get("/registre")
 def parking(request: Request):
+    user_id = get_user_from_cookie(request)
+    if user_id:
+        return RedirectResponse(url="/welcome", status_code=303)
+
     return templates.TemplateResponse("registre.html", {
         "request": request
     })
