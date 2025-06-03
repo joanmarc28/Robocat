@@ -8,6 +8,7 @@ from app.models import Robot
 from datetime import datetime
 import json
 import requests
+import copy
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -50,6 +51,26 @@ async def websocket_telemetria(websocket: WebSocket, db: Session = Depends(get_d
                 db.commit()
             clients.pop(robot_id, None)
             telemetria_data.pop(robot_id, None)
+            
+
+import asyncio
+
+@router.websocket("/ws/telemetria/clients/{robot_id}")
+async def websocket_client(websocket: WebSocket, robot_id: str):
+    await websocket.accept()
+    print(f"👤 Navegador connectat per {robot_id}")
+    anterior = None
+    try:
+        while True:
+            actual = telemetria_data.get(robot_id)
+            if actual is not None:
+                if actual != anterior:
+                    await websocket.send_text(json.dumps(actual))
+                    anterior = copy.deepcopy(actual)
+            await asyncio.sleep(1)
+    except WebSocketDisconnect:
+        print(f"❌ Navegador desconnectat per {robot_id}")
+
 
 # --- Enviar comanda a un robot concret ---
 @router.post("/comanda/{robot_id}")
