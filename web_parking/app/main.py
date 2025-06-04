@@ -26,6 +26,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 templates = Jinja2Templates(directory="app/templates")
 
+#HOLI
 # Carrega les variables d'entorn des del fitxer .env
 load_dotenv()
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "app/robocat-user-app-5d2b35bd5c22.json"
