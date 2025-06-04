@@ -5,3 +5,11 @@ telemetria_data = {
     "heading": None,
     "dist": None
 }
+
+sensors_status = {
+    "displays": None,
+    "internet": None,
+    "ultrasons": None,
+    "heading": None,
+    "gps": None
+}

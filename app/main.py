@@ -4,13 +4,13 @@ from sensors.ultrasonic import ModulUltrasons
 from movement.motors import EstructuraPotes,set_servo_angle,PotaIK
 from sensors.gps import thread_gps, thread_heading
 #from modes.human import prova
-#from interface.display import display_message,clear_displays
+from interface.display import start_displays,displays_message,clear_displays
 import config
 import time
 from utils.helpers import check_internet,get_local_ip
 from multiprocessing import Process
 
-from telemetria_shared import telemetria_data
+from telemetria_shared import telemetria_data,sensors_status
 import asyncio
 import websockets
 import json
@@ -24,57 +24,65 @@ def start_system(mode, ultrasons=None, heading=None, gps=None):
     temps=0.5
     clear_displays()  # Esborrem la pantalla i el buffer
 
-    display_message("Loading Robocat ........")
+    displays_message("Loading Robocat ........")
     time.sleep(temps)
-    display_message(f"Actual Mode: {mode}")
+    displays_message(f"Actual Mode: {mode}")
     time.sleep(temps)
-    display_message(f"Checking Systems ........")
+    displays_message(f"Checking Systems ........")
     time.sleep(temps)
 
     errors = 0
 
     # Check Internet Connection
     if check_internet():
-        display_message(f"  Internet ..... ok")
+        displays_message(f"  Internet ..... ok")
+        sensors_status["internet"] = True
     else:
-        display_message(f"  Internet ..... Fail")
+        displays_message(f"  Internet ..... Fail")
+        sensors_status["internet"] = False
         errors += 1
     time.sleep(temps)
 
     # Check Ultrasons
     if ultrasons and ultrasons.mesura_distancia():
-        display_message(f"  Ultrasons ..... ok")
+        displays_message(f"  Ultrasons ..... ok")
+        sensors_status["ultrasons"] = True
     else:
-        display_message(f"  Ultrasons ..... Fail")
+        displays_message(f"  Ultrasons ..... Fail")
+        sensors_status["ultrasons"] = False
         errors += 1
     time.sleep(temps)
 
     # Check Ultrasons
     if heading:
-        display_message(f"  Heading ..... ok")
+        displays_message(f"  Heading ..... ok")
+        sensors_status["heading"] = True
     else:
-        display_message(f"  Heading ..... Fail")
+        displays_message(f"  Heading ..... Fail")
+        sensors_status["heading"] = False
         #errors += 1
     time.sleep(temps)
 
     # Check Ultrasons
     if gps:
-        display_message(f"  GPS ..... ok")
+        displays_message(f"  GPS ..... ok")
+        sensors_status["gps"] = True
     else:
-        display_message(f"  GPS ..... Not Found")
+        displays_message(f"  GPS ..... Not Found")
+        sensors_status["gps"] = False
         #errors += 1
     time.sleep(temps)
 
     # Summary
     if errors == 0:
-        display_message(f"All Systems Ready")
+        displays_message(f"All Systems Ready")
         time.sleep(temps)
-        display_message(f"Welcome ")
+        displays_message(f"Welcome ")
         return True
     else:
-        display_message(f"Errors Found: {errors}")
+        displays_message(f"Errors Found: {errors}")
         time.sleep(temps)
-        display_message(f"Please Check")
+        displays_message(f"Please Check")
         return False
 
 def thread_ultrasons(ultrasons):
@@ -88,6 +96,13 @@ def thread_ultrasons(ultrasons):
 def main():
     # Loop principal
     global estructura
+    print("🔄 Iniciant el sistema Robocat...")
+    # Iniciar els displays
+    if start_displays():
+        system_ok = start_system(config.DEFAULT_MODE, ultrasons, None, None)
+        if not system_ok:
+            print("Errors crítics detectats. Aturant el sistema.")
+            return  # surt del main
 
     try:
         ultrasons = ModulUltrasons()
@@ -113,12 +128,6 @@ def main():
     t_gps.start()
 
 
-    # Aquí comprovem si hi ha errors
-    """system_ok = start_system(config.DEFAULT_MODE, ultrasons, None, None)
-    if not system_ok:
-        print("Errors crítics detectats. Aturant el sistema.")
-        return  # surt del main"""
-    
     """t_gps = threading.Thread(target=prova, args=())
     t_gps.daemon = True
     t_gps.start()"""
