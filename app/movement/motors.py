@@ -93,7 +93,7 @@ class EstructuraPotes:
             "normal": (130, 120),
             "up": (100, 165),
             "strech": (130, 120),
-            "step_1": (120, 160),
+            "step_1": (115, 165),
             "step_2": (100, 165),
             "step_3": (100, 165),
             "step_4": (100, 165),
@@ -107,7 +107,7 @@ class EstructuraPotes:
             "normal": (130, 120),
             "up": (100, 160),
             "strech": (100, 160),
-            "step_1": (100, 160),
+            "step_1": (115, 130),
             "step_2": (100, 160),
             "step_3": (100, 160),
             "step_4": (100, 160),
@@ -121,7 +121,7 @@ class EstructuraPotes:
             "normal": (50, 60),
             "up": (70, 20),
             "strech": (80, 20),
-            "step_1": (70, 20),
+            "step_1": (45, 50),
             "step_2": (70, 20),
             "step_3": (70, 20),
             "step_4": (70, 20),
@@ -135,7 +135,7 @@ class EstructuraPotes:
             "normal": (30, 50),
             "up": (60, 20),
             "strech": (30, 50),
-            "step_1": (60, 20),
+            "step_1": (45, 20),
             "step_2": (60, 20),
             "step_3": (60, 20),
             "step_4": (60, 20),
@@ -210,21 +210,21 @@ class EstructuraPotes:
         t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_1", duracio))
         t1.start()
         t1.join()
-        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_2", duracio))
+        t1 = threading.Thread(target=self.pota_davant_dreta.canvia_estat, args=("step_1", duracio))
         t1.start()
         t1.join()
-        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_3", duracio))
+        t1 = threading.Thread(target=self.pota_darrera_dreta.canvia_estat, args=("step_1", duracio))
         t1.start()
         t1.join()
-        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_4", duracio))
+        t1 = threading.Thread(target=self.pota_darrera_esquerra.canvia_estat, args=("step_1", duracio))
         t1.start()
         t1.join()
-        t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_5", duracio))
+        """t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_5", duracio))
         t1.start()
         t1.join()
         t1 = threading.Thread(target=self.pota_davant_esquerra.canvia_estat, args=("step_6", duracio))
         t1.start()
-        t1.join()
+        t1.join()"""
         """t2 = threading.Thread(target=self.pota_darrera_dreta.canvia_estat, args=("step_1", duracio))
         t2.start()
         t2.join()
