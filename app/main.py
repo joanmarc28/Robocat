@@ -77,31 +77,6 @@ def start_system(mode, ultrasons=None, heading=None, gps=None):
         display_message(f"Please Check")
         return False
 
-"""def altres():
-    start_system()
-    time.sleep(0.5)
-    #prova()
-    while True:
-        try:
-            print("🔍 Llegint GPS i brúixola...")
-            lat, lon = read_gps(timeout=10)
-            heading = read_heading()
-
-            if lat is not None and lon is not None:
-                print(f"📍 Latitud: {lat:.6f}, Longitud: {lon:.6f}, Heading: {heading:.1f}°")
-            else:
-                print("❗️ Sense fix GPS actualment")
-
-            time.sleep(1)
-
-        except KeyboardInterrupt:
-            print("🛑 Sortint per teclat...")
-            break
-
-        except Exception as e:
-            print(f"[ERROR] {e}")
-            time.sleep(0.5)
-"""
 def thread_ultrasons(ultrasons):
     while True:
         ultrasons.mesura_distancia_auto()
@@ -143,18 +118,6 @@ def main():
     if not system_ok:
         print("Errors crítics detectats. Aturant el sistema.")
         return  # surt del main"""
-
-    t_ultra = threading.Thread(target=thread_ultrasons, args=(ultrasons,))
-    t_ultra.daemon = True
-    t_ultra.start()
-
-    t_compas = threading.Thread(target=thread_heading, args=())
-    t_compas.daemon = True
-    t_compas.start()
-
-    t_gps = threading.Thread(target=thread_gps, args=())
-    t_gps.daemon = True
-    t_gps.start()
     
     """t_gps = threading.Thread(target=prova, args=())
     t_gps.daemon = True

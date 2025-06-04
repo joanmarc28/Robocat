@@ -90,3 +90,11 @@ def show_frames(carpeta_frames):
         imatge = Image.open(ruta).convert("1").resize((WIDTH, HEIGHT))
         right_eye.display(imatge)
         time.sleep(config.EYE_DELAY)
+
+
+class Display:
+    """Classe per gestionar displays"""
+    def __init__(self,width=WIDTH, height=HEIGHT, display=None):
+        self.display = display
+        self.image = Image.new("1", (width, height))
+        self.draw = ImageDraw.Draw(image)
