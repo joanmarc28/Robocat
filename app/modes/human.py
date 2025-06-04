@@ -11,7 +11,7 @@ def prova():
     for e in emotions:
         print(f"  · {e}")
         #say_emotion(e)
-        durada_total = 10  # segons
+        durada_total = 5  # segons
         t_inici = time.time()
         while time.time() - t_inici < durada_total:
             displays_show_frames(e)

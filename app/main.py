@@ -129,9 +129,9 @@ def main():
     t_gps.start()
 
 
-    """t_gps = threading.Thread(target=prova, args=())
+    t_gps = threading.Thread(target=prova, args=())
     t_gps.daemon = True
-    t_gps.start()"""
+    t_gps.start()
     
     try:
         while True:
