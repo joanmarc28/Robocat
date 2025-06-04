@@ -2,61 +2,277 @@
 {% block title %}Robocat - {{ robot_id }}{% endblock %}
 
 {% block content %}
-<div class="section" style="z-index: 2; position: relative; padding-top: 0px !important;">
+<style>
+  .radar-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 30px auto 10px auto;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+  }
+
+  .wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #00ffcc;
+    border-radius: 50%;
+    animation: sonarWave 2s linear infinite;
+    opacity: 0.5;
+    transition: border-color 0.3s ease, animation-duration 0.3s ease;
+  }
+
+  .wave.delay1 {
+    animation-delay: 0.5s;
+  }
+
+  .wave.delay2 {
+    animation-delay: 1s;
+  }
+
+  .center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background-color: #00ffcc;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    transition: background-color 0.3s ease;
+  }
+
+  .center-dot.pulse {
+    animation: pulse 0.6s infinite;
+  }
+
+  .dist-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding: 8px 14px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+    transition: all 0.3s ease;
+    z-index: 20;
+  }
+
+  .dist-label.alert {
+    color: #fff !important;
+    background-color: rgba(255, 0, 0, 0.5);
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+  }
+
+
+  @keyframes sonarWave {
+    0% {
+      transform: scale(0.1);
+      opacity: 0.8;
+    }
+
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+  }
+
+  @keyframes shake {
+
+    0%,
+    100% {
+      transform: translate(-50%, -50%) translateX(0);
+    }
+
+    25% {
+      transform: translate(-50%, -50%) translateX(3px);
+    }
+
+    50% {
+      transform: translate(-50%, -50%) translateX(-3px);
+    }
+
+    75% {
+      transform: translate(-50%, -50%) translateX(3px);
+    }
+  }
+</style>
+
+<div class="section">
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-12 col-md-10 col-lg-8">
-        <div class="card card-pricing" data-color="white">
-          <div class="card-body text-center">
-
-            <h2>Robocat: {{ robot_id }}</h2>
-
-            <!-- Vídeo en directe -->
-            <div class="my-3">
-              <img id="video" src="/video/{{ robot_id }}" class="img-fluid rounded border" />
+      <div class="col-12">
+        <div class="card" data-color="white">
+          <div class="card-body">
+            <div class="form-group">
+              <div class="col-12 btn-disabled titols">Robot: {{ robot_id }}</div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- Telemetria -->
-            <h4 class="mt-4">📊 Telemetria</h4>
-            <pre id="telemetria" class="text-left bg-light p-2 rounded" style="min-height: 150px;">Esperant dades...</pre>
 
-            <!-- Controls -->
-            <h4 class="mt-4">🎮 Controls</h4>
-            <div class="d-grid gap-2 d-md-block">
+      <div class="col-12 col-md-10 col-lg-6">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <h4 class="mb-3">📺 Vídeo en directe</h4>
+            <img id="video" src="/video/{{ robot_id }}" class="img-fluid rounded border" />
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-10 col-lg-6">
+        <!-- 📈 Gràfic telemetria -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h4>📈 Històric de Distancia/h4>
+              <canvas id="grafica-telemetria" height="100"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-10 col-lg-4">
+        <!-- 📊 Telemetria JSON -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h4>📊 Telemetria</h4>
+            <pre id="telemetria" class="bg-light p-2 rounded" style="min-height: 150px;">Esperant dades...</pre>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-10 col-lg-4">
+        <!-- 📡 Radar -->
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <h4>📡 Sensor de Distància</h4>
+            <div class="radar-container">
+              <div class="wave"></div>
+              <div class="wave delay1"></div>
+              <div class="wave delay2"></div>
+              <div class="center-dot"></div>
+              <div class="dist-label" id="distancia">Distància: -- cm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-10 col-lg-4">
+        <!-- 🎮 Controls -->
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <h4>🎮 Controls</h4>
+            <div class="d-grid gap-2 d-md-block mb-3">
               <button onclick="enviar('endavant')" class="btn btn-success m-1">Endavant</button>
               <button onclick="enviar('enrere')" class="btn btn-secondary m-1">Enrere</button>
-              <button onclick="enviar('esquerra')" class="btn btn-primary m-1">Esquerra</button>
-              <button onclick="enviar('dreta')" class="btn btn-primary m-1">Dreta</button>
+              <button onclick="enviar('esquerra')" class="btn btn-info m-1">Esquerra</button>
+              <button onclick="enviar('dreta')" class="btn btn-info m-1">Dreta</button>
               <button onclick="enviar('atura')" class="btn btn-danger m-1">Atura</button>
             </div>
-
-            <!-- Controls -->
-            <h4 class="mt-4">🎮 Controls 2</h4>
             <div class="d-grid gap-2 d-md-block">
-              <button onclick="enviar('ajupir')" class="btn btn-success m-1">Ajupir</button>
+              <button onclick="enviar('ajupir')" class="btn btn-warning m-1">Ajupir</button>
               <button onclick="enviar('normal')" class="btn btn-secondary m-1">Normal</button>
               <button onclick="enviar('up')" class="btn btn-primary m-1">De Peu</button>
               <button onclick="enviar('strech')" class="btn btn-primary m-1">Estirat</button>
             </div>
-
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   const robot_id = "{{ robot_id }}";
   const telemetria = document.getElementById("telemetria");
-  const socket = new WebSocket("wss://" + location.host + "/ws/telemetria/clients/" + robot_id);
+  const label = document.getElementById("distancia");
+  const centerDot = document.querySelector(".center-dot");
+  const waves = document.querySelectorAll(".wave");
 
+  const ctx = document.getElementById("grafica-telemetria").getContext("2d");
+  const grafica = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: [],
+      datasets: [
+        { label: "Distància (cm)", borderColor: "#00ffcc", data: [], fill: false },
+        { label: "Capçalera (°)", borderColor: "#ffa500", data: [], fill: false }
+      ]
+    },
+    options: {
+      animation: false,
+      scales: {
+        x: { title: { display: true, text: "Temps" } },
+        y: { title: { display: true, text: "Valor" } }
+      }
+    }
+  });
+
+  const socket = new WebSocket("wss://" + location.host + "/ws/telemetria/clients/" + robot_id);
   socket.onmessage = event => {
     const data = JSON.parse(event.data);
     if (data.robot_id === robot_id) {
       telemetria.textContent = JSON.stringify(data, null, 2);
+      if (data.dist !== undefined) {
+        updateDistance(data.dist);
+        updateGraph(data.dist, data.capcalera || 0);
+      }
     }
   };
+
+  function updateDistance(dist) {
+    label.textContent = `Distància: ${parseFloat(dist).toFixed(1)} cm`;
+
+    if (dist < 20) {
+      waves.forEach(w => w.style.animationDuration = "0.8s");
+      waves.forEach(w => w.style.borderColor = "#ff3333");
+      centerDot.style.backgroundColor = "#ff3333";
+      centerDot.classList.add("pulse");
+      label.classList.add("alert");
+    } else if (dist < 40) {
+      waves.forEach(w => w.style.animationDuration = "1.3s");
+      waves.forEach(w => w.style.borderColor = "#ffa500");
+      centerDot.style.backgroundColor = "#ffa500";
+      centerDot.classList.remove("pulse");
+      label.classList.remove("alert");
+    } else {
+      waves.forEach(w => w.style.animationDuration = "2s");
+      waves.forEach(w => w.style.borderColor = "#00ffcc");
+      centerDot.style.backgroundColor = "#00ffcc";
+      centerDot.classList.remove("pulse");
+      label.classList.remove("alert");
+    }
+  }
+
+  function updateGraph(distancia, capcalera) {
+    const now = new Date().toLocaleTimeString();
+    grafica.data.labels.push(now);
+    grafica.data.datasets[0].data.push(distancia);
+    grafica.data.datasets[1].data.push(capcalera);
+    if (grafica.data.labels.length > 20) {
+      grafica.data.labels.shift();
+      grafica.data.datasets[0].data.shift();
+      grafica.data.datasets[1].data.shift();
+    }
+    grafica.update();
+  }
 
   function enviar(moviment) {
     fetch(`/comanda/${robot_id}`, {
