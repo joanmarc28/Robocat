@@ -91,6 +91,7 @@ def show_frames(carpeta_frames):
         right_eye.display(imatge)
         time.sleep(config.EYE_DELAY)
 """
+from PIL import ImageFont
 
 class Display:
     """Classe per gestionar displays"""
@@ -104,27 +105,36 @@ class Display:
         self.max_lines = height // 10
         self.line_cache = []
 
+
+        # Escull la font: predeterminada o TTF
+        # self.font = ImageFont.load_default()
+        self.font = ImageFont.truetype("assets/fonts/PressStart2P.ttf", 6)  # exemple
+
+        # Càlcul segur de l'alçada de línia
+        """       bbox = self.font.getbbox("A")
+        self.line_height = bbox[3] - bbox[1]
+        self.max_lines = height // self.line_height"""
+
     def clear(self):
         self.draw.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
         self.display.display(self.image)    
 
     def display_message(self,text):
-        global line_cache
 
         # Afegeix la nova línia al final
-        line_cache.append(text)
+        self.line_cache.append(text)
 
         # Si tenim més línies del que cap, elimina les més antigues
-        if len(line_cache) > self.max_lines:
-            line_cache = line_cache[-self.max_lines:]
+        if len(self.line_cache) > self.max_lines:
+            self.line_cache = self.line_cache[-self.max_lines:]
 
         # Esborra la imatge
         self.draw.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
 
         # Escriu totes les línies del buffer
-        for i, line in enumerate(line_cache):
+        for i, line in enumerate(self.line_cache):
             y = i * 10
-            self.draw.text((0, y), line, fill=255)
+            self.draw.text((0, y), line,font=self.font, fill=255)
 
         # Actualitza les dues pantalles
         self.display.display(self.image)

@@ -3,7 +3,7 @@ import threading
 from sensors.ultrasonic import ModulUltrasons
 from movement.motors import EstructuraPotes,set_servo_angle,PotaIK
 from sensors.gps import thread_gps, thread_heading
-#from modes.human import prova
+from modes.human import prova
 from interface.display import start_displays,displays_message,clear_displays
 import config
 import time
@@ -98,17 +98,18 @@ def main():
     global estructura
     print("🔄 Iniciant el sistema Robocat...")
     # Iniciar els displays
-    if start_displays():
-        system_ok = start_system(config.DEFAULT_MODE, ultrasons, None, None)
-        if not system_ok:
-            print("Errors crítics detectats. Aturant el sistema.")
-            return  # surt del main
 
     try:
         ultrasons = ModulUltrasons()
     except Exception as e:
         print(f"[ERROR] Ultrasons: {e}")
         ultrasons = None
+        
+    if start_displays():
+        system_ok = start_system(config.DEFAULT_MODE, ultrasons, None, None)
+        if not system_ok:
+            print("Errors crítics detectats. Aturant el sistema.")
+            return  # surt del main
 
     try:
         estructura = EstructuraPotes(ultrasons)
@@ -135,11 +136,27 @@ def main():
     try:
         while True:
             """time.sleep(0.5)
-            set_servo_angle(0,50)
+            set_servo_angle(15,50)
             time.sleep(0.5)
-            set_servo_angle(0,90)
+            set_servo_angle(15,90)
             time.sleep(0.5)
-            set_servo_angle(0,130)"""
+            set_servo_angle(15,130)"""
+            """time.sleep(1)
+            set_servo_angle(13,120)
+            set_servo_angle(12,130)
+
+            time.sleep(1)
+            set_servo_angle(13,150)
+            set_servo_angle(12,160)
+
+            time.sleep(1)
+            set_servo_angle(13,165)
+            set_servo_angle(12,90)
+
+            time.sleep(1)
+            set_servo_angle(13,150)
+            set_servo_angle(12,145)"""
+
             """print("🔄 Executant moviment Ajupir ...")
             estructura.ajupir()
             time.sleep(0.5)
@@ -258,6 +275,7 @@ async def connectar():
 
 # Llançar `main()` i WebSocket en paral·lel
 if __name__ == "__main__":
+    """main()"""
     threading.Thread(target=main, daemon=True).start()
     asyncio.run(connectar())
 
