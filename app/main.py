@@ -1,7 +1,7 @@
 # main.py
 import threading
 from sensors.ultrasonic import ModulUltrasons
-from movement.motors import EstructuraPotes,set_servo_angle,PotaIK
+from movement.motors import EstructuraPotes,set_servo_angle
 from sensors.gps import thread_gps, thread_heading
 from modes.human import prova
 from interface.display import start_displays,displays_message,clear_displays
@@ -16,6 +16,9 @@ import websockets
 import json
 import socket
 import random
+
+
+from movement.simulation_data import walk_states
 # Variable global per accedir a l'estructura de potes
 estructura = None
 
@@ -265,6 +268,9 @@ async def connectar():
                         elif accio == "strech":
                             estructura.moure_4_potes("strech", 0.3)
                             time.sleep(0.5)
+                        elif accio == "prova":
+                            estructura.moure_4_potes("prova", 0.3)
+                            time.sleep(0.5)
 
                 except asyncio.TimeoutError:
                     pass
@@ -275,7 +281,11 @@ async def connectar():
 
 # Llançar `main()` i WebSocket en paral·lel
 if __name__ == "__main__":
+    estructura = EstructuraPotes(None)
+    estructura.follow_sequance(walk_states,cycles=1,t=0.4)
+    #estructura.moure_4_potes("lower", 0.1)
+
     """main()"""
-    threading.Thread(target=main, daemon=True).start()
-    asyncio.run(connectar())
+    """threading.Thread(target=main, daemon=True).start()
+    asyncio.run(connectar())"""
 
