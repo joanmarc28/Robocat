@@ -3,7 +3,6 @@ from datetime import datetime
 import os
 import sys
 
-# 🔥 Afegeix manualment el path del projecte al sys.path
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
@@ -24,7 +23,7 @@ def actualitzar_estades():
                 temps_restant = estada.data_final - ara if estada.data_final else None
                 print(f"[{ara}] Estada {estada.id} encara activa. Temps restant: {temps_restant}")
 
-        # Robots (si fa +2 minuts de la última connexió ⇒ offline)
+        #robots (si fa +2 minuts de la ultima connexio -> offline)
         robots = db.query(Robot).filter(Robot.estat == "online").all()
         for robot in robots:
             if robot.ultima_connexio and robot.ultima_connexio < ara - timedelta(minutes=2):

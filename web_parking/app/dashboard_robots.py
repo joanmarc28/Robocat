@@ -16,7 +16,7 @@ templates = Jinja2Templates(directory="app/templates")
 clients = {}
 telemetria_data = {}
 
-# --- WebSocket per rebre telemetria i registrar robots ---
+#WebSocket -> telemetria i registrar robots
 @router.websocket("/ws/telemetria")
 async def websocket_telemetria(websocket: WebSocket, db: Session = Depends(get_db)):
     await websocket.accept()
@@ -69,10 +69,10 @@ async def websocket_client(websocket: WebSocket, robot_id: str):
                     anterior = copy.deepcopy(actual)
             await asyncio.sleep(1)
     except WebSocketDisconnect:
-        print(f"❌ Navegador desconnectat per {robot_id}")
+        print(f"Navegador desconnectat per {robot_id}")
 
 
-# --- Enviar comanda a un robot concret ---
+#enviar comanda a robot concret
 @router.post("/comanda/{robot_id}")
 async def enviar_comanda(robot_id: str, request: Request):
     msg = await request.json()
@@ -82,7 +82,7 @@ async def enviar_comanda(robot_id: str, request: Request):
         return {"status": "comanda enviada"}
     return {"error": "robot no disponible"}
 
-# --- Stream MJPEG des de la IP del robot ---
+#stream MJPEG desde IP robot
 @router.get("/video/{robot_id}")
 def video_feed(robot_id: str, db: Session = Depends(get_db)):
     robot = db.query(Robot).filter_by(identificador=robot_id).first()
@@ -100,7 +100,7 @@ def video_feed(robot_id: str, db: Session = Depends(get_db)):
 
     return StreamingResponse(proxy_stream(), media_type='multipart/x-mixed-replace; boundary=frame')
 
-# --- Interfície de control per robot ---
+#interficie control
 @router.get("/robocat/{robot_id}")
 def robocat_ui(robot_id: str, request: Request):
     return templates.TemplateResponse("robocat.html", {

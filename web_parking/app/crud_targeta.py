@@ -1,4 +1,5 @@
 from app.models import Targeta, ClientTargeta
+from sqlalchemy.orm import Session
 
 async def create_targeta(db: Session, num: str, tipus: str):
     nova_targeta = Targeta(num=num, tipus=tipus)

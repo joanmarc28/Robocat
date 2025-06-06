@@ -1,4 +1,4 @@
-from app.models import Cotxe
+from app.models import Cotxe, Client
 from sqlalchemy.orm import Session
 
 async def create_cotxe(
@@ -75,4 +75,4 @@ async def get_cotxes_by_client(db: Session, dni_usuari: str):
     client = db.query(Client).filter(Client.dni == dni_usuari).first()
     if not client:
         return None
-    return client.cotxes  # gràcies a la relació secondary
+    return client.cotxes

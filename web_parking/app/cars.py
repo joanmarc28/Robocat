@@ -8,7 +8,6 @@ from sqlalchemy import select
 
 router = APIRouter()
 
-# Guardar cotxe
 @router.post("/guardar-cotxe")
 async def guardar_cotxe(
     matricula: str = Form(...),
@@ -19,15 +18,14 @@ async def guardar_cotxe(
     imatge: str = Form(...),
     dgt: str = Form(...),
     combustible: str = Form(...),
-    dni_usuari: str = Form(...),  # 🔥 Agafa el DNI de l’usuari també!
+    dni_usuari: str = Form(...), 
     db: Session = Depends(get_db)
 ):
-    # Comprova si ja existeix
+    #comprova si existeix
     cotxe_existent = db.query(Cotxe).filter(Cotxe.matricula == matricula).first()
     if cotxe_existent:
         raise HTTPException(status_code=400, detail="Aquest cotxe ja existeix")
 
-    # 🔥 Crea el nou cotxe
     nou_cotxe = Cotxe(
         matricula=matricula,
         marca=marca,
@@ -40,14 +38,11 @@ async def guardar_cotxe(
     )
     db.add(nou_cotxe)
 
-    # 🔥 Busca el client pel DNI
     client = db.query(Client).filter(Client.dni == dni_usuari).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client no trobat")
 
-    # 🔥 Afegeix la relació entre el cotxe i el client
-    client.cotxes.append(nou_cotxe)
-
+    client.cotxes.append(nou_cotxe) #afegeix relacio cotxe-client
     db.commit()
     db.refresh(nou_cotxe)
 
@@ -94,7 +89,7 @@ def obtenir_cotxe(
     }
 
 
-# Eliminar cotxe per matrícula
+#eliminar cotxe
 @router.post("/eliminar-cotxe")
 async def eliminar_cotxe(request: Request, db: Session = Depends(get_db)):
     data = await request.json()

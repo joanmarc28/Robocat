@@ -1,4 +1,5 @@
 from app.models import Zona
+from sqlalchemy.orm import Session
 
 async def create_zona(db: Session, tipus: str, ciutat: str, carrer: str, preu_min: float, temps_maxim: int, coordenades: str):
     nova_zona = Zona(

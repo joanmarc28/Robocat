@@ -21,7 +21,7 @@ async def guardar_zona(
     coords: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    # Valida coordenades (assegura't que és JSON vàlid)
+    #validacio coords
     try:
         import json
         coordenades_data = json.loads(coords)
@@ -34,7 +34,7 @@ async def guardar_zona(
         carrer=carrer,
         preu_min=preu_Min,
         temps_maxim=temps_Maxim,
-        coordenades=json.dumps(coordenades_data)  # Guarda com a string JSON
+        coordenades=json.dumps(coordenades_data)  #guardar string json
     )
 
     db.add(nova_zona)
@@ -49,7 +49,7 @@ async def guardar_zona(
             "carrer": nova_zona.carrer,
             "temps_maxim": nova_zona.temps_maxim,
             "preu_min": float(nova_zona.preu_min),
-            "coordenades": nova_zona.coordenades  # que ja és string JSON
+            "coordenades": nova_zona.coordenades
         }
     }
 
