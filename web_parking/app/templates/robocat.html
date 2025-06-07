@@ -134,7 +134,26 @@
         <div class="card mb-4">
           <div class="card-body text-center">
             <h4 class="mb-3">📺 Vídeo en directe</h4>
-            <img id="video" src="/video/{{ robot_id }}" class="img-fluid rounded border" />
+            <img id="video" src="/stream/{{ robot_id }}" class="img-fluid rounded border" />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-10 col-lg-6">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <h4 class="mb-3">🗺️ Ubicació Robocat</h4>
+            <div id="mapa" class="rounded-bottom shadow" style="
+              height: 400px;
+              width: 100%;
+              border: none;
+              border-bottom-left-radius: 30px;
+              border-bottom-right-radius: 30px;
+              overflow: hidden;
+              position: relative;
+              z-index: 1;
+            ">
+            </div>
           </div>
         </div>
       </div>
@@ -142,7 +161,7 @@
         <!-- 📈 Gràfic telemetria -->
         <div class="card mb-4">
           <div class="card-body">
-            <h4>📈 Històric de Distancia/h4>
+            <h4>📈 Històric de Distancia </h4>
               <canvas id="grafica-telemetria" height="100"></canvas>
           </div>
         </div>
@@ -198,7 +217,6 @@
     </div>
   </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   const robot_id = "{{ robot_id }}";
@@ -207,40 +225,113 @@
   const centerDot = document.querySelector(".center-dot");
   const waves = document.querySelectorAll(".wave");
 
-  const ctx = document.getElementById("grafica-telemetria").getContext("2d");
-  const grafica = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: [],
-      datasets: [
-        { label: "Distància (cm)", borderColor: "#00ffcc", data: [], fill: false },
-        { label: "Capçalera (°)", borderColor: "#ffa500", data: [], fill: false }
-      ]
-    },
-    options: {
-      animation: false,
-      scales: {
-        x: { title: { display: true, text: "Temps" } },
-        y: { title: { display: true, text: "Valor" } }
-      }
-    }
-  });
+  let mapa;
+  let marcador;
+  let primerCop = true;
+  let haRebutPosicioRobocat = false;
 
-  const socket = new WebSocket("wss://" + location.host + "/ws/telemetria/clients/" + robot_id);
-  socket.onmessage = event => {
+  function initMap() {
+    const coordenadesInicials = { lat: 41.5381, lng: 2.4447 }; // Ex: Mataró
+
+    mapa = new google.maps.Map(document.getElementById("mapa"), {
+      center: coordenadesInicials,
+      zoom: 17,
+      mapTypeId: "satellite"
+    });
+
+    marcador = new google.maps.Marker({
+      position: coordenadesInicials,
+      map: mapa,
+      title: "Robocat",
+      icon: {
+        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        scale: 5,
+        fillColor: "#00ffcc",
+        fillOpacity: 0.9,
+        strokeWeight: 2,
+        rotation: 0
+      }
+    });
+
+    // Espera 3 segons per veure si rebem la ubicació del Robocat
+    setTimeout(() => {
+      if (!haRebutPosicioRobocat) {
+        obtenirCoordenadesClient().then(pos => {
+          marcador.setPosition(pos);
+          mapa.setCenter(pos);
+        }).catch(console.warn);
+      }
+    }, 3000);
+  }
+
+  function obtenirCoordenadesClient() {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          err => reject("No s'han pogut obtenir coordenades client: " + err.message)
+        );
+      } else {
+        reject("Geolocalització no suportada");
+      }
+    });
+  }
+
+  function setMarker(lat, lon, heading) {
+    let posActual = marcador.getPosition();
+
+    if (lat && lon) {
+      // Si ens arriben coordenades, actualitzem posició i heading
+      const pos = { lat: parseFloat(lat), lng: parseFloat(lon) };
+      marcador.setPosition(pos);
+      if (primerCop) {
+        mapa.setCenter(pos);
+        primerCop = false;
+      }
+    } else if (!posActual) {
+      // Si encara no tenim posició, no podem fer res
+      return;
+    }
+
+    // Sempre actualitzem l'icona (inclòs si només arriba heading)
+    marcador.setIcon({
+      path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+      scale: 5,
+      fillColor: "#00ffcc",
+      fillOpacity: 0.9,
+      strokeWeight: 2,
+      rotation: heading || 0
+    });
+  }
+
+
+  // WebSocket de telemetria
+  const telemetriaSocket = new WebSocket("wss://" + location.host + "/ws/telemetria/clients/" + robot_id);
+  telemetriaSocket.onmessage = event => {
     const data = JSON.parse(event.data);
     if (data.robot_id === robot_id) {
       telemetria.textContent = JSON.stringify(data, null, 2);
+
+      const heading = data.heading || 0;
+      const lat = data.lat || null;
+      const lon = data.lon || null;
+
+      if (lat && lon) {
+        haRebutPosicioRobocat = true;
+      }
+
+      setMarker(lat, lon, heading);
+
       if (data.dist !== undefined) {
         updateDistance(data.dist);
-        updateGraph(data.dist, data.capcalera || 0);
+        updateGraph(data.dist, heading);
       }
     }
   };
 
+
   function updateDistance(dist) {
     label.textContent = `Distància: ${parseFloat(dist).toFixed(1)} cm`;
-
     if (dist < 20) {
       waves.forEach(w => w.style.animationDuration = "0.8s");
       waves.forEach(w => w.style.borderColor = "#ff3333");
@@ -282,5 +373,29 @@
       body: JSON.stringify({ moviment })
     });
   }
+
+  // Inicialitza la gràfica
+  const ctx = document.getElementById("grafica-telemetria").getContext("2d");
+  const grafica = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: [],
+      datasets: [
+        { label: "Distància (cm)", borderColor: "#00ffcc", data: [], fill: false },
+        { label: "Capçalera (°)", borderColor: "#ffa500", data: [], fill: false }
+      ]
+    },
+    options: {
+      animation: false,
+      scales: {
+        x: { title: { display: true, text: "Temps" } },
+        y: { title: { display: true, text: "Valor" } }
+      }
+    }
+  });
 </script>
+
+<!-- Carrega Google Maps al FINAL -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap"></script>
+
 {% endblock %}

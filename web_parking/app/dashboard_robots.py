@@ -9,12 +9,20 @@ from datetime import datetime
 import json
 import requests
 import copy
+import os
+from dotenv import load_dotenv
+
+#Video en directe
+from typing import Dict
+import asyncio
+load_dotenv()
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 clients = {}
 telemetria_data = {}
+active_robots: Dict[str, asyncio.Queue] = {}
 
 #WebSocket -> telemetria i registrar robots
 @router.websocket("/ws/telemetria")
@@ -105,7 +113,8 @@ def video_feed(robot_id: str, db: Session = Depends(get_db)):
 def robocat_ui(robot_id: str, request: Request):
     return templates.TemplateResponse("robocat.html", {
         "request": request,
-        "robot_id": robot_id
+        "robot_id": robot_id,
+        "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
 
 @router.get("/robots")
@@ -115,3 +124,35 @@ def llista_robots(request: Request, db: Session = Depends(get_db)):
         "request": request,
         "robots": robots
     })
+
+@router.websocket("/ws/stream/{robot_id}")
+async def video_stream_endpoint(websocket: WebSocket, robot_id: str):
+    await websocket.accept()
+    print(f"🎥 Robocat {robot_id} connectat")
+    queue = asyncio.Queue()
+    active_robots[robot_id] = queue
+
+    try:
+        while True:
+            data = await websocket.receive_bytes()
+            if queue.qsize() > 2:  # Evitem backlog
+                _ = queue.get_nowait()
+            await queue.put(data)
+    except WebSocketDisconnect:
+        print(f"❌ Robocat {robot_id} desconnectat")
+        del active_robots[robot_id]
+
+@router.get("/stream/{robot_id}")
+def get_mjpeg(robot_id: str):
+    async def mjpeg_generator():
+        boundary = "--frame"
+        while True:
+            if robot_id not in active_robots:
+                await asyncio.sleep(0.2)
+                continue
+            frame = await active_robots[robot_id].get()
+            yield (
+                f"{boundary}\r\n"
+                "Content-Type: image/jpeg\r\n\r\n"
+            ).encode() + frame + b"\r\n"
+    return StreamingResponse(mjpeg_generator(), media_type="multipart/x-mixed-replace; boundary=frame")
