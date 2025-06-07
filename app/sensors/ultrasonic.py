@@ -35,3 +35,10 @@ class ModulUltrasons:
         dist = self.mesura_distancia()
         print(f"Distància: {dist:.2f} cm")
 
+    def thread_ultrasons(self):
+        while True:
+            """ultrasons.mesura_distancia_auto()"""
+            dist = self.mesura_distancia()
+            telemetria_data["dist"] = dist
+            time.sleep(0.5)
+

@@ -101,6 +101,17 @@ class EstructuraPotes:
 
         for t in threads:
             t.join()
+    
+    def set_position(self,text):
+        threads = []
+        for leg in self.legs:
+            leg.set_state(text)
+            t = threading.Thread(target=leg.set_new_position, args=(0.3,))
+            threads.append(t)
+            t.start()
+
+        for t in threads:
+            t.join()
 
     def body_forward(self):
         for leg in self.legs:
@@ -127,7 +138,8 @@ class EstructuraPotes:
     def get_states(self):
         return [leg.state for leg in self.legs]
 
-    def follow_order(self, order, states, t=1):
+    """def follow_order(self, order, states, t=1):"""
+    def follow_order(self, order,states = None, t=1):
         legs = self.legs
         action, *args = order
         old_states = self.get_states()
