@@ -1,3 +1,6 @@
+NOTA: Per provar l'aplicació, accedeixi al següent enllaç: https://robocat.jmprojects.cat/
+----------------------------------------------------------------------------------------------
+
 Funcions i mòduls per a la gestió d’usuaris, robots, zones i estades amb FastAPI i SQLAlchemy
 
 1. Models de dades (app/models.py)
