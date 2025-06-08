@@ -22,27 +22,24 @@ from app.models import Usuari,Policia, Client, Cotxe, Estada, Zona
 from datetime import datetime
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")  # monta la carpeta static per servir fitxers estatics
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="app/templates")  # carpeta on hi ha les plantilles jinja2
 
-# Carrega les variables d'entorn des del fitxer .env
-load_dotenv()
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "app/robocat-user-app-5d2b35bd5c22.json"
+load_dotenv()  # carrega variables d'entorn des del fitxer .env
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "app/robocat-user-app-5d2b35bd5c22.json"  # clau api google vision
 
-# Configuració de la base de dades
-Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)  # crea les taules de la base de dades si no existeixen
 
-# Importa i registra rutes de auth
-app.include_router(auth.router)
-app.include_router(zones.router)
-app.include_router(cars.router)
-app.include_router(assistent.router)
-app.include_router(dashboard_robots.router)
+app.include_router(auth.router)  # registra les rutes d'autenticacio
+app.include_router(zones.router)  # registra les rutes de zones
+app.include_router(cars.router)  # registra les rutes de cotxes
+app.include_router(assistent.router)  # registra les rutes de l'assistent
+app.include_router(dashboard_robots.router)  # registra les rutes del dashboard robots
 
 @app.get("/")
 def index(request: Request, db: Session = Depends(get_db)):
-    user_id = get_user_from_cookie(request)
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
     if not user_id:
         return templates.TemplateResponse("index.html", {
             "request": request,
@@ -50,41 +47,22 @@ def index(request: Request, db: Session = Depends(get_db)):
             "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
         })
 
-    # Si està loguejat, redirigeix a welcome
-    return RedirectResponse(url="/welcome", status_code=303)
-
-"""@app.get("/welcome")
-def welcome(request: Request, db: Session = Depends(get_db)):
-    user_id = get_user_from_cookie(request)
-    if not user_id:
-        return RedirectResponse(url="/login", status_code=303)
-
-    user = db.query(Usuari).get(user_id)
-    role = "client"
-    if db.query(Policia).filter_by(user_id=user.id).first():
-        role = "policia"
-
-    return templates.TemplateResponse("welcome.html", {
-        "request": request,
-        "user_id": user_id,
-        "role": role,
-        "user": user
-    })"""
+    return RedirectResponse(url="/welcome", status_code=303)  # si esta loguejat redirigeix a welcome
 
 @app.get("/welcome")
 def welcome(request: Request, db: Session = Depends(get_db)):
-    user_id = get_user_from_cookie(request)
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
     if not user_id:
-        return RedirectResponse(url="/login", status_code=303)
+        return RedirectResponse(url="/login", status_code=303)  # si no esta loguejat, a login
 
-    user = db.query(Usuari).get(user_id)
+    user = db.query(Usuari).get(user_id)  # agafa usuari per id
     role = "client"
-    if db.query(Policia).filter_by(user_id=user.id).first():
+    if db.query(Policia).filter_by(user_id=user.id).first():  # comprova si es policia
         role = "policia"
 
     estada_activa = None
     if role == "client":
-        estada_activa = db.query(Estada).filter_by(dni_usuari=user.client.dni, activa=True).first()
+        estada_activa = db.query(Estada).filter_by(dni_usuari=user.client.dni, activa=True).first()  # agafa estada activa si es client
 
     return templates.TemplateResponse("welcome.html", {
         "request": request,
@@ -92,21 +70,21 @@ def welcome(request: Request, db: Session = Depends(get_db)):
         "role": role,
         "user": user,
         "estada_activa": estada_activa,
-        "datetime": datetime  # 👉 afegim el mòdul aquí!
+        "datetime": datetime  # passem el mòdul datetime per usar a la plantilla
     })
 
 @app.get("/parking")
 def parking(request: Request, db: Session = Depends(get_db)):
-    user_id = get_user_from_cookie(request)
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
     if not user_id:
-        return RedirectResponse(url="/login", status_code=303)
+        return RedirectResponse(url="/login", status_code=303)  # si no esta loguejat, a login
 
-    user = db.query(Usuari).get(user_id)
-    client = db.query(Client).filter_by(user_id=user.id).first()
+    user = db.query(Usuari).get(user_id)  # agafa usuari per id
+    client = db.query(Client).filter_by(user_id=user.id).first()  # agafa client per usuari
     if not client:
-        return RedirectResponse(url="/welcome", status_code=303)
+        return RedirectResponse(url="/welcome", status_code=303)  # si no es client, redirigeix a welcome
 
-    any_actual = datetime.now().year
+    any_actual = datetime.now().year  # any actual
 
     return templates.TemplateResponse("parking.html", {
         "request": request,
@@ -119,15 +97,15 @@ def parking(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/zones")
 def parking(request: Request, db: Session = Depends(get_db)):
-    user_id = get_user_from_cookie(request)
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
     if not user_id:
-        return RedirectResponse(url="/login", status_code=303)
+        return RedirectResponse(url="/login", status_code=303)  # si no esta loguejat, a login
 
-    user = db.query(Usuari).get(user_id)
-    if db.query(Client).filter_by(user_id=user.id).first():
+    user = db.query(Usuari).get(user_id)  # agafa usuari per id
+    if db.query(Client).filter_by(user_id=user.id).first():  # si es client, redirigeix a welcome
         return RedirectResponse(url="/welcome", status_code=303)
 
-    role = "policia"
+    role = "policia"  # si no es client, es policia
     return templates.TemplateResponse("zones.html", {
         "request": request,
         "user_id": user_id,
@@ -136,48 +114,24 @@ def parking(request: Request, db: Session = Depends(get_db)):
         "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
 
-"""
-@app.get("/cars")
-def cars(request: Request):
-    plate = "1234ABC"
-    model = "Prius"
-    brand = "Toyota"
-    year = 2003
-    color = "Blue"
-    # Aquí podries fer una consulta a la base de dades per obtenir la matrícula i el model
-    image_link = cercar_imatges(brand+" "+model+" "+color+" "+str(year))
-
-    return templates.TemplateResponse("cars.html", {
-        "request": request,
-        "plate": plate,
-        "model": model,
-        "year": 2020,
-        "color": color,
-        "brand": brand,
-        "fuel": "diesel",
-        "dgt": "b",
-        "image_car": image_link
-    })"""
-
 @app.get("/cars")
 def cars(request: Request, db: Session = Depends(get_db)):
-    user_id = get_user_from_cookie(request)
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
 
     if not user_id:
-        return RedirectResponse(url="/login", status_code=303)
+        return RedirectResponse(url="/login", status_code=303)  # si no esta loguejat, redirigeix a login
 
-    user = db.query(Usuari).get(user_id)
+    user = db.query(Usuari).get(user_id)  # agafa usuari per id
     if db.query(Policia).filter_by(user_id=user.id).first():
-        return RedirectResponse(url="/welcome", status_code=303)
+        return RedirectResponse(url="/welcome", status_code=303)  # si es policia, redirigeix a welcome
 
-
-    client = db.query(Client).filter_by(user_id=user.id).first()
+    client = db.query(Client).filter_by(user_id=user.id).first()  # agafa client per usuari
 
     cotxes = []
-    print(f"Client: {client}")
-    print(f"Cotxes del client: {client.cotxes}")
+    print(f"client: {client}")  # debug client
+    print(f"cotxes del client: {client.cotxes}")  # debug cotxes
     for cotxe in client.cotxes:
-        image_link = cercar_imatges(f"{cotxe.marca} {cotxe.model} {cotxe.color} {cotxe.any_matriculacio}")
+        image_link = cercar_imatges(f"{cotxe.marca} {cotxe.model} {cotxe.color} {cotxe.any_matriculacio}")  # busca imatge
         cotxes.append({
             "matricula": cotxe.matricula,
             "model": cotxe.model,
@@ -197,24 +151,23 @@ def cars(request: Request, db: Session = Depends(get_db)):
         "cotxes": cotxes
     })
 
-
 @app.post("/extract-plate")
 async def analitzar_matricula(capturedImage: str = Form(...)):
     try:
-        image_data = base64.b64decode(capturedImage.split(",")[1])
-        client = vision.ImageAnnotatorClient()
-        image = vision.Image(content=image_data)
-        response = client.text_detection(image=image)
+        image_data = base64.b64decode(capturedImage.split(",")[1])  # decodifica la imatge base64
+        client = vision.ImageAnnotatorClient()  # client google vision
+        image = vision.Image(content=image_data)  # crea imatge per google vision
+        response = client.text_detection(image=image)  # detecta text
 
         texts = response.text_annotations
         if texts:
-            text_detected = texts[0].description.strip().replace("\n", "")
+            text_detected = texts[0].description.strip().replace("\n", "")  # neteja text detectat
         else:
             text_detected = ""
 
         return JSONResponse(content={"plate": text_detected})
     except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
+        return JSONResponse(content={"error": str(e)}, status_code=500)  # error
 
 def cercar_imatges(query):
     url = 'https://www.googleapis.com/customsearch/v1'
@@ -225,37 +178,36 @@ def cercar_imatges(query):
         'searchType': 'image',
         'num': 1
     }
-    print(f"Buscant: {query}")
+    print(f"buscant: {query}")  # debug query
     response = requests.get(url, params=params)
-    print("URL final:", response.url)
-    print("Codi resposta:", response.status_code)
-    print("Resposta:", response.text)
+    print("url final:", response.url)  # debug url
+    print("codi resposta:", response.status_code)  # debug codi resposta
+    print("resposta:", response.text)  # debug resposta completa
 
     if response.status_code == 200:
         resultats = response.json().get('items', [])
-        return resultats[0]['link'] if resultats else None
-    return None
-
+        return resultats[0]['link'] if resultats else None  # retorna link de la imatge si hi ha resultats
+    return None  # retorna none si falla
 
 @app.get("/historial")
 def veure_historial(request: Request, db: Session = Depends(get_db)):
 
-    user_id = get_user_from_cookie(request)
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
     if not user_id:
-        return RedirectResponse(url="/login", status_code=303)
+        return RedirectResponse(url="/login", status_code=303)  # si no esta loguejat, redirigeix a login
 
-    usuari = db.query(Usuari).get(user_id)
+    usuari = db.query(Usuari).get(user_id)  # agafa usuari per id
     if db.query(Policia).filter_by(user_id=usuari.id).first():
-        return RedirectResponse(url="/welcome", status_code=303)
+        return RedirectResponse(url="/welcome", status_code=303)  # si es policia, redirigeix a welcome
 
-    estades = db.query(Estada).filter(Estada.dni_usuari == usuari.client.dni).all()
-    client = db.query(Client).filter_by(user_id=usuari.id).first()
+    estades = db.query(Estada).filter(Estada.dni_usuari == usuari.client.dni).all()  # agafa totes les estades del client
+    client = db.query(Client).filter_by(user_id=usuari.id).first()  # agafa client per usuari
 
     dades = []
     for estada in estades:
-        zona = db.query(Zona).filter(Zona.id == estada.id_zona).first()
-        cotxe = db.query(Cotxe).filter_by(matricula=estada.matricula_cotxe).first()
-        image_link = cercar_imatges(f"{cotxe.marca} {cotxe.model} {cotxe.color} {cotxe.any_matriculacio}")
+        zona = db.query(Zona).filter(Zona.id == estada.id_zona).first()  # agafa zona per estada
+        cotxe = db.query(Cotxe).filter_by(matricula=estada.matricula_cotxe).first()  # agafa cotxe per matricula
+        image_link = cercar_imatges(f"{cotxe.marca} {cotxe.model} {cotxe.color} {cotxe.any_matriculacio}")  # busca imatge cotxe
 
         dades.append({
             "id": estada.id,
@@ -269,7 +221,7 @@ def veure_historial(request: Request, db: Session = Depends(get_db)):
             "activa": estada.activa,
             "image_car": image_link
         })
-    dades.reverse()
+    dades.reverse()  # posa l'historial en ordre invers
 
     return templates.TemplateResponse("historial.html", {
         "request": request,
@@ -281,27 +233,12 @@ def veure_historial(request: Request, db: Session = Depends(get_db)):
 
 @app.post("/finalitzar-estada")
 async def finalitzar_estada(estada_id: int = Form(...), db: Session = Depends(get_db)):
-    estada = db.query(Estada).filter(Estada.id == estada_id).first()
+    estada = db.query(Estada).filter(Estada.id == estada_id).first()  # agafa estada per id
     if not estada:
-        raise HTTPException(status_code=404, detail="Estada no trobada")
+        raise HTTPException(status_code=404, detail="estada no trobada")  # si no troba estada, error 404
 
-    estada.activa = False
-    db.commit()
+    estada.activa = False  # marca estada com a no activa
+    db.commit()  # guarda canvis
 
-    return RedirectResponse(url="/historial", status_code=303)
-
-
-"""
-@app.post("/guardar-zona")
-async def guardar_zona(nom: str = Form(...), coords: str = Form(...)):
-    zona = {
-        "nom": nom,
-        "coordenades": json.loads(coords)
-    }
-    # ⚠️ Per ara, ho guardem a fitxer (pots canviar per PostgreSQL després)
-    with open("zones.json", "a") as f:
-        f.write(json.dumps(zona) + "\n")
-
-    return RedirectResponse(url="/mapa", status_code=303)
-"""
+    return RedirectResponse(url="/historial", status_code=303)  # redirigeix a historial
 

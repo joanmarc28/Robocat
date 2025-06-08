@@ -158,7 +158,7 @@
         </div>
       </div>
       <div class="col-12 col-md-10 col-lg-6">
-        <!-- 📈 Gràfic telemetria -->
+        <!-- Gràfic telemetria -->
         <div class="card mb-4">
           <div class="card-body">
             <h4>📈 Històric de Distancia </h4>
@@ -167,7 +167,7 @@
         </div>
       </div>
       <div class="col-12 col-md-10 col-lg-4">
-        <!-- 📊 Telemetria JSON -->
+        <!-- Telemetria JSON -->
         <div class="card mb-4">
           <div class="card-body">
             <h4>📊 Telemetria</h4>
@@ -176,7 +176,7 @@
         </div>
       </div>
       <div class="col-12 col-md-10 col-lg-4">
-        <!-- 📡 Radar -->
+        <!-- Radar -->
         <div class="card mb-4">
           <div class="card-body text-center">
             <h4>📡 Sensor de Distància</h4>
@@ -192,7 +192,7 @@
       </div>
 
       <div class="col-12 col-md-10 col-lg-4">
-        <!-- 🎮 Controls -->
+        <!-- Controls -->
         <div class="card mb-4">
           <div class="card-body text-center">
             <h4>🎮 Controls</h4>
@@ -281,7 +281,7 @@
     let posActual = marcador.getPosition();
 
     if (lat && lon) {
-      // Si ens arriben coordenades, actualitzem posició i heading
+      // si ens arriben coordenades, actualitzem pos i heading
       const pos = { lat: parseFloat(lat), lng: parseFloat(lon) };
       marcador.setPosition(pos);
       if (primerCop) {
@@ -289,11 +289,11 @@
         primerCop = false;
       }
     } else if (!posActual) {
-      // Si encara no tenim posició, no podem fer res
+      // si encara no tenim posició, no podem fer res
       return;
     }
 
-    // Sempre actualitzem l'icona (inclòs si només arriba heading)
+    // Sempre actualitzem l'icona (inclos si només arriba heading)
     marcador.setIcon({
       path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
       scale: 5,
@@ -374,7 +374,7 @@
     });
   }
 
-  // Inicialitza la gràfica
+  // init grafica
   const ctx = document.getElementById("grafica-telemetria").getContext("2d");
   const grafica = new Chart(ctx, {
     type: "line",

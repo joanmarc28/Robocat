@@ -21,12 +21,12 @@ async def guardar_zona(
     coords: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    #validacio coords
+    # validacio coords: comprovem que coords son un json correcte
     try:
         import json
         coordenades_data = json.loads(coords)
     except Exception as e:
-        raise HTTPException(status_code=400, detail="Coordenades mal formatejades")
+        raise HTTPException(status_code=400, detail="coordenades mal formatejades")
 
     nova_zona = Zona(
         tipus=tipus,
@@ -34,7 +34,7 @@ async def guardar_zona(
         carrer=carrer,
         preu_min=preu_Min,
         temps_maxim=temps_Maxim,
-        coordenades=json.dumps(coordenades_data)  #guardar string json
+        coordenades=json.dumps(coordenades_data)  # guardem les coords com a string json
     )
 
     db.add(nova_zona)
@@ -42,7 +42,7 @@ async def guardar_zona(
     db.refresh(nova_zona)
 
     return {
-        "message": "Zona guardada correctament!",
+        "message": "zona guardada correctament!",
         "zona": {
             "id": nova_zona.id,
             "tipus": nova_zona.tipus,
@@ -56,6 +56,7 @@ async def guardar_zona(
 
 @router.get("/obtenir-zones")
 def obtenir_zones(ciutat: str = None, db: Session = Depends(get_db)):
+    # si tenim ciutat, filtrem per aquesta, si no, retornem totes les zones
     if ciutat:
         zones = db.query(Zona).filter(Zona.ciutat == ciutat).all()
     else:
@@ -69,12 +70,13 @@ def obtenir_zones(ciutat: str = None, db: Session = Depends(get_db)):
             "temps_maxim": zona.temps_maxim,
             "preu_min": float(zona.preu_min),
             "carrer": zona.carrer,
-            "coordenades": json.loads(zona.coordenades)
+            "coordenades": json.loads(zona.coordenades)  # convertim string json a objecte
         })
     return result
 
 @router.post("/eliminar_zona")
 async def eliminar_zona(request: Request, db: Session = Depends(get_db)):
+    # obtenim id zona del json enviat i intentem eliminar-la
     data = await request.json()
     zona_id = data.get("id")
 
@@ -83,7 +85,7 @@ async def eliminar_zona(request: Request, db: Session = Depends(get_db)):
         db.delete(zona)
         db.commit()
         return {"success": True}
-    return {"success": False, "error": "Zona no trobada"}
+    return {"success": False, "error": "zona no trobada"}
 
 @router.post("/guardar-estada")
 async def guardar_estada(
@@ -96,6 +98,7 @@ async def guardar_estada(
     activa: bool = Form(...),
     db: Session = Depends(get_db)
 ):
+    # creem nova estada amb les dades rebudes
     nova_estada = Estada(
         dni_usuari=dni_usuari,
         matricula_cotxe=matricula_cotxe,
@@ -111,7 +114,7 @@ async def guardar_estada(
     db.refresh(nova_estada)
 
     return {
-        "message": "Estada registrada correctament!",
+        "message": "estada registrada correctament!",
         "estada": {
             "id": nova_estada.id,
             "dni_usuari": nova_estada.dni_usuari,

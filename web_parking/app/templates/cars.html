@@ -2,8 +2,6 @@
 {% block title %}Els Meus Cotxes{% endblock %}
 
 {% block content %}
-
-<!--<div class="wrapper">-->
 <div class="section" style="z-index: 2; position: relative;padding-top: 0px !important;">
     <div class="container">
         <div class="row justify-content-center">
@@ -38,9 +36,11 @@
                                         <p>Marca: {{ cotxe.marca }}</p>
                                         <p>Model: {{ cotxe.model }}</p>
                                     </div>
+                                    <button class="btn btn-danger btn-sm btn-eliminar" data-matricula="{{ cotxe.matricula }}">
+                                        Eliminar
+                                    </button>
                                 </div>
                             </div>
-
                         </div>
                         {% endfor %}
                         <div class="">
@@ -48,25 +48,19 @@
                         </div>
                         <div id="registrar_cotxe" style="display: none;">
                             <div id="registrar-cotxe" class="mt-2">
-                                <label class="font-weight-bold d-block" style="color:#66615b;">Registrar
-                                    Cotxe</label>
+                                <label class="font-weight-bold d-block" style="color:#66615b;">Registrar Cotxe</label>
                                 <div class="form-group">
-                                    <input type="text" class="form-control input-class" id="plate" name="plate"
-                                        placeholder="Matricula" required>
+                                    <input type="text" class="form-control input-class" id="plate" name="plate" placeholder="Matricula" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control input-class" id="marca" name="marca"
-                                        placeholder="Introdueix la Marca" required>
+                                    <input type="text" class="form-control input-class" id="marca" name="marca" placeholder="Introdueix la Marca" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control input-class" id="model" name="model"
-                                        placeholder="Introdueix el Model" required>
+                                    <input type="text" class="form-control input-class" id="model" name="model" placeholder="Introdueix el Model" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="color" class="font-weight-bold d-block"
-                                        style="color:#66615b;">Selecciona Color:</label>
-                                    <select name="color" class="form-control select-class" required
-                                        style="border-radius: 30px; border: 3px solid #94b9ff;" id="color">
+                                    <label for="color" class="font-weight-bold d-block" style="color:#66615b;">Selecciona Color:</label>
+                                    <select name="color" class="form-control select-class" required style="border-radius: 30px; border: 3px solid #94b9ff;" id="color">
                                         <option value="blue">Blau</option>
                                         <option value="orange">Taronja</option>
                                         <option value="green">Verd</option>
@@ -77,15 +71,11 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input type="number" class="form-control input-class" id="any_matriculacio"
-                                        name="any_matriculacio" min="1980" max="{{ any_actual }}"
-                                        placeholder="Introdueix l’Any de Matriculació" required>
+                                    <input type="number" class="form-control input-class" id="any_matriculacio" name="any_matriculacio" min="1980" max="{{ any_actual }}" placeholder="Introdueix l’Any de Matriculació" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="combustible" class="font-weight-bold d-block"
-                                        style="color:#66615b;">Dades DGT:</label>
-                                    <select name="dgt" class="form-control select-class" required
-                                        style="border-radius: 30px; border: 3px solid #94b9ff;" id="dgt">
+                                    <label for="combustible" class="font-weight-bold d-block" style="color:#66615b;">Dades DGT:</label>
+                                    <select name="dgt" class="form-control select-class" required style="border-radius: 30px; border: 3px solid #94b9ff;" id="dgt">
                                         <option value="c">C</option>
                                         <option value="b">B</option>
                                         <option value="zero">0 emisions</option>
@@ -94,10 +84,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="combustible" class="font-weight-bold d-block"
-                                        style="color:#66615b;">Tipus de Combustible:</label>
-                                    <select name="combustible" class="form-control select-class" required
-                                        style="border-radius: 30px; border: 3px solid #94b9ff;" id="combustible">
+                                    <label for="combustible" class="font-weight-bold d-block" style="color:#66615b;">Tipus de Combustible:</label>
+                                    <select name="combustible" class="form-control select-class" required style="border-radius: 30px; border: 3px solid #94b9ff;" id="combustible">
                                         <option value="diesel">Diesel</option>
                                         <option value="gasolina">Gasolina</option>
                                         <option value="gas">Gas</option>
@@ -107,8 +95,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="button" class="col-12 btn btn-neutral btn-round"
-                                    onclick="newCar()">Registrar Cotxe</button>
+                                <button type="button" class="col-12 btn btn-neutral btn-round" onclick="newCar()">Registrar Cotxe</button>
                             </div>
                         </div>
                     </div>
@@ -119,6 +106,7 @@
 </div>
 
 {% endblock %}
+
 {% block scripts %}
 <script>
     function view_new_Car() {
@@ -126,7 +114,7 @@
     }
 
     async function newCar() {
-        const userId = "{{ client.dni }}";  // Passat des del backend amb Jinja o FastAPI
+        const userId = "{{ client.dni }}";  // passat des del backend amb Jinja o FastAPI
         const matricula = document.getElementById("plate").value.trim();
         const marca = document.getElementById("marca").value.trim();
         const model = document.getElementById("model").value.trim();
@@ -135,7 +123,7 @@
         const dgt = document.getElementById("dgt").value;
         const combustible = document.getElementById("combustible").value;
 
-        // Validació ràpida
+        // validacio
         if (!matricula || !marca || !model || !color || !any_matriculacio || !dgt || !combustible) {
             alert("Si us plau, omple tots els camps abans d'enviar.");
             return;
@@ -166,14 +154,42 @@
             //alert("Cotxe registrat amb èxit!");
 
             document.getElementById("registrar_cotxe").style.display = 'none';
-            // Opcional: pots actualitzar la llista de cotxes o redirigir a una altra pàgina
-            window.location.reload(); // Recarrega la pàgina per mostrar el nou cotxe
+            window.location.reload(); // recarrega la pagina
         } catch (error) {
             console.error("Error creant cotxe:", error);
             alert("Hi ha hagut un error al registrar el cotxe.");
         }
     }
 
-</script>
+    //eliminar cotxe
+    document.querySelectorAll('.btn-eliminar').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            const matricula = e.target.getAttribute('data-matricula');
 
+            if (confirm(`Segur que vols eliminar el cotxe amb matrícula ${matricula}?`)) {
+                try {
+                    const response = await fetch('/eliminar-cotxe', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ matricula })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        alert(result.message);
+                        window.location.reload(); // recarrega per actualitzar la llista
+                    } else {
+                        alert(result.error || 'Error eliminant el cotxe');
+                    }
+                } catch (err) {
+                    alert('Error de connexió');
+                    console.error(err);
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}
