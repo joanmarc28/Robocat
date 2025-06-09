@@ -1,6 +1,7 @@
 # main.py
 import threading
-from vision.cameraweb import send_frames
+"""from app.vision.old_cameraweb import send_frames"""
+from vision.camera import RobotCamera
 from sensors.ultrasonic import ModulUltrasons
 from movement.motors import EstructuraPotes
 from sensors.gps import ModulGPS
@@ -15,6 +16,7 @@ import json
 from movement.simulation_data import walk_states
 
 estructura = None
+camera = RobotCamera()
 
 def start_system(mode, ultrasons=None, gps=None):
     clear_displays()
@@ -133,7 +135,7 @@ async def connectar():
                         if accio == "ajupir":
                             estructura.set_position("sit")
                         elif accio == "endavant":
-                            estructura.follow_sequance(walk_states, cycles=6, t=0.4)
+                            threading.Thread(target=estructura.follow_sequance, args=(walk_states,), kwargs={"cycles": 6, "t": 0.2}, daemon=True).start()
                         elif accio == "normal":
                             estructura.sit_hind_legs()
                         elif accio == "hind_sit":
@@ -153,13 +155,10 @@ async def connectar():
 
 async def main_async():
     await asyncio.gather(
-        send_frames(),
+        camera.stream_frames(),
         connectar()
     )
 
 if __name__ == "__main__":
-    estructura = EstructuraPotes()
-    estructura.follow_sequance(walk_states, cycles=6, t=0.2)
-
-    """threading.Thread(target=main, daemon=True).start()
-    asyncio.run(main_async())"""
+    threading.Thread(target=main, daemon=True).start()
+    asyncio.run(main_async())
