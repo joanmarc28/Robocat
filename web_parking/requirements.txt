@@ -12,3 +12,4 @@ alembic
 datetime
 google-cloud-speech
 google-generativeai
+aiortc

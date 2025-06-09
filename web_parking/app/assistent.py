@@ -1,111 +1,100 @@
-from google.cloud import speech_v1p1beta1 as speech
+from google.cloud import speech_v1p1beta1 as speech  #importem llibreria de reconeixement de veu
 import io
 import os
 import tempfile
 import subprocess
-from app.database import get_db
-from fastapi import APIRouter, Request,UploadFile, File,Depends
-from pydantic import BaseModel
-import google.generativeai as genai
+from app.database import get_db  #funcio per obtenir sessio de base de dades
+from fastapi import APIRouter, Request, UploadFile, File, Depends  #importem fastapi
+from pydantic import BaseModel  #per validar dades d'entrada
+import google.generativeai as genai  #llibreria de gemini
+from google.cloud import texttospeech  #per generar audio
 
-from dotenv import load_dotenv
-import google.generativeai as genai
-from google.cloud import texttospeech
+from app.models import Cotxe, Estada  #models de la base de dades
+from app.session import get_user_from_cookie  #per obtenir usuari des de cookies
+from sqlalchemy.orm import Session  #sessio per a consultes ORM
 
-from app.models import Cotxe, Estada
-from app.session import get_user_from_cookie
-from sqlalchemy.orm import Session
-# Carregar les variables del fitxer .env
+from dotenv import load_dotenv  #per carregar variables d'entorn
 load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY")  #clau de gemini des del .env
 
-# Agafar la clau de l’entorn
-api_key = os.getenv("GEMINI_API_KEY")
+router = APIRouter()  #creem router de fastapi
 
-router = APIRouter()
-
-class PreguntaModel(BaseModel):
+class PreguntaModel(BaseModel):  #model per rebre preguntes
     pregunta: str
 
-# 🔑 Configura la clau d’API
-genai.configure(api_key=api_key)
+genai.configure(api_key=api_key)  #configurem gemini amb la clau
 
-@router.post("/transcripcio")
+@router.post("/transcripcio")  #endpoint per transcripcio de veu
 async def transcripcio(audio: UploadFile = File(...)):
-    client = speech.SpeechClient()
+    client = speech.SpeechClient()  #creem client de reconeixement
 
-    # Guarda el .webm a fitxer temporal
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_webm:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_webm:  #guardem arxiu rebut com a fitxer temporal
         temp_webm.write(await audio.read())
         temp_webm_path = temp_webm.name
 
-    # Converteix a .wav LINEAR16 amb ffmpeg
-    temp_wav_path = temp_webm_path.replace(".webm", ".wav")
-    ffmpeg_cmd = [
-        "ffmpeg", "-i", temp_webm_path, 
+    temp_wav_path = temp_webm_path.replace(".webm", ".wav")  #preparem ruta per convertir a wav
+    ffmpeg_cmd = [  #comanda per convertir audio amb ffmpeg
+        "ffmpeg", "-i", temp_webm_path,
         "-ar", "16000", "-ac", "1", "-f", "wav", temp_wav_path
     ]
-    subprocess.run(ffmpeg_cmd, check=True)
+    subprocess.run(ffmpeg_cmd, check=True)  #executem conversio
 
-    # Llegeix el fitxer wav convertit
-    with open(temp_wav_path, "rb") as wav_file:
+    with open(temp_wav_path, "rb") as wav_file:  #llegim arxiu wav
         audio_content = wav_file.read()
 
-    # Configura Google Speech
-    audio = speech.RecognitionAudio(content=audio_content)
-    config = speech.RecognitionConfig(
+    audio = speech.RecognitionAudio(content=audio_content)  #preparem audio per reconeixer
+    config = speech.RecognitionConfig(  #config del reconeixement
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code="ca-ES"
     )
 
-    # Envia a Google Cloud Speech
-    response = client.recognize(config=config, audio=audio)
+    response = client.recognize(config=config, audio=audio)  #fem reconeixement
 
     resultat = ""
-    for result in response.results:
+    for result in response.results:  #concatenem resultats
         resultat += result.alternatives[0].transcript
 
-    # Neteja fitxers temporals
-    os.remove(temp_webm_path)
+    os.remove(temp_webm_path)  #esborrem fitxers temporals
     os.remove(temp_wav_path)
 
-    return {"transcripcio": resultat}
+    return {"transcripcio": resultat}  #retornem transcripcio
 
-
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse  #per retornar resposta json
+from app.models import Cotxe, Estada, Usuari, Zona  #models
 import base64
 import io
 
-@router.post("/assistente-gemini")
+@router.post("/assistente-gemini")  #endpoint per xat amb assistent
 async def assistente_gemini(pregunta: PreguntaModel, db: Session = Depends(get_db)):
     resposta_text = None
+    text = pregunta.pregunta.lower()  #passem pregunta a minuscules
 
-    text = pregunta.pregunta.lower()
-    if "quants estacionats" in text:
+    if "quants estacionats" in text:  #cas: contar cotxes actius
         count = db.query(Estada).filter(Estada.activa == True).count()
         resposta_text = f"Tens {count} cotxe(s) aparcat(s) ara mateix."
 
-    elif "quins models" in text:
+    elif "quins models" in text:  #cas: mostrar models actius
         cotxes = db.query(Cotxe).join(Estada).filter(Estada.activa == True).all()
         noms = [f"{c.marca} {c.model}" for c in cotxes]
         llista = ", ".join(noms) if noms else "Cap cotxe aparcat."
         resposta_text = f"Els models que tens ara mateix aparcats són: {llista}"
 
-    elif "quins cotxes" in text or "models registrats" in text:
-        cotxes = db.query(Cotxe).all()
+    elif "quins cotxes" in text or "models registrats" in text:  #cas: mostrar tots els cotxes de l'usuari
+        cotxes = db.query(Cotxe).filter(Cotxe.usuari_id == Usuari.id).all()
         noms = [f"{c.marca} {c.model}" for c in cotxes]
         llista = ", ".join(noms) if noms else "No tens cap cotxe registrat."
         resposta_text = f"Els cotxes registrats al teu compte són: {llista}"
 
-    elif "quantes zones" in text or "quantes zones hi ha" in text:
+    elif "quantes zones" in text or "quantes zones hi ha" in text:  #cas: contar zones disponibles
         zones = db.query(Zona).count()
         resposta_text = f"Hi ha {zones} zona(es) disponibles."
 
-    elif "quin és el meu nom" in text or "quin és el meu usuari" in text:
+    elif "quin és el meu nom" in text or "quin és el meu usuari" in text:  #cas: obtenir nom d'usuari
         user = db.query(Usuari).filter(Usuari.id == pregunta.user_id).first()
         resposta_text = f"El teu nom d’usuari és {user.nom}" if user else "No he pogut trobar el teu nom."
 
-    else:
+    else:  #qualsevol altre pregunta es gestiona amb gemini
         model = genai.GenerativeModel('gemini-2.0-flash-lite')
         prompt = f"""
         Ets un assistent per la web Robocat. Les funcionalitats disponibles són:
@@ -121,40 +110,38 @@ async def assistente_gemini(pregunta: PreguntaModel, db: Session = Depends(get_d
         🔹 /logout → Tancar la sessió
 
         Quan l’usuari et pregunta:
-        ✅ Si vol fer una d’aquestes accions, respon exclusivament amb el LINK (per exemple: '/registre').
-        ✅ No afegeixis cap explicació extra ni frase llarga, només escriu el link exacte.
-        ✅ Si la pregunta no correspon a cap acció disponible, respon amb: "No puc ajudar-te amb això, torna a provar."
+        - Si vol fer una d’aquestes accions, respon exclusivament amb el LINK (per exemple: '/registre').
+        - No afegeixis cap explicacio extra ni frase llarga, només escriu el link exacte.
+        - Si la pregunta no correspon a cap accio disponible, respon amb: "No puc ajudar-te amb això, torna a provar."
 
         Pregunta de l’usuari: {pregunta.pregunta}
         """
         response = model.generate_content(prompt)
         resposta_text = response.text.strip()
 
-    # 🔥 Generem àudio
-    audio_bytes = generar_audio(resposta_text)
-    audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+    audio_bytes = generar_audio(resposta_text)  #generem audio de la resposta
+    audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')  #convertim a base64
 
-    return JSONResponse(content={
+    return JSONResponse(content={  #retornem resposta i audio
         "resposta": resposta_text,
         "audio": audio_base64
     })
 
-
-def generar_audio(text):
+def generar_audio(text):  #funcio per convertir text a veu
     client = texttospeech.TextToSpeechClient()
     input_text = texttospeech.SynthesisInput(text=text)
 
-    voice = texttospeech.VoiceSelectionParams(
-        language_code="ca-ES",  # català
+    voice = texttospeech.VoiceSelectionParams(  #configuracio de la veu
+        language_code="ca-ES",
         ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
     )
 
-    audio_config = texttospeech.AudioConfig(
+    audio_config = texttospeech.AudioConfig(  #configuracio de sortida
         audio_encoding=texttospeech.AudioEncoding.MP3
     )
 
-    response = client.synthesize_speech(
+    response = client.synthesize_speech(  #generem l'audio
         input=input_text, voice=voice, audio_config=audio_config
     )
 
-    return response.audio_content
+    return response.audio_content  #retornem audio

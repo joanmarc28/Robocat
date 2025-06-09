@@ -6,9 +6,8 @@ import json
 from fastapi.responses import RedirectResponse
 from sqlalchemy import select
 
-router = APIRouter()
+router = APIRouter()  # crear router per gestionar les rutes relacionades amb cotxes
 
-# Guardar cotxe
 @router.post("/guardar-cotxe")
 async def guardar_cotxe(
     matricula: str = Form(...),
@@ -19,15 +18,16 @@ async def guardar_cotxe(
     imatge: str = Form(...),
     dgt: str = Form(...),
     combustible: str = Form(...),
-    dni_usuari: str = Form(...),  # 🔥 Agafa el DNI de l’usuari també!
+    dni_usuari: str = Form(...), 
     db: Session = Depends(get_db)
 ):
-    # Comprova si ja existeix
+    # comprovar si ja existeix un cotxe amb aquesta matricula
     cotxe_existent = db.query(Cotxe).filter(Cotxe.matricula == matricula).first()
     if cotxe_existent:
+        # si existeix, llençar error 400
         raise HTTPException(status_code=400, detail="Aquest cotxe ja existeix")
 
-    # 🔥 Crea el nou cotxe
+    # crear nou objecte Cotxe amb les dades rebudes
     nou_cotxe = Cotxe(
         matricula=matricula,
         marca=marca,
@@ -38,19 +38,23 @@ async def guardar_cotxe(
         dgt=dgt,
         combustible=combustible
     )
+    # afegir el nou cotxe a la sessio de base de dades
     db.add(nou_cotxe)
 
-    # 🔥 Busca el client pel DNI
+    # buscar client pel dni per establir relacio
     client = db.query(Client).filter(Client.dni == dni_usuari).first()
     if not client:
+        # si no troba client, llençar error 404
         raise HTTPException(status_code=404, detail="Client no trobat")
 
-    # 🔥 Afegeix la relació entre el cotxe i el client
-    client.cotxes.append(nou_cotxe)
-
+    # afegir el cotxe a la llista de cotxes del client (relacio)
+    client.cotxes.append(nou_cotxe) 
+    # confirmar canvis a la base de dades
     db.commit()
+    # refrescar el nou cotxe per obtenir dades actualitzades
     db.refresh(nou_cotxe)
 
+    # retornar missatge d'exit amb dades del cotxe
     return {
         "message": "Cotxe guardat correctament i vinculat al client!",
         "cotxe": {
@@ -72,6 +76,7 @@ def obtenir_cotxe(
     dni: str,
     db: Session = Depends(get_db)
 ):
+    # consultar cotxe i client associat mitjançant join i filtratge per matricula i dni client
     cotxe = (
         db.query(Cotxe)
         .join(Cotxe.clients)
@@ -79,9 +84,11 @@ def obtenir_cotxe(
         .first()
     )
 
+    # si no es troba el cotxe amb aquest client, llençar error 404
     if not cotxe:
         raise HTTPException(status_code=404, detail="Cotxe no trobat per aquest client")
 
+    # retornar les dades del cotxe trobat
     return {
         "matricula": cotxe.matricula,
         "marca": cotxe.marca,
@@ -94,15 +101,21 @@ def obtenir_cotxe(
     }
 
 
-# Eliminar cotxe per matrícula
+# eliminar cotxe
 @router.post("/eliminar-cotxe")
 async def eliminar_cotxe(request: Request, db: Session = Depends(get_db)):
+    # obtenir dades json del request
     data = await request.json()
+    # agafar matricula per identificar cotxe
     matricula = data.get("matricula")
 
+    # buscar cotxe per matricula
     cotxe = db.query(Cotxe).filter(Cotxe.matricula == matricula).first()
     if cotxe:
+        # si existeix, eliminar-lo de la base de dades
         db.delete(cotxe)
         db.commit()
+        # retornar missatge d'exit
         return {"success": True, "message": f"Cotxe {matricula} eliminat"}
+    # si no es troba cotxe, retornar error
     return {"success": False, "error": "Cotxe no trobat"}

@@ -14,10 +14,10 @@
                 <div class="list-group">
                     {% for estada in estades %}
                     <div class="white mb-3 btn-round shadow-sm d-flex p-0">
-                        <!-- Franja lateral amb el color de la zona -->
+                        <!-- franja lateral amb el color de la zona -->
                         <div class="color-bar {{ estada.zona|lower|replace(' ', '-') }}"></div>
 
-                        <!-- Contingut principal -->
+                        <!-- contingut principal -->
                         <div class="p-3 w-100">
                             <div class="d-flex align-items-center mb-2">
                                 <img src="{{ estada.image_car if estada.image_car else '/static/img/logo.png' }}"

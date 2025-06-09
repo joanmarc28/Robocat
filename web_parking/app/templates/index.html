@@ -55,7 +55,7 @@
       fullscreenControl: false,
     });
 
-    // 🔥 Carrega zones del backend
+    //carrega zones backend
     fetch("/obtenir-zones")
       .then(response => response.json())
       .then(zones => {
@@ -93,7 +93,7 @@
         console.error("Error carregant zones:", error);
       });
 
-    // 🔵 Mostra la ubicació de l’usuari
+    // mostra ubicacio user
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(
         (position) => {
@@ -120,7 +120,7 @@
           map.setCenter(pos);
         },
         (error) => {
-          console.warn("❌ Error obtenint ubicació:", error.message);
+          console.warn("Error obtenint ubicació:", error.message);
           alert("No s’ha pogut obtenir la teva ubicació.");
         },
         {
@@ -130,7 +130,7 @@
         }
       );
     } else {
-      alert("⚠️ El teu navegador no suporta geolocalització.");
+      alert("El teu navegador no suporta geolocalització.");
     }
   }
 </script>

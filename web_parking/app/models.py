@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 from datetime import datetime
 
-# Taula associativa Possessio (Client ↔ Cotxe)
 possessio_table = Table(
     "possessio",
     Base.metadata,

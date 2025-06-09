@@ -2,6 +2,7 @@ from app.models import Usuari, Client, Policia
 from sqlalchemy.orm import Session
 from datetime import datetime
 
+# crea un usuari nou amb les dades proporcionades i el guarda a la base de dades
 async def create_user(
     db: Session,
     email: str,
@@ -18,23 +19,23 @@ async def create_user(
     telefon: str = None,
     placa: str = None
 ):
-    data_naixement_dt = datetime.strptime(data_naixement, "%Y-%m-%d").date()
+    data_naixement_dt = datetime.strptime(data_naixement, "%Y-%m-%d").date()  # converteix la data a objecte date
     nou_usuari = Usuari(
         email=email,
         password=password,
         data_naixement=data_naixement_dt,
         ciutat=ciutat
     )
-    db.add(nou_usuari)
-    db.commit()
-    db.refresh(nou_usuari)
+    db.add(nou_usuari)  # afegeix l'usuari a la sessio
+    db.commit()         # confirma la transaccio
+    db.refresh(nou_usuari)  # refresca l'objecte amb la info de la db
 
     if es_policia:
         nou_policia = Policia(
             user_id=nou_usuari.id,
             placa=placa
         )
-        db.add(nou_policia)
+        db.add(nou_policia)  # afegeix el policia si es poliica
     else:
         nou_client = Client(
             user_id=nou_usuari.id,
@@ -45,12 +46,7 @@ async def create_user(
             codi_postal=codi_postal,
             telefon=telefon
         )
-        db.add(nou_client)
+        db.add(nou_client)  # afegeix el client si no es policia
 
-    db.commit()
-    return nou_usuari
-
-
-
-
-
+    db.commit()  # confirma la transaccio per policia o client
+    return nou_usuari  # retorna l'usuari creat

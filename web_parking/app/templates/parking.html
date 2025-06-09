@@ -30,7 +30,7 @@
                                     <p class="font-weight-bold" style="color:#66615b;">Temps Maxim estada: <span
                                             id="temps_zona">-------------</span></p>
                                     <p class="font-weight-bold" style="color:#66615b;">Preu: <span
-                                            id="preu_zona">--,--</span> € / hora </p>
+                                            id="preu-zona">--,--</span> € / hora </p>
                                 </div>
                             </div>
                             <div class="mt-3">
@@ -137,10 +137,8 @@
                                         <label class="font-weight-bold m-auto col-4" style="color:#66615b;">
                                             Minuts</label>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="font-weight-bold d-block" style="color:#66615b;">Preu: <span
-                                                id="preu-zona">1,5</span>€ / hora</label>
-                                    </div>
+                                    
+                                        
                                     <div class="form-group">
                                         <label for="data_final" class="font-weight-bold d-block"
                                             style="color:#66615b;">Fins: </label>
@@ -184,7 +182,7 @@
             fullscreenControl: false,
         });
 
-        // 🔥 Carrega zones del backend
+        //carrega zones backend
         fetch("/obtenir-zones")
             .then(response => response.json())
             .then(zones => {
@@ -213,7 +211,7 @@
                         document.getElementById('id_zona').innerText = zona.id;
                         document.getElementById('carrer_zona').innerText = zona.carrer;
                         document.getElementById('temps_zona').innerText = `${zona.temps_maxim} min`;
-                        document.getElementById('preu_zona').innerText = zona.preu_min.toFixed(2).replace('.', ',');
+                        document.getElementById('preu-zona').innerText = zona.preu_min.toFixed(2).replace('.', ',');
                     });
                 });
             })
@@ -221,7 +219,7 @@
                 console.error("Error carregant zones:", error);
             });
 
-        // 🔵 Mostra la ubicació de l’usuari
+        //mostra ubicacio user
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(
                 (position) => {
@@ -248,7 +246,7 @@
                     map.setCenter(pos);
                 },
                 (error) => {
-                    console.warn("❌ Error obtenint ubicació:", error.message);
+                    console.warn("Error obtenint ubicació:", error.message);
                     alert("No s’ha pogut obtenir la teva ubicació.");
                 },
                 {
@@ -258,7 +256,7 @@
                 }
             );
         } else {
-            alert("⚠️ El teu navegador no suporta geolocalització.");
+            alert("El teu navegador no suporta geolocalització.");
         }
     }
 
@@ -282,26 +280,25 @@
     });
 
 
-    const preuPerHora = parseFloat((document.getElementById('preu-zona').innerText || '1.5').replace(',', '.'));
-    const preuPerMinut = preuPerHora / 60;
-
-
     document.getElementById('minuts').addEventListener('input', function () {
         const minuts = parseInt(this.value) || 0;
 
-        // Calcula preu
+        const preuPerHoraText = document.getElementById('preu-zona').innerText;
+        const preuPerHora = parseFloat(preuPerHoraText.replace(',', '.')) || 0;
+        const preuPerMinut = preuPerHora / 60;
+
         const preuTotal = (minuts * preuPerMinut).toFixed(2);
+
         document.getElementById('date').innerText = `${preuTotal}`;
 
-        // Calcula hora final
+        // calcula hora final
         const ara = new Date();
         ara.setMinutes(ara.getMinutes() + minuts);
         const horaFiStr = ara.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Mostra la nova hora
+        // mostra nova hora
         document.querySelector('label[for="data_final"]').innerText = `Fins (hora): ${horaFiStr}`;
 
-        // Opcional: si vols posar la data al <input> date (només el dia, no l’hora)
         const yyyy = ara.getFullYear();
         const mm = String(ara.getMonth() + 1).padStart(2, '0');
         const dd = String(ara.getDate()).padStart(2, '0');
@@ -310,7 +307,7 @@
 
 
 
-    let stream; // Per guardar el MediaStream globalment
+    let stream; //per guardar el MediaStream globalment
 
     function startCamera() {
         const video = document.getElementById('video');
@@ -323,7 +320,7 @@
             })
             .catch(error => {
                 console.error("No s’ha pogut accedir a la càmera del darrere:", error);
-                // Si falla, fem servir la càmera per defecte
+                //si falla, fer servir camera default
                 navigator.mediaDevices.getUserMedia({ video: true })
                     .then(mediaStream => {
                         stream = mediaStream;
@@ -337,17 +334,17 @@
         const video = document.getElementById('video');
         const hiddenInput = document.getElementById('imageInput');
 
-        // Esborrem la foto i tornem a mostrar el vídeo
+        //esborra foro i tornar a mostrar video
         photo.src = '';
         photo.style.display = 'none';
         video.style.display = 'block';
 
-        // Eliminem el valor del camp hidden (si existeix)
+        //eliminem el valor del camp hidden (si existeix)
         if (hiddenInput) {
             hiddenInput.value = '';
         }
 
-        // Reengeguem la càmera si s’ha apagat abans
+        // reengeguem la camera si s’ha apagat abans
         if (!video.srcObject) {
             startCamera();
         }
@@ -363,15 +360,15 @@
 
         const imageData = canvas.toDataURL("image/png");
 
-        // 👉 Mostra la imatge de seguida
+        // mostra la imatge de seguida
         photo.src = imageData;
         photo.style.display = 'block';
         video.style.display = 'none';
 
-        // 👉 Atura la càmera immediatament
+        // atura la càmera immediatament
         if (stream) stream.getTracks().forEach(track => track.stop());
 
-        // 👉 Envia la imatge al backend
+        // envia la imatge al backend
         const formData = new FormData();
         formData.append("capturedImage", imageData);
 
@@ -411,7 +408,7 @@
                 } else {
                     alert("Error inesperat: " + response.status);
                 }
-                return; // Atura aquí
+                return; //atura aqui
             }
 
             const result = await response.json();
@@ -426,7 +423,7 @@
     }
 
     async function newCar() {
-        const userId = "{{ client.dni }}";  // Passat des del backend amb Jinja o FastAPI
+        const userId = "{{ client.dni }}";  //passat des del backend amb Jinja o FastAPI
         const matricula = document.getElementById("plate").value.trim();
         const marca = document.getElementById("marca").value.trim();
         const model = document.getElementById("model").value.trim();
@@ -435,7 +432,7 @@
         const dgt = document.getElementById("dgt").value;
         const combustible = document.getElementById("combustible").value;
 
-        // Validació ràpida
+        //validacio
         if (!matricula || !marca || !model || !color || !any_matriculacio || !dgt || !combustible) {
             alert("Si us plau, omple tots els camps abans d'enviar.");
             return;
@@ -449,7 +446,7 @@
         formData.append("any_matriculacio", any_matriculacio);
         formData.append("dgt", dgt);
         formData.append("combustible", combustible);
-        formData.append("imatge", "");  // Si vols passar imatge pots omplir-ho aquí
+        formData.append("imatge", "");
         formData.append("dni_usuari", userId);
 
         try {
@@ -512,7 +509,7 @@ async function iniciarAparcament() {
         }
 
         const result = await response.json();
-        //alert("✅ Aparcament registrat amb èxit!");
+        //alert("Aparcament registrat amb èxit!");
         //console.log("Estada creada:", result);
 
         // Aquí pots redirigir o actualitzar l’UI
@@ -521,7 +518,7 @@ async function iniciarAparcament() {
 
     } catch (error) {
         console.error("Error registrant l’aparcament:", error);
-        alert("❌ Hi ha hagut un error al registrar l’aparcament.");
+        alert("Hi ha hagut un error al registrar l’aparcament.");
     }
 }
 

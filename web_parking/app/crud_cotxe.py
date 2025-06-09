@@ -1,6 +1,7 @@
-from app.models import Cotxe
+from app.models import Cotxe, Client
 from sqlalchemy.orm import Session
 
+# crea un cotxe nou i l'afegeix a la base de dades
 async def create_cotxe(
     db: Session,
     matricula: str,
@@ -22,18 +23,20 @@ async def create_cotxe(
         dgt=dgt,
         combustible=combustible
     )
-    db.add(nou_cotxe)
-    db.commit()
-    db.refresh(nou_cotxe)
-    return nou_cotxe
+    db.add(nou_cotxe)  # afegeix el cotxe a la sessio
+    db.commit()         # confirma la transaccio
+    db.refresh(nou_cotxe) # actualitza l'objecte amb la info de la db
+    return nou_cotxe    # retorna el cotxe creat
 
+# elimina un cotxe de la base de dades segons la matricula
 async def delete_cotxe(db: Session, matricula: str):
-    cotxe = db.query(Cotxe).filter(Cotxe.matricula == matricula).first()
+    cotxe = db.query(Cotxe).filter(Cotxe.matricula == matricula).first()  # busca el cotxe
     if cotxe:
-        db.delete(cotxe)
-        db.commit()
-    return cotxe
+        db.delete(cotxe)  # elimina el cotxe si existeix
+        db.commit()       # confirma la eliminacio
+    return cotxe         # retorna el cotxe eliminat o None si no existeix
 
+# actualitza les dades d'un cotxe segons la matricula
 async def update_cotxe(
     db: Session,
     matricula: str,
@@ -45,10 +48,11 @@ async def update_cotxe(
     dgt: str = None,
     combustible: str = None
 ):
-    cotxe = db.query(Cotxe).filter(Cotxe.matricula == matricula).first()
+    cotxe = db.query(Cotxe).filter(Cotxe.matricula == matricula).first()  # busca el cotxe
     if not cotxe:
-        return None
+        return None  # si no existeix, retorna None
 
+    # actualitza cada camp només si s'ha passat un valor nou
     if marca is not None:
         cotxe.marca = marca
     if model is not None:
@@ -64,15 +68,17 @@ async def update_cotxe(
     if combustible is not None:
         cotxe.combustible = combustible
 
-    db.commit()
-    db.refresh(cotxe)
-    return cotxe
+    db.commit()        # guarda els canvis a la base de dades
+    db.refresh(cotxe)  # refresca l'objecte actualitzat
+    return cotxe       # retorna el cotxe actualitzat
 
+# obté un cotxe per la seva matricula
 async def get_cotxe(db: Session, matricula: str):
     return db.query(Cotxe).filter(Cotxe.matricula == matricula).first()
 
+# obté la llista de cotxes associats a un client per el seu dni
 async def get_cotxes_by_client(db: Session, dni_usuari: str):
-    client = db.query(Client).filter(Client.dni == dni_usuari).first()
+    client = db.query(Client).filter(Client.dni == dni_usuari).first()  # busca client
     if not client:
-        return None
-    return client.cotxes  # gràcies a la relació secondary
+        return None  # si no existeix client, retorna None
+    return client.cotxes  # retorna la llista de cotxes del client

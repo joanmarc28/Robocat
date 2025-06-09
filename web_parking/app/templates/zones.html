@@ -155,12 +155,12 @@
       const result = await response.json();
       alert("Zona guardada correctament!");
 
-      // Reinicia el formulari
+      // reinicia el formulari
       form.reset();
       document.getElementById("coords").value = "";
 
-      // 🔥 Dibuixa la nova zona al mapa
-      const zona = result.zona;  // Assegura't que el backend retorna la zona nova amb coordenades
+      // dibuixa la nova zona al mapa
+      const zona = result.zona; 
       const polygonCoords = JSON.parse(zona.coordenades).map(coord => ({ lat: coord.lat, lng: coord.lng }));
       const color = zona.tipus === "blava" ? "#009cff" :
         zona.tipus === "verda" ? "#00FF00" :
@@ -179,20 +179,18 @@
 
       const infoWindow = new google.maps.InfoWindow();
       polygon.addListener('click', (event) => {
-        // 🔥 Si ja hi ha un seleccionat, desactiva edició i restaura estil
+        // si ja hi ha un seleccionat, desactiva edició i restaura estil
         if (selectedShape) {
           selectedShape.setEditable(false);
           selectedShape.setDraggable(false);
           selectedShape.setOptions({ strokeWeight: 2 });  // gruix normal
         }
 
-        // 🔥 Marca aquest com el nou seleccionat
+        // marca nou seleccionat
         selectedShape = polygon;
-
-        // 🔥 (Opcional) Ressalta visualment el seleccionat
         selectedShape.setOptions({ strokeWeight: 4 });  // gruix més gran
 
-        // 🔥 Mostra info
+        // mostrar info
         const infoWindow = new google.maps.InfoWindow();
         infoWindow.setContent(
           `<strong>Zona ${zona.tipus}</strong><br>
@@ -256,12 +254,10 @@
       const result = await response.json();
       alert("Zona guardada correctament!");
 
-      // Reinicia el formulari
       form.reset();
       document.getElementById("coords").value = "";
 
-      // 🔥 Dibuixa la nova zona al mapa
-      const zona = result.zona;  // Assegura't que el backend retorna la zona nova amb coordenades
+      const zona = result.zona;  
       const polygonCoords = JSON.parse(zona.coordenades).map(coord => ({ lat: coord.lat, lng: coord.lng }));
       const color = zona.tipus === "blava" ? "#009cff" :
         zona.tipus === "verda" ? "#00FF00" :
@@ -280,20 +276,14 @@
 
       const infoWindow = new google.maps.InfoWindow();
       polygon.addListener('click', (event) => {
-        // 🔥 Si ja hi ha un seleccionat, desactiva edició i restaura estil
         if (selectedShape) {
           selectedShape.setEditable(false);
           selectedShape.setDraggable(false);
-          selectedShape.setOptions({ strokeWeight: 2 });  // gruix normal
+          selectedShape.setOptions({ strokeWeight: 2 }); 
         }
-
-        // 🔥 Marca aquest com el nou seleccionat
         selectedShape = polygon;
+        selectedShape.setOptions({ strokeWeight: 4 }); 
 
-        // 🔥 (Opcional) Ressalta visualment el seleccionat
-        selectedShape.setOptions({ strokeWeight: 4 });  // gruix més gran
-
-        // 🔥 Mostra info
         const infoWindow = new google.maps.InfoWindow();
         infoWindow.setContent(
           `<strong>Zona ${zona.tipus}</strong><br>
@@ -336,7 +326,7 @@
 
     drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
 
-    // Mostra el formulari de nova zona
+    // formulari de nova zona
     nova_zona_form.style.display = 'block';
     eliminar_zona_form.style.display = 'none';
     canviar_zona_form.style.display = 'none';
@@ -354,7 +344,7 @@
       selectedShape = null;
       document.getElementById("coords").value = "";
     }
-    // Mostra el formulari d'eliminació de zona
+    // formulari d'eliminació de zona
     nova_zona_form.style.display = 'none';
     eliminar_zona_form.style.display = 'block';
     canviar_zona_form.style.display = 'none';
@@ -374,7 +364,7 @@
       google.maps.event.addListener(selectedShape.getPath(), 'insert_at', updateCoords);
     }
     
-    // Mostra el formulari de canvi de zona
+    // formulari de canvi de zona
     nova_zona_form.style.display = 'none';
     eliminar_zona_form.style.display = 'none';
     canviar_zona_form.style.display = 'block';
@@ -406,7 +396,7 @@
           updateCoords();
         });
 
-        // 🔥 Crida al backend per carregar les zones existents
+        // crida al backend per carregar les zones existents
         fetch(`/obtenir-zones?ciutat=${encodeURIComponent(ciutat)}`)
           .then(response => response.json())
           .then(zones => {
@@ -429,20 +419,14 @@
 
               const infoWindow = new google.maps.InfoWindow();
               polygon.addListener('click', (event) => {
-                // 🔥 Si ja hi ha un seleccionat, desactiva edició i restaura estil
                 if (selectedShape) {
                   selectedShape.setEditable(false);
                   selectedShape.setDraggable(false);
-                  selectedShape.setOptions({ strokeWeight: 2 });  // gruix normal
+                  selectedShape.setOptions({ strokeWeight: 2 });  
                 }
-
-                // 🔥 Marca aquest com el nou seleccionat
                 selectedShape = polygon;
+                selectedShape.setOptions({ strokeWeight: 4 });  
 
-                // 🔥 (Opcional) Ressalta visualment el seleccionat
-                selectedShape.setOptions({ strokeWeight: 4 });  // gruix més gran
-
-                // 🔥 Mostra info
                 const infoWindow = new google.maps.InfoWindow();
                 infoWindow.setContent(
                   `<strong>Zona ${zona.tipus}</strong><br>
