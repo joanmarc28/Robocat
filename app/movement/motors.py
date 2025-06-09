@@ -128,7 +128,23 @@ class EstructuraPotes:
     def body_downward(self):
         for leg in self.legs:
             leg.set_state("sit")
+            
+    def sit_hind_legs(self, t=0.2):
+        """Sit using only the hind legs while front legs are raised."""
+        # hind legs
+        self.legs[2].set_state("sit")
+        self.legs[3].set_state("sit")
+        # raise front legs
+        self.legs[0].set_state("up")
+        self.legs[1].set_state("up")
+        threads = []
+        for leg in self.legs:
+            th = threading.Thread(target=leg.set_new_position, args=(t,))
+            threads.append(th)
+            th.start()
 
+        for th in threads:
+            th.join()
     """def init_bot(self,t):
         for leg in self.legs:
             leg.state = "sit"
@@ -224,7 +240,6 @@ def new_angle(servo,angle_final,angle_inicial, duracio, passos=30):
         angle_actual = angle_inicial + i * pas
         servo.angle = max(0, min(180, angle_actual))  # Protecció límits
         time.sleep(delay)
-
 
 # Crear potes (ajusta els canals segons com els tinguis connectats)
 

@@ -129,12 +129,15 @@ async def connectar():
                     comanda = json.loads(resposta)
                     if estructura:
                         accio = comanda.get("moviment")
+                        print("Comanda: "+ accio)
                         if accio == "ajupir":
                             estructura.set_position("sit")
                         elif accio == "endavant":
-                            estructura.follow_sequance(walk_states, cycles=1, t=0.4)
+                            estructura.follow_sequance(walk_states, cycles=6, t=0.4)
                         elif accio == "normal":
-                            pass
+                            estructura.sit_hind_legs()
+                        elif accio == "hind_sit":
+                            estructura.sit_hind_legs()
                         elif accio == "up":
                             estructura.set_position("up")
                         elif accio == "strech":
@@ -155,5 +158,8 @@ async def main_async():
     )
 
 if __name__ == "__main__":
-    threading.Thread(target=main, daemon=True).start()
-    asyncio.run(main_async())
+    estructura = EstructuraPotes()
+    estructura.follow_sequance(walk_states, cycles=6, t=0.2)
+
+    """threading.Thread(target=main, daemon=True).start()
+    asyncio.run(main_async())"""
