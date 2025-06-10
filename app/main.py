@@ -13,10 +13,14 @@ from telemetria_shared import telemetria_data, sensors_status
 import asyncio
 import websockets
 import json
-from movement.simulation_data import walk_states
+from movement.simulation_data import walk_states,sit_sequence,up_sequence
+from queue import Queue
 
 estructura = None
 camera = RobotCamera()
+
+
+moviment_queue = Queue()
 
 def start_system(mode, ultrasons=None, gps=None):
     clear_displays()
@@ -47,7 +51,7 @@ def start_system(mode, ultrasons=None, gps=None):
         errors += 1
     time.sleep(temps)
 
-    if gps.read_heading() is not None:
+    if gps and gps.read_heading() is not None:
         displays_message(f"  Heading ..... ok")
         sensors_status["heading"] = True
     else:
@@ -55,7 +59,7 @@ def start_system(mode, ultrasons=None, gps=None):
         sensors_status["heading"] = False
     time.sleep(temps)
 
-    if gps.read_gps() is not None:
+    if gps and gps.read_gps() is not None:
         displays_message(f"  GPS ..... ok")
         sensors_status["gps"] = True
     else:
@@ -107,6 +111,29 @@ def main():
         threading.Thread(target=gps.thread_heading, daemon=True).start()
         threading.Thread(target=gps.thread_gps, daemon=True).start()
 
+    while True:
+        accio = moviment_queue.get()
+        try:
+            if accio == "endavant":
+                estructura.follow_sequance(walk_states, cycles=6, t=0.2)
+            elif accio == "ajupir":
+                estructura.set_position("sit")
+                """estructura.follow_sequance(sit_sequence, cycles=1, t=0.2)"""
+            elif accio == "normal":
+                """estructura.follow_sequance(up_sequence, cycles=1, t=0.2)"""
+                estructura.set_position("normal")
+            elif accio == "hind_sit":
+                estructura.sit_hind_legs()
+            elif accio == "up":
+                estructura.set_position("up")
+            elif accio == "strech":
+                pass
+            elif accio == "prova":
+                estructura.sit_hind_legs()
+        except Exception as e:
+            print(f"[ERROR] Executant acció '{accio}': {e}")
+        moviment_queue.task_done()
+
 def obtenir_telemetria():
     return {
         "robot_id": config.ROBOT_ID,
@@ -132,20 +159,10 @@ async def connectar():
                     if estructura:
                         accio = comanda.get("moviment")
                         print("Comanda: "+ accio)
-                        if accio == "ajupir":
-                            estructura.set_position("sit")
-                        elif accio == "endavant":
-                            threading.Thread(target=estructura.follow_sequance, args=(walk_states,), kwargs={"cycles": 6, "t": 0.2}, daemon=True).start()
-                        elif accio == "normal":
-                            estructura.sit_hind_legs()
-                        elif accio == "hind_sit":
-                            estructura.sit_hind_legs()
-                        elif accio == "up":
-                            estructura.set_position("up")
-                        elif accio == "strech":
-                            pass
-                        elif accio == "prova":
-                            pass
+                        if accio:
+                            print(f"📥 Comanda rebuda: {accio}")
+                            moviment_queue.put(accio)
+
                 except asyncio.TimeoutError:
                     pass
     except Exception as e:

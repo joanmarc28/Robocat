@@ -2,7 +2,8 @@
 positions = {
     #basic positions
     "start": (  0.0,  0.0),
-    "sit"  : (-60.0, 120.0),
+    "sit"  : (-60.0, 140.0),
+    "normal"  : (0.0, 90.0),
 
     #short stand positions
     "center" : (-30.0, 60.0),
@@ -14,7 +15,19 @@ positions = {
     "long_back" : (-30.0, 0.0),
 
     #move postitions
-    "up": (-60.0, 120.0),
+    "up": (-30.0, 60.0),
+}
+
+up_sequence = {
+    "initial": [("move_body", "upward")],
+    "cycle": [],
+    "end": []
+}
+
+sit_sequence = {
+    "initial": [("move_body", "upward")],
+    "cycle": [],
+    "end": []
 }
 
 walk_states = {

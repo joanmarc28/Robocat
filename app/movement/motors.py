@@ -102,16 +102,21 @@ class EstructuraPotes:
         for t in threads:
             t.join()
     
+    def set_body_state(self,text):
+        for leg in self.legs:
+            leg.set_state(text)    
+
     def set_position(self,text):
-        threads = []
         for leg in self.legs:
             leg.set_state(text)
-            t = threading.Thread(target=leg.set_new_position, args=(0.3,))
-            threads.append(t)
-            t.start()
+        threads = []
+        for leg in self.legs:
+            th = threading.Thread(target=leg.set_new_position, args=(0.3,))
+            threads.append(th)
+            th.start()
 
-        for t in threads:
-            t.join()
+        for th in threads:
+            th.join()
 
     def body_forward(self):
         for leg in self.legs:
@@ -137,6 +142,7 @@ class EstructuraPotes:
         # raise front legs
         self.legs[0].set_state("up")
         self.legs[1].set_state("up")
+
         threads = []
         for leg in self.legs:
             th = threading.Thread(target=leg.set_new_position, args=(t,))
@@ -171,6 +177,8 @@ class EstructuraPotes:
                 
             elif args[0] == "downward":
                 self.body_downward()
+            else:
+                self.set_body_state(args[0])
 
         elif action == 'raise_leg':
             legs = [self.legs[args[0]]]
@@ -194,7 +202,7 @@ class EstructuraPotes:
             th.join()
         return new_states
 
-    def follow_sequance(self, sequance, cycles=1, t = 10):
+    def follow_sequance(self, sequance, cycles=1, t = 1):
         """states = self.init_bot()"""
         states = self.get_states()
         print(f"Initial states: {states}")
