@@ -52,16 +52,21 @@ class RobotCamera:
         return frame
 
     async def stream_frames(self, server_url=None):
-        """Stream annotated frames to a websocket server."""
         url = server_url or f"wss://{config.SERVER_IP}/ws/stream/" + config.ROBOT_ID
-        async with websockets.connect(url) as websocket:
-            print("📡 Connectat al servidor")
-            while True:
-                frame = self.capture_frame()
-                frame = self.detect_faces(frame)
-                _, jpeg = cv2.imencode(".jpg", frame)
-                await websocket.send(jpeg.tobytes())
-                await asyncio.sleep(1 / self.fps)
+        while True:
+            try:
+                async with websockets.connect(url) as websocket:
+                    print("📡 Connectat al servidor")
+                    while True:
+                        frame = self.capture_frame()
+                        frame = self.detect_faces(frame)
+                        _, jpeg = cv2.imencode(".jpg", frame)
+                        await websocket.send(jpeg.tobytes())
+                        await asyncio.sleep(1 / self.fps)
+            except Exception as e:
+                print(f"❌ Connexió perduda: {e}. Reintentant en 5 segons...")
+                await asyncio.sleep(5)
+
 
     def take_photo(self, path):
         """Save a single frame to ``path``."""

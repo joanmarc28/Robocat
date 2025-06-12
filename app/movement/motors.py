@@ -83,8 +83,8 @@ class Pota:
 
 class EstructuraPotes:
     """Classe per gestionar les potes del quadrúpede."""
-    def __init__(self,ultrasons=None):
-        self.ultrasons = ultrasons
+    def __init__(self,ultrasons: ModulUltrasons=None):
+        self.ultrasons:ModulUltrasons = ultrasons
 
         self.legs = [
             Pota(servos[11], servos[10], True,True),  # Pota 1
@@ -213,8 +213,9 @@ class EstructuraPotes:
         
         for _ in range(cycles):
             for order in sequance["cycle"]:
-                states = self.follow_order(order, states, t)
-                print(f"After order {order}: {states}")
+                if self.ultrasons and self.ultrasons.mesura_distancia() > config.LLINDAR_ULTRASONIC:
+                    states = self.follow_order(order, states, t)
+                    print(f"After order {order}: {states}")
             
         for order in sequance["end"]:
             states = self.follow_order(order, states, t)

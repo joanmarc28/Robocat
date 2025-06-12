@@ -13,7 +13,8 @@ from telemetria_shared import telemetria_data, sensors_status
 import asyncio
 import websockets
 import json
-from movement.simulation_data import walk_states,sit_sequence,up_sequence
+from movement.simulation_data import walk_states
+from vision.slam import start_autonomous_slam
 from queue import Queue
 
 estructura = None
@@ -21,8 +22,9 @@ camera = RobotCamera()
 
 
 moviment_queue = Queue()
+slam_controller = None
 
-def start_system(mode, ultrasons=None, gps=None):
+def start_system(mode, ultrasons:ModulUltrasons=None, gps=None):
     clear_displays()
     temps = 0.5
     displays_message("Loading Robocat ........")
@@ -79,7 +81,7 @@ def start_system(mode, ultrasons=None, gps=None):
         return False
 
 def main():
-    global estructura
+    global estructura, slam_controller
     print("🔄 Iniciant el sistema Robocat...")
 
     try:
@@ -128,8 +130,12 @@ def main():
                 estructura.set_position("up")
             elif accio == "strech":
                 pass
-            elif accio == "prova":
-                estructura.sit_hind_legs()
+            elif accio == "autonom":
+                if slam_controller is None:
+                    try:
+                        slam_controller = start_autonomous_slam()
+                    except Exception as e:
+                        print(f"[ERROR] Autonomous SLAM: {e}")
         except Exception as e:
             print(f"[ERROR] Executant acció '{accio}': {e}")
         moviment_queue.task_done()
@@ -147,28 +153,29 @@ def obtenir_telemetria():
 async def connectar():
     uri = f"wss://{config.SERVER_IP}/ws/telemetria"
     global estructura
-    try:
-        async with websockets.connect(uri) as websocket:
-            print("✅ Connectat al servidor")
-            while True:
-                await websocket.send(json.dumps(obtenir_telemetria()))
+    while True:
+        try:
+            async with websockets.connect(uri) as websocket:
+                print("✅ Connectat al servidor")
+                while True:
+                    await websocket.send(json.dumps(obtenir_telemetria()))
 
-                try:
-                    resposta = await asyncio.wait_for(websocket.recv(), timeout=0.5)
-                    comanda = json.loads(resposta)
-                    if estructura:
-                        accio = comanda.get("moviment")
-                        print("Comanda: "+ accio)
-                        if accio:
-                            print(f"📥 Comanda rebuda: {accio}")
-                            moviment_queue.put(accio)
+                    try:
+                        resposta = await asyncio.wait_for(websocket.recv(), timeout=0.5)
+                        comanda = json.loads(resposta)
+                        if estructura:
+                            accio = comanda.get("moviment")
+                            print("Comanda: "+ accio)
+                            if accio:
+                                print(f"📥 Comanda rebuda: {accio}")
+                                moviment_queue.put(accio)
 
-                except asyncio.TimeoutError:
-                    pass
-    except Exception as e:
-        print("❌ Error de connexió:", e)
-        await asyncio.sleep(5)
-        await connectar()
+                    except asyncio.TimeoutError:
+                        pass
+        except Exception as e:
+            print("❌ Error de connexió:", e)
+            await asyncio.sleep(5)
+            continue
 
 async def main_async():
     await asyncio.gather(

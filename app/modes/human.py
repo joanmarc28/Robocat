@@ -1,5 +1,5 @@
 
-from interface.display import start_displays,displays_message,clear_displays, displays_show_frames
+from interface.display import clear_displays, displays_show_frames
 import config
 import time
 from interface.speaker import say_emotion
@@ -17,8 +17,3 @@ def prova():
             displays_show_frames(e)
 
         clear_displays()
-
-def prova_text():
-    # Mostra missatge inicial a la pantalla OLED
-    displays_message("Robocat Ready", line=0)
-    displays_message(f"Mode: {config.DEFAULT_MODE}", line=1)

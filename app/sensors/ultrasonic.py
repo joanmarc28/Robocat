@@ -20,10 +20,24 @@ class ModulUltrasons:
         GPIO.output(config.ULTRASONIC_TRIG, False)
 
         # Espera l'eco
-        while GPIO.input(config.ULTRASONIC_ECHO) == 0:
-            start = time.time()
-        while GPIO.input(config.ULTRASONIC_ECHO) == 1:
-            end = time.time()
+        # Espera l'eco amb timeout per evitar bloquejos
+        timeout = 0.02  # 20 ms
+        start_time = time.time()
+
+        start = start_time
+        while GPIO.input(config.ULTRASONIC_ECHO) == 0 and (time.time() - start_time) < timeout:
+             start = time.time()
+
+        if (time.time() - start_time) >= timeout:
+            return None
+
+        start_time = time.time()
+        end = start_time
+        while GPIO.input(config.ULTRASONIC_ECHO) == 1 and (time.time() - start_time) < timeout:
+             end = time.time()
+             
+        if (time.time() - start_time) >= timeout:
+            return None
 
         # Calcula temps i distancia
         duration = end - start
@@ -38,7 +52,11 @@ class ModulUltrasons:
     def thread_ultrasons(self):
         while True:
             """ultrasons.mesura_distancia_auto()"""
-            dist = self.mesura_distancia()
-            telemetria_data["dist"] = dist
+            try:
+                dist = self.mesura_distancia()
+                if dist is not None:
+                    telemetria_data["dist"] = dist
+            except Exception as e:
+                print(f"[ERROR] Ultrasons: {e}")
             time.sleep(0.5)
 
