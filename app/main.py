@@ -1,6 +1,7 @@
 # main.py
 import threading
 """from app.vision.old_cameraweb import send_frames"""
+from sensors.accelerometre import ModulAccelerometer
 from vision.camera import RobotCamera
 from sensors.ultrasonic import ModulUltrasons
 from movement.motors import EstructuraPotes
@@ -14,7 +15,7 @@ import asyncio
 import websockets
 import json
 from movement.simulation_data import walk_states
-from vision.slam import start_autonomous_slam
+#from vision.slam import start_autonomous_slam
 from queue import Queue
 
 estructura = None
@@ -184,5 +185,9 @@ async def main_async():
     )
 
 if __name__ == "__main__":
-    threading.Thread(target=main, daemon=True).start()
-    asyncio.run(main_async())
+    """threading.Thread(target=main, daemon=True).start()
+    asyncio.run(main_async())"""
+    sensor = ModulAccelerometer()
+    while True:
+        sensor.print_data()
+        time.sleep(0.5)
