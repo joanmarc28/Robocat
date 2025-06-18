@@ -7,8 +7,8 @@ from vision.camera import RobotCamera
 class Agent:
     def __init__(self, camera:RobotCamera= None, speaker:Speaker= None):
         self.mode = "human"
-        self.submode = "idle"
-        self.speaker = Speaker()
+        self.submode = "default"
+        self.speaker = speaker
         self.camera = camera
 
         self.human = HumanBehavior(self.speaker)
@@ -21,7 +21,7 @@ class Agent:
         if mode in ["human", "police"]:
             print(f"Mode ➜ {mode}")
             self.mode = mode
-            self.submode = "idle"
+            self.submode = "default"
         else:
             print(f"Mode desconegut: {mode}")
 
@@ -46,11 +46,11 @@ class Agent:
         self.running = False
 
     def _execute_mode(self):
-        print(f"[⚙️] Executant: mode={self.mode}, submode={self.submode}")
+        print(f"Executant: mode={self.mode}, submode={self.submode}")
         if self.mode == "human":
             self.human.express_emotion(self.submode)
         elif self.mode == "police":
             if self.submode == "detect":
                 self.police.detect_license_plate()
             else:
-                print(f"[❓] Submode policial desconegut: {self.submode}")
+                print(f"Submode policial desconegut: {self.submode}")
