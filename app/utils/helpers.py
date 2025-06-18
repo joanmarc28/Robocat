@@ -56,3 +56,28 @@ def get_cpu_temp():
 def get_cpu_freq():
     output = subprocess.check_output(['vcgencmd', 'measure_clock', 'arm']).decode()
     return int(output.split('=')[1]) / 1_000_000  # en MHz
+
+def parse_throttled_state(hex_string):
+    if '=' in hex_string:
+        hex_value = int(hex_string.split('=')[1], 16)
+    else:
+        hex_value = int(hex_string, 16)
+
+    def is_bit_set(value, bit):
+        return (value & (1 << bit)) != 0
+
+    state = {
+        "under_voltage_now": is_bit_set(hex_value, 0),
+        "frequency_capped_now": is_bit_set(hex_value, 1),
+        "throttling_now": is_bit_set(hex_value, 2),
+        "under_voltage_occurred": is_bit_set(hex_value, 16),
+        "frequency_capped_occurred": is_bit_set(hex_value, 17),
+        "throttling_occurred": is_bit_set(hex_value, 18),
+    }
+    return state
+
+"""def print_throttled_status(status):
+    for key, value in status.items():
+        emoji = "🟢" if not value else "🔴"
+        print(f"{emoji} {key.replace('_', ' ').capitalize()}: {'YES' if value else 'NO'}")
+"""

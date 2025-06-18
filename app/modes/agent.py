@@ -3,10 +3,11 @@ from modes.human_behavior import HumanBehavior
 from modes.police_behavior import PoliceBehavior
 from interface.speaker import Speaker
 from vision.camera import RobotCamera
+import config
 
 class Agent:
     def __init__(self, camera:RobotCamera= None, speaker:Speaker= None):
-        self.mode = "human"
+        self.mode = config.DEFAULT_MODE
         self.submode = "default"
         self.speaker = speaker
         self.camera = camera

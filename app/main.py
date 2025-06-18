@@ -103,10 +103,6 @@ def main():
     global estructura, slam_controller, agent
     print("🔄 Iniciant el sistema Robocat...")
 
-    # Llança el bucle en un fil separat
-    agent_loop = threading.Thread(target=agent.run, daemon=True)
-    agent_loop.start()
-
     try:
         speaker = Speaker()
     except Exception as e:
@@ -159,6 +155,10 @@ def main():
     if accelerometre:
         threading.Thread(target=accelerometre.thread, daemon=True).start()
 
+    # Llança el bucle en un fil separat
+    agent_loop = threading.Thread(target=agent.run, daemon=True)
+    agent_loop.start()
+    
     # Analisis d'accions desde la web
     while True:
         accio = moviment_queue.get()
@@ -203,7 +203,7 @@ def obtenir_telemetria():
         'ram_use': get_ram(),
         'cpu_temp': get_cpu_temp(),
         'cpu_freq': get_cpu_freq(),
-        'throttled_state': get_throttled_status(),
+        'throttled_state': parse_throttled_state(get_throttled_status()),
     }
 
 async def connectar():
