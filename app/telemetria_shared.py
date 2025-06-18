@@ -3,7 +3,11 @@ telemetria_data = {
     "lat": None,
     "lon": None,
     "heading": None,
-    "dist": None
+    "dist": None,
+    'accel': None,
+    'gyro': None,
+    'gyro_temp': None,
+    'angle': None
 }
 
 sensors_status = {
@@ -11,5 +15,7 @@ sensors_status = {
     "internet": None,
     "ultrasons": None,
     "heading": None,
-    "gps": None
+    "gps": None,
+    "giroscopi": None,
+    "speaker": None,
 }

@@ -1,6 +1,7 @@
 import smbus2
 import time
 from math import atan2, sqrt, degrees
+from telemetria_shared import telemetria_data
 
 class ModulAccelerometer:
     def __init__(self, bus_num=6, address=0x68):
@@ -53,3 +54,11 @@ class ModulAccelerometer:
         print(f"🌀 Gyro: {data['gyro']}")
         print(f"🌡️ Temp: {data['temp']} ºC")
         print(f"🎯 Pitch/Roll: {data['angle']}")
+        
+    def thread(self):
+        while True:
+            telemetria_data["accel"] = self.get_accel()
+            telemetria_data["gyro"] = self.get_gyro()
+            telemetria_data["gyro_temp"] = self.get_temp()
+            telemetria_data["angle"] = self.get_pitch_roll()
+            time.sleep(0.5)

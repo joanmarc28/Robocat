@@ -1,23 +1,22 @@
 # config.py
 
-ROBOT_ID = "robocat001"  # Canvia si tens múltiples robots
-SERVER_IP = "robocat.jmprojects.cat"  # IP del servidor web (on hi ha FastAPI)
+ROBOT_ID = "robocat001"  # ID percada robot
+SERVER_IP = "robocat.jmprojects.cat"  # IP del servidor web
 
 # I2C pins 
 I2C_BUS_OLED_LEFT = 3
 I2C_BUS_OLED_RIGHT = 4
 I2C_BUS_GPS = 5
 
-# Pins de sensors, motors, etc.
+# Pins Ultrasons
 ULTRASONIC_TRIG = 8
 ULTRASONIC_ECHO = 23
-
-#SERVO_PIN_FRONT_LEFT = 17
-LLINDAR_ULTRASONIC = 10  # Distància mínima per activar l'alerta d'obstacle
+LLINDAR_ULTRASONIC = 10  # Distància mínima per l'alerta d'aproximació
 
 # Pantalla OLED
 OLED_WIDTH = 128
 OLED_HEIGHT = 64
+EYE_DELAY = 0.01
 
 # Configuració de la càmera
 CAMERA_WIDTH = 640
@@ -29,28 +28,29 @@ CAMERA_FLIP = False  # Inverteix la imatge horitzontalment
 # Mode de funcionament per defecte
 DEFAULT_MODE = "Patrol"
 
-# temps 
-EYE_DELAY = 0.01
+SOUNDS_DIR = "assets/sounds_clean"
+AUDIO_DEVICE = "plughw:1,0"
 
-STATES_INFO = {"default":{
-                "sounds": ["neutral_1_clean.wav"],
-
-                }, 
-                "happy":{
-                    "sounds": ["cute_1_clean.wav"],
-
-                },  
-                "patrol":{
-                    "sounds": ["angry_2_clean.wav"],
-
-                },  
-                "angry":{
-                    "sounds": ["angry_1_clean.wav"],
-
-                },  
-                "sad":{
-                    "sounds": ["sick_1_clean.wav"],
-
-                }
-            }
-#STATES_INFO.
+STATES = {"default":{
+            "sounds": ["neutral_1_clean.wav"],
+            "eyes":""
+        }, 
+        "happy":{
+            "sounds": ["cute_1_clean.wav"],
+        },  
+        "patrol":{
+            "sounds": ["angry_2_clean.wav"],
+        },  
+        "angry":{
+            "sounds": ["angry_1_clean.wav"],
+        },    
+        "surprised":{
+            "sounds": ["funny_1_clean.wav"],
+        },     
+        "sleepy":{
+            "sounds": ["angry_2_clean.wav"],
+        },  
+        "sad":{
+            "sounds": ["sick_1_clean.wav"],
+        }
+    }

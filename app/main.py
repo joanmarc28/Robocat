@@ -1,6 +1,9 @@
 # main.py
 import threading
 """from app.vision.old_cameraweb import send_frames"""
+from modes.human import Human
+from modes.patrol import Patrol
+from interface.speaker import Speaker
 from sensors.accelerometre import ModulAccelerometer
 from vision.camera import RobotCamera
 from sensors.ultrasonic import ModulUltrasons
@@ -9,7 +12,7 @@ from sensors.gps import ModulGPS
 from interface.display import start_displays, displays_message, clear_displays
 import config
 import time
-from utils.helpers import check_internet, get_local_ip
+from utils.helpers import *
 from telemetria_shared import telemetria_data, sensors_status
 import asyncio
 import websockets
@@ -25,7 +28,7 @@ camera = RobotCamera()
 moviment_queue = Queue()
 slam_controller = None
 
-def start_system(mode, ultrasons:ModulUltrasons=None, gps=None):
+def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None):
     clear_displays()
     temps = 0.5
     displays_message("Loading Robocat ........")
@@ -70,6 +73,22 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps=None):
         sensors_status["gps"] = False
     time.sleep(temps)
 
+    if accelerometre and accelerometre.read_data() is not None:
+        displays_message(f"  Gyroscope ..... ok")
+        sensors_status["giroscopi"] = True
+    else:
+        displays_message(f"  Gyroscope ..... Not Found")
+        sensors_status["giroscopi"] = False
+    time.sleep(temps)
+
+    if speaker:
+        displays_message(f"  Speaker ..... ok")
+        sensors_status["speaker"] = True
+    else:
+        displays_message(f"  Speaker ..... Not Found")
+        sensors_status["speaker"] = False
+    time.sleep(temps)
+
     if errors == 0:
         displays_message(f"All Systems Ready")
         time.sleep(temps)
@@ -85,6 +104,9 @@ def main():
     global estructura, slam_controller
     print("🔄 Iniciant el sistema Robocat...")
 
+    human = Human()
+    patrol = Patrol()
+
     try:
         ultrasons = ModulUltrasons()
     except Exception as e:
@@ -97,8 +119,20 @@ def main():
         print(f"[ERROR] GPS: {e}")
         gps = None
 
+    try:
+        accelerometre = ModulAccelerometer()
+    except Exception as e:
+        print(f"[ERROR] Gyroscope: {e}")
+        accelerometre = None
+
+    try:
+        speaker = Speaker()
+    except Exception as e:
+        print(f"[ERROR] Speaker: {e}")
+        speaker = None
+
     if start_displays():
-        if not start_system(config.DEFAULT_MODE, ultrasons, gps):
+        if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker):
             print("Errors crítics detectats. Aturant el sistema.")
             return
 
@@ -108,15 +142,25 @@ def main():
         print(f"[ERROR] Motors: {e}")
         estructura = None
 
+    # Creació dels multiples threads per cada senor i obtenir dades en temps real
     if ultrasons:
         threading.Thread(target=ultrasons.thread_ultrasons, daemon=True).start()
+
     if gps:
         threading.Thread(target=gps.thread_heading, daemon=True).start()
         threading.Thread(target=gps.thread_gps, daemon=True).start()
 
+    if accelerometre:
+        threading.Thread(target=accelerometre.thread, daemon=True).start()
+
+    # Analisis d'accions desde la web
     while True:
         accio = moviment_queue.get()
         try:
+            if accio == "patrol":
+                """human.express_emotion("happy", duration=3)"""
+            if accio == "human":
+
             if accio == "endavant":
                 estructura.follow_sequance(walk_states, cycles=6, t=0.2)
             elif accio == "ajupir":
@@ -148,7 +192,16 @@ def obtenir_telemetria():
         "lat": telemetria_data.get("lat", 0.0),
         "lon": telemetria_data.get("lon", 0.0),
         "heading": telemetria_data.get("heading", 0.0),
-        "dist": telemetria_data.get("dist", 0)
+        "dist": telemetria_data.get("dist", 0),
+        'accel': telemetria_data.get("accel", 0),
+        'gyro': telemetria_data.get("gyro", 0),
+        'gyro_temp': telemetria_data.get("gyro_temp", 0),
+        'angle': telemetria_data.get("angle", 0),
+        'cpu_use': get_cpu_usage(),
+        'ram_use': get_ram(),
+        'cpu_temp': get_cpu_temp(),
+        'cpu_freq': get_cpu_freq(),
+        'throttled_state': get_throttled_status(),
     }
 
 async def connectar():
@@ -185,9 +238,6 @@ async def main_async():
     )
 
 if __name__ == "__main__":
-    """threading.Thread(target=main, daemon=True).start()
-    asyncio.run(main_async())"""
-    sensor = ModulAccelerometer()
-    while True:
-        sensor.print_data()
-        time.sleep(0.5)
+    threading.Thread(target=main, daemon=True).start()
+    asyncio.run(main_async())
+

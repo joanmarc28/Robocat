@@ -1,19 +1,24 @@
-
 from interface.display import clear_displays, displays_show_frames
+from interface.speaker import Speaker
 import config
 import time
-from interface.speaker import say_emotion
+from vision.camera import RobotCamera
 
-def prova():
-    emotions = ["default", "happy", "angry", "patrol","sad"]
+class Human:
 
-    print("→ Reproduint emocions:")
-    for e in emotions:
-        print(f"  · {e}")
-        #say_emotion(e)
-        durada_total = 5  # segons
+    def __init__(self, speaker:Speaker=None,camera:RobotCamera=None):
+        self.active = False
+        self.speaker = speaker
+
+    def express_emotion(self, emotion, duration=5):
+        print(f"[🤖] Expressant emoció: {emotion}")
+        
+        # Dir l'emoció amb veu
+        self.speaker.say_emotion(emotion)
+
+        # Mostrar-la durant `duration` segons
         t_inici = time.time()
-        while time.time() - t_inici < durada_total:
-            displays_show_frames(e)
-
+        while time.time() - t_inici < duration:
+            displays_show_frames(emotion)
+        
         clear_displays()
