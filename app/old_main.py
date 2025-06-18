@@ -4,7 +4,7 @@ from vision.cameraweb import start_webrtc_client
 from sensors.ultrasonic import ModulUltrasons
 from movement.motors import EstructuraPotes,set_servo_angle
 from sensors.gps import ModulGPS
-from modes.human import prova
+from app.modes.human_behavior import prova
 from interface.display import start_displays,displays_message,clear_displays
 import config
 import time

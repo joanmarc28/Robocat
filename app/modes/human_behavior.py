@@ -4,14 +4,13 @@ import config
 import time
 from vision.camera import RobotCamera
 
-class Human:
-
+class HumanBehavior:
     def __init__(self, speaker:Speaker=None,camera:RobotCamera=None):
-        self.active = False
         self.speaker = speaker
+        self.camera = camera
 
-    def express_emotion(self, emotion, duration=5):
-        print(f"[🤖] Expressant emoció: {emotion}")
+    def express_emotion(self, emotion, duration=3):
+        #print(f"[HUMAN] Expressant emoció: {emotion}")
         
         # Dir l'emoció amb veu
         self.speaker.say_emotion(emotion)

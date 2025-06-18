@@ -1,0 +1,56 @@
+import time
+from modes.human_behavior import HumanBehavior
+from modes.police_behavior import PoliceBehavior
+from interface.speaker import Speaker
+from vision.camera import RobotCamera
+
+class Agent:
+    def __init__(self, camera:RobotCamera= None, speaker:Speaker= None):
+        self.mode = "human"
+        self.submode = "idle"
+        self.speaker = Speaker()
+        self.camera = camera
+
+        self.human = HumanBehavior(self.speaker)
+        self.police = PoliceBehavior(self.speaker, self.camera)
+
+        self.running = True
+        self.last_action_time = 0
+
+    def set_mode(self, mode):
+        if mode in ["human", "police"]:
+            print(f"Mode ➜ {mode}")
+            self.mode = mode
+            self.submode = "idle"
+        else:
+            print(f"Mode desconegut: {mode}")
+
+    def set_submode(self, submode):
+        print(f"Submode ➜ {submode}")
+        self.submode = submode
+
+    def run(self):
+        print("Agent en execució...")
+        while self.running:
+            now = time.time()
+
+            # Limita la freqüència d'acció (ex: cada 5s)
+            if now - self.last_action_time >= 5:
+                self._execute_mode()
+                self.last_action_time = now
+
+            time.sleep(0.1)  # Redueix ús de CPU
+
+    def stop(self):
+        print("Aturant Agent")
+        self.running = False
+
+    def _execute_mode(self):
+        print(f"[⚙️] Executant: mode={self.mode}, submode={self.submode}")
+        if self.mode == "human":
+            self.human.express_emotion(self.submode)
+        elif self.mode == "police":
+            if self.submode == "detect":
+                self.police.detect_license_plate()
+            else:
+                print(f"[❓] Submode policial desconegut: {self.submode}")

@@ -1,8 +1,7 @@
 # main.py
 import threading
 """from app.vision.old_cameraweb import send_frames"""
-from modes.human import Human
-from modes.patrol import Patrol
+from modes.agent import Agent
 from interface.speaker import Speaker
 from sensors.accelerometre import ModulAccelerometer
 from vision.camera import RobotCamera
@@ -23,7 +22,7 @@ from queue import Queue
 
 estructura = None
 camera = RobotCamera()
-
+agent = None
 
 moviment_queue = Queue()
 slam_controller = None
@@ -101,11 +100,24 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
         return False
 
 def main():
-    global estructura, slam_controller
+    global estructura, slam_controller, agent
     print("🔄 Iniciant el sistema Robocat...")
 
-    human = Human()
-    patrol = Patrol()
+    # Llança el bucle en un fil separat
+    agent_loop = threading.Thread(target=agent.run, daemon=True)
+    agent_loop.start()
+
+    try:
+        speaker = Speaker()
+    except Exception as e:
+        print(f"[ERROR] Speaker: {e}")
+        speaker = None
+
+    try:
+        agent = Agent(camera,speaker)
+    except Exception as e:
+        print(f"[ERROR] Motors: {e}")
+        agent = None
 
     try:
         ultrasons = ModulUltrasons()
@@ -124,12 +136,6 @@ def main():
     except Exception as e:
         print(f"[ERROR] Gyroscope: {e}")
         accelerometre = None
-
-    try:
-        speaker = Speaker()
-    except Exception as e:
-        print(f"[ERROR] Speaker: {e}")
-        speaker = None
 
     if start_displays():
         if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker):
@@ -156,11 +162,7 @@ def main():
     # Analisis d'accions desde la web
     while True:
         accio = moviment_queue.get()
-        try:
-            if accio == "patrol":
-                """human.express_emotion("happy", duration=3)"""
-            if accio == "human":
-
+        try:          
             if accio == "endavant":
                 estructura.follow_sequance(walk_states, cycles=6, t=0.2)
             elif accio == "ajupir":
@@ -206,7 +208,7 @@ def obtenir_telemetria():
 
 async def connectar():
     uri = f"wss://{config.SERVER_IP}/ws/telemetria"
-    global estructura
+    global estructura, agent
     while True:
         try:
             async with websockets.connect(uri) as websocket:
@@ -223,6 +225,16 @@ async def connectar():
                             if accio:
                                 print(f"📥 Comanda rebuda: {accio}")
                                 moviment_queue.put(accio)
+
+                            estat = comanda.get("estat")
+                            print("Estat: "+ estat)
+                            if estat == "police":
+                                agent.set_mode("police")
+                            if estat == "human":
+                                agent.set_mode("human")
+                            if estat == "happy":
+                                agent.set_submode("happy")
+
 
                     except asyncio.TimeoutError:
                         pass
