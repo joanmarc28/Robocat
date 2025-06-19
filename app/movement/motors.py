@@ -275,8 +275,18 @@ def sweep_servo(index, delay=0.01):
         servos[index].angle = angle
         time.sleep(delay)
 
+def mou_cap(index=15, inici=30, pic=90, final=60, duracio=2, passos=40):
+    if not (0 <= index < len(servos)):
+        raise ValueError("Index de servo fora de rang.")
 
+    def interpolar(ang1, ang2):
+        pas = (ang2 - ang1) / passos
+        return [ang1 + i * pas for i in range(passos + 1)]
 
+    angles = interpolar(inici, pic) + interpolar(pic, final)[1:]  # Evita duplicar el pic
+    delay = duracio / len(angles)
 
-
+    for angle in angles:
+        servos[index].angle = max(0, min(180, angle))
+        time.sleep(delay)
 

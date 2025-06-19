@@ -50,3 +50,16 @@ class Speaker:
                 print(f"[INFO] No sounds listed for emotion: {emotion}")
         else:
             print(f"[INFO] Unknown emotion: {emotion}")
+            
+    def say_text(self, text):
+        try:
+            # Alternativa 1: amb espeak (habitual a Raspberry)
+            subprocess.run(["espeak", "-vca", "-s140", text], check=True)
+
+            # Alternativa 2: amb pico2wave (millor veu, més natural)
+            # wav_path = "/tmp/robocat_voice.wav"
+            # subprocess.run(["pico2wave", "-l=ca-ES", "-w", wav_path, text], check=True)
+            # subprocess.run(["aplay", "-D", self.audio_device, wav_path], check=True)
+
+        except Exception as e:
+            print(f"[ERROR] Error dient text: {e}")

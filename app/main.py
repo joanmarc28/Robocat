@@ -19,6 +19,7 @@ import json
 from movement.simulation_data import walk_states
 #from vision.slam import start_autonomous_slam
 from queue import Queue
+from interface.micro import Micro  # el fitxer on tens la classe de veu
 
 estructura = None
 camera = RobotCamera()
@@ -27,7 +28,7 @@ agent = None
 moviment_queue = Queue()
 slam_controller = None
 
-def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None):
+def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None, micro:Micro = None):
     clear_displays()
     temps = 0.5
     displays_message("Loading Robocat ........")
@@ -88,6 +89,14 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
         sensors_status["speaker"] = False
     time.sleep(temps)
 
+    if micro:
+        displays_message(f"  Micro ..... ok")
+        sensors_status["micro"] = True
+    else:
+        displays_message(f"  Micro ..... Not Found")
+        sensors_status["micro"] = False
+    time.sleep(temps)
+
     if errors == 0:
         displays_message(f"All Systems Ready")
         time.sleep(temps)
@@ -114,6 +123,12 @@ def main():
     except Exception as e:
         print(f"[ERROR] Motors: {e}")
         agent = None
+        
+    try:
+        micro = Micro(agent=agent, device_index=2)
+    except Exception as e:
+        print(f"[ERROR] Motors: {e}")
+        micro = None
 
     try:
         ultrasons = ModulUltrasons()
@@ -155,10 +170,13 @@ def main():
     if accelerometre:
         threading.Thread(target=accelerometre.thread, daemon=True).start()
 
-    # Llança el bucle en un fil separat
-    agent_loop = threading.Thread(target=agent.run, daemon=True)
-    agent_loop.start()
+    if micro:
+        threading.Thread(target=micro.run, daemon=True).start()
+
+    if agent:
+        threading.Thread(target=agent.run, daemon=True).start()
     
+
     # Analisis d'accions desde la web
     while True:
         accio = moviment_queue.get()
@@ -178,11 +196,11 @@ def main():
             elif accio == "strech":
                 pass
             elif accio == "autonom":
-                if slam_controller is None:
+                """if slam_controller is None:
                     try:
                         slam_controller = start_autonomous_slam()
                     except Exception as e:
-                        print(f"[ERROR] Autonomous SLAM: {e}")
+                        print(f"[ERROR] Autonomous SLAM: {e}")"""
         except Exception as e:
             print(f"[ERROR] Executant acció '{accio}': {e}")
         moviment_queue.task_done()
