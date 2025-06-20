@@ -6,7 +6,7 @@ from interface.speaker import Speaker
 from sensors.accelerometre import ModulAccelerometer
 from vision.camera import RobotCamera
 from sensors.ultrasonic import ModulUltrasons
-from movement.motors import EstructuraPotes
+from movement.motors import EstructuraPotes, mou_cap
 from sensors.gps import ModulGPS
 from interface.display import start_displays, displays_message, clear_displays
 import config
@@ -54,7 +54,7 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
     else:
         displays_message(f"  Ultrasons ..... Fail")
         sensors_status["ultrasons"] = False
-        errors += 1
+        #errors += 1
     time.sleep(temps)
 
     if gps and gps.read_heading() is not None:
@@ -198,10 +198,12 @@ def main():
                 agent.set_submode("happy")
             elif accio == "sad":
                 agent.set_mode("human")
-                agent.set_submode("happy")
+                agent.set_submode("sad")
             elif accio == "angry":
                 agent.set_mode("human")
-                agent.set_submode("happy")
+                agent.set_submode("angry")
+                mou_cap()
+
             elif accio == "patrol":
                 #Provisional
                 agent.set_mode("human")
