@@ -151,6 +151,24 @@ class EstructuraPotes:
 
         for th in threads:
             th.join()
+            
+    def strech(self, t=0.2):
+        """Sit using only the hind legs while front legs are raised."""
+        # hind legs
+        self.legs[2].set_state("up")
+        self.legs[3].set_state("up")
+        # raise front legs
+        self.legs[0].set_state("sit")
+        self.legs[1].set_state("sit")
+
+        threads = []
+        for leg in self.legs:
+            th = threading.Thread(target=leg.set_new_position, args=(t,))
+            threads.append(th)
+            th.start()
+
+        for th in threads:
+            th.join()
     """def init_bot(self,t):
         for leg in self.legs:
             leg.state = "sit"
@@ -275,7 +293,7 @@ def sweep_servo(index, delay=0.01):
         servos[index].angle = angle
         time.sleep(delay)
 
-def mou_cap(index=15, inici=30, pic=90, final=60, duracio=2, passos=40):
+def mou_cap(index=15, inici=30, pic=90, final=60, duracio=0.8, passos=40):
     if not (0 <= index < len(servos)):
         raise ValueError("Index de servo fora de rang.")
 

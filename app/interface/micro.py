@@ -23,7 +23,6 @@ class Micro:
     def say(self, text):
         if self.agent and hasattr(self.agent, "speaker"):
             """self.agent.speaker.say_text(text)"""
-            self.agent.speaker.say_emotion("surprised")
         else:
             print(f"🔊 {text}")
 
@@ -47,21 +46,22 @@ class Micro:
     def run(self):
         while self._running:
             print("👂 Escoltant wake word...")
-            text = self.listen_once(timeout=1, phrase_time_limit=3)
+            text = self.listen_once(timeout=5, phrase_time_limit=3)
             if text and self.wake_word in text:
                 print("✅ Wake word detectada!")
-                self.say("Et sento. Digues què vols que faci.")
+                """self.say("Et sento. Digues què vols que faci.")"""
                 mou_cap()
+                self.agent.speaker.say_emotion("surprised")
 
                 command = self.listen_once(timeout=5, phrase_time_limit=6)
                 if not command:
                     self.say("No t'he entès bé. Pots repetir?")
                     continue
 
-                response = self.send_to_gemini(command)
+                """response = self.send_to_gemini(command)
                 print("🤖 Gemini:", response)
                 self.say(response or "No he pogut obtenir resposta.")
 
                 if self.agent:
-                    self.agent.handle_gemini_response(response or "")
+                    self.agent.handle_gemini_response(response or "")"""
             time.sleep(0.5)

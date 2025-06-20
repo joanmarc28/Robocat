@@ -149,7 +149,7 @@ def main():
         accelerometre = None
 
     if start_displays():
-        if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker):
+        if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker,micro):
             print("Errors crítics detectats. Aturant el sistema.")
             return
 
@@ -193,8 +193,21 @@ def main():
                 estructura.sit_hind_legs()
             elif accio == "up":
                 estructura.set_position("up")
+            elif accio == "happy":
+                agent.set_mode("human")
+                agent.set_submode("happy")
+            elif accio == "sad":
+                agent.set_mode("human")
+                agent.set_submode("happy")
+            elif accio == "angry":
+                agent.set_mode("human")
+                agent.set_submode("happy")
+            elif accio == "patrol":
+                #Provisional
+                agent.set_mode("human")
+                agent.set_submode("patrol")
             elif accio == "strech":
-                pass
+                estructura.strech()
             elif accio == "autonom":
                 """if slam_controller is None:
                     try:
