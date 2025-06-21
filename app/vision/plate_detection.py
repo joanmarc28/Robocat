@@ -108,8 +108,7 @@ class PlateDetection:
         cnn.save("models/cnn_plate.h5")
 
     #funcions de deteccio
-    def detect_car():
-        frame = RobotCamera.capture_frame()
+    def detect_car(frame):
         model = YOLO("yolo/car_model/runs/train_fast/yolov8n_cotxes/weights/best.pt")
         results = model.predict(frame, save=True, imgsz=416)  # 0 -> gpu, "cpu" -> cpu
         if results:
@@ -119,16 +118,15 @@ class PlateDetection:
                     return car
         return None
 
-    def detect_plate():
-        frame = RobotCamera.capture_frame()
+    def detect_plate(car):
         model = YOLO("yolo/plate_model/runs/train_fast/yolov8n_plates4/weights/best.pt")
-        results = model.predict(frame, save=True, imgsz=416)
+        results = model.predict(car, save=True, imgsz=416)
         if results:
             for result in results:
                 if result.boxes:
-                    plate = PlateDetection.crop(result, frame)
+                    plate = PlateDetection.crop(result, car)
                     only_plate = PlateDetection.crop_nationality(plate) 
-                    return plate
+                    return only_plate
         return None
 
     def detect_ocr(plate):
