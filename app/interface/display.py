@@ -8,6 +8,7 @@ import time
 from luma.core.interface.serial import i2c
 from luma.oled.device import ssd1306
 from PIL import ImageFont
+import threading
 
 class Display:
     """Classe per gestionar displays"""
@@ -111,6 +112,14 @@ def displays_show_frames(carpeta_frames, eye_delay=config.EYE_DELAY):
     if display_left is None or display_right is None:
         print("Displays no inicialitzats")
         return
-    """Mostra els frames d'animació a les pantalles OLED"""
-    display_left.show_frames(carpeta_frames, "left", eye_delay)
-    display_right.show_frames(carpeta_frames, "right", eye_delay)
+
+    # Crear i iniciar els fils per cada pantalla
+    thread_left = threading.Thread(target=display_left.show_frames, args=(carpeta_frames, "left", eye_delay), daemon=True)
+    thread_right = threading.Thread(target=display_right.show_frames, args=(carpeta_frames, "right", eye_delay), daemon=True)
+
+    thread_left.start()
+    thread_right.start()
+
+    # Si vols esperar que acabin abans de continuar:
+    thread_left.join()
+    thread_right.join()
