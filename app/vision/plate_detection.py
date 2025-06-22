@@ -1,4 +1,4 @@
-from camera import RobotCamera
+from vision.camera import RobotCamera
 from ultralytics import YOLO
 import os
 import pickle

@@ -87,9 +87,9 @@ class EstructuraPotes:
         self.ultrasons:ModulUltrasons = ultrasons
 
         self.legs = [
-            Pota(servos[11], servos[10], True,True),  # Pota 1
-            Pota(servos[13], servos[12], False,True),  # Pota 2
-            Pota(servos[3], servos[2], True, False),  # Pota 3
+            Pota(servos[10], servos[11], True,True),  # Pota 1
+            Pota(servos[12], servos[13], False,True),  # Pota 2
+            Pota(servos[2], servos[3], True, False),  # Pota 3
             Pota(servos[7], servos[6], False, False)   # Pota 4
         ]
         threads = []
@@ -252,11 +252,11 @@ class EstructuraPotes:
 def get_angle(state,right):
     (up, down) = positions[state]
     if right:
-        up = 90 + up
-        down = 180 - down
-    else:
         up = 90 - up
         down = down
+    else:
+        up = 90 + up
+        down = 180 - down
     return (up,down)
 
 def new_angle(servo,angle_final,angle_inicial, duracio, passos=30):
@@ -293,7 +293,7 @@ def sweep_servo(index, delay=0.01):
         servos[index].angle = angle
         time.sleep(delay)
 
-def mou_cap(index=15, inici=30, pic=90, final=60, duracio=0.8, passos=40):
+def mou_cap(index=15, inici=30, pic=90, final=90, duracio=0.8, passos=40):
     if not (0 <= index < len(servos)):
         raise ValueError("Index de servo fora de rang.")
 

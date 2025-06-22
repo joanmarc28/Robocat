@@ -54,7 +54,7 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
     else:
         displays_message(f"  Ultrasons ..... Fail")
         sensors_status["ultrasons"] = False
-        #errors += 1
+        errors += 1
     time.sleep(temps)
 
     if gps and gps.read_heading() is not None:
@@ -79,6 +79,7 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
     else:
         displays_message(f"  Gyroscope ..... Not Found")
         sensors_status["giroscopi"] = False
+        errors += 1
     time.sleep(temps)
 
     if speaker:
@@ -260,13 +261,18 @@ async def connectar():
                                 moviment_queue.put(accio)
 
                             estat = comanda.get("estat")
-                            print("Estat: "+ estat)
-                            if estat == "police":
-                                agent.set_mode("police")
-                            if estat == "human":
-                                agent.set_mode("human")
-                            if estat == "happy":
-                                agent.set_submode("happy")
+                            if estat is not None:
+                                print("Estat: "+ estat)
+                                if estat == "police":
+                                    agent.set_mode("police")
+                                if estat == "human":
+                                    agent.set_mode("human")
+                                if estat == "happy":
+                                    agent.set_submode("happy")
+                            else:
+                                print("Estat: cap valor rebut")
+
+
 
 
                     except asyncio.TimeoutError:
