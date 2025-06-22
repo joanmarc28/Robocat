@@ -11,6 +11,15 @@ class HumanBehavior:
         self.camera = camera
 
     def express_emotion(self, emotion, duration=3):
+
+        if emotion not in config.STATES:
+            print(f"[HUMAN] Emoció desconeguda: {emotion}")
+            return
+
+        if not self.speaker:
+            print("[HUMAN] Altaveu no disponible")
+            return
+
         # Funció per parlar en un fil separat
         def speak():
             self.speaker.say_emotion(emotion)

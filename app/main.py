@@ -20,6 +20,7 @@ from movement.simulation_data import walk_states
 #from vision.slam import start_autonomous_slam
 from queue import Queue
 from interface.micro import Micro  # el fitxer on tens la classe de veu
+from utils.loggers import setup_logging
 
 estructura = None
 camera = RobotCamera()
@@ -27,6 +28,9 @@ agent = None
 
 moviment_queue = Queue()
 slam_controller = None
+
+# Configure logging to file
+setup_logging()
 
 def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None, micro:Micro = None):
     clear_displays()
