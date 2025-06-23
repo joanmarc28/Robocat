@@ -4,6 +4,7 @@ import os
 import pickle
 import cv2
 import numpy as np
+import logging
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
@@ -13,6 +14,8 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 PATH = "/home/Robocat/Robocat"
+logger = logging.getLogger(__name__)
+
 class PlateDetection:
     #funcions de train (nomes s'executen un cop per crear models yolo i cnn)
     def car_train():
@@ -110,13 +113,16 @@ class PlateDetection:
 
     #funcions de deteccio
     def detect_car(frame):
+        logger.info("Detectant cotxe...")
         model = YOLO(PATH+"/app/assets/yolo/car_model/runs/train_fast/yolov8n_cotxes/weights/best.pt")
         results = model.predict(frame, save=True, imgsz=416)  # 0 -> gpu, "cpu" -> cpu
         if results:
             for result in results:
                 if result.boxes:
+                    logger.info("Cotxe detectat")
                     car = PlateDetection.crop(result, frame)
                     return car
+        logger.info("No s'ha detectat cap cotxe")
         return None
 
     def detect_plate(car):
@@ -131,7 +137,9 @@ class PlateDetection:
         return None
 
     def detect_ocr(plate):
+        logger.info("Llegint text de la matrícula...")
         result, char_imgs, chars = PlateDetection.predict_plate_text(plate) #model i label encoder no es toquen!
+        logger.info(f"Matrícula reconeguda: {result}")
         return result, char_imgs, chars
 
     #funcions d'ajuda
@@ -166,6 +174,7 @@ class PlateDetection:
         return canvas
     
     def segment_characters(plate_img):
+        logger.info("Segmentant caràcters de la matrícula")
         gray = cv2.cvtColor(plate_img, cv2.COLOR_BGR2GRAY)
         blur = cv2.GaussianBlur(gray, (5,5), 0)
         _, thr = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
@@ -190,6 +199,7 @@ class PlateDetection:
         return char_imgs
     
     def predict_plate_text(plate_img, model_path=PATH+"/app/assets/models/cnn_plate.h5", label_encoder_path=PATH+"/app/assets/models/label_encoder/label_encoder.pkl"):
+        logger.info("Processant imatge de matrícula per OCR")
         char_imgs = PlateDetection.segment_characters(plate_img)
         text = "" #per guardar el text de la matricula
         model = load_model(model_path)
@@ -202,6 +212,7 @@ class PlateDetection:
             text += predicted_label #afegim la prediccio a text
 
         corrected = PlateDetection.correct_plate_format(text) #correccio de la matricula (si cal)
+        logger.info(f"Text processat: {corrected}")
         return corrected, char_imgs, list(corrected)
 
     def correct_plate_format(text): #format 1234 BCD
@@ -234,6 +245,7 @@ class PlateDetection:
         return corrected
 
     def crop_nationality(img):
+        logger.info("Retallant part de nacionalitat si es detecta blau")
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV) #per detectar el to que ens interessa (blau)
         lower_blue = np.array([100, 100, 50])
         upper_blue = np.array([130, 255, 255])
@@ -246,8 +258,10 @@ class PlateDetection:
 
         if blue_ratio > 0.05: #si hi ha algo de blau
             plate_w = int(w * 0.12)
+            logger.info("Retallada la banda blava de la matrícula")
             return img[:, plate_w:]
         else:
+            logger.info("No s'ha trobat banda blava a la matrícula")
             return img
 
     
