@@ -26,15 +26,15 @@
 
  <!---Modificar per els nostres casos--->
 <p align="center">
-  <a href="what-is-robocat">What is RoboCat?</a> •
-  <a href="requirements">Requirements</a> •
-  <a href="how-to-use">How to use</a> •
-  <a href="components">Components</a> •
-  <a href="software">Software</a> •
-  <a href="#tech-stack">Tech Stack</a> •
-  <a href="license">License</a> •
-  <a href="#contribution">Contribution</a> •
-  <a href="#credits">Credits</a>
+  <a href="What-is-RoboCat?">What is RoboCat?</a> •
+  <a href="Requirements">Requirements</a> •
+  <a href="How-To-Use">How to use</a> •
+  <a href="Components">Components</a> •
+  <a href="Software">Software</a> •
+  <a href="#Tech-Stack">Tech Stack</a> •
+  <a href="License">License</a> •
+  <a href="#Contribution">Contribution</a> •
+  <a href="#Credits">Credits</a>
 </p>
 
 ![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
