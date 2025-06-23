@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">Quadrúpede autònom creat per estudiants del grau d'Enginyeria Informàtica de la UAB.</h4>
+<h4 align="center">Autonomous quadruped created by Computer Engineering students at UAB.</h4>
 
 <p align="center">
  
@@ -28,22 +28,23 @@
 
  <!---Modificar per els nostres casos--->
 <p align="center">
-  <a href="#Què-és-Robocat?">Què és Robocat?</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
+  <a href="#What-is-RoboCat?">What is RoboCat?</a> •
+  <a href="#Requeriments">Requeriments</a> •
+  <a href="#How-To-Use">How-To-Use</a> •
+  <a href="#Components">Components</a> •
+  <a href="#Functions">Functions</a> •
+  <a href="#License">License</a> •
+  <a href="#Bibliography">Bibliography</a> 
+  
 </p>
 
 ![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
-# Taula de Continguts
 
-# Què és Robocat?
+# What is RoboCat?
 
 # Requeriments
 
-# Descàrrega
+# How To Use
 
 # Components
 
@@ -52,16 +53,11 @@
 ## 3D Design
 
 
-# Contrucció amb
+# Functions
  tinked card .............
  vs code 
  
-# Llicència
+# License
 create comouns
 
-# Contribució
-si es obert
-
-# Autors
-
-# Bibliografia
+# Bibliography
