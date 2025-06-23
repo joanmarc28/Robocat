@@ -91,9 +91,15 @@ Make sure the robot is powered on and properly connected before executing the .s
 ## Web application
 
 # Functions
-## Patrol mode
+## Patrol Mode
+In Patrol Mode, RoboCat autonomously patrols public streets with the main goal of detecting vehicle plates to identify parking violations. Using a CNN-based OCR (Optical Character Recognition) model, it reads license plates in real-time. When a license plate is detected, the recognized text is sent to the web application, which checks the database for matching records to verify if the parking has been paid correctly. If the car owner hasn't made the payment, the plate number is recorded in the infraction table within the application database used by an officer.
+
+If a possible infraction is detected, RoboCat captures evidence and flags it for manual verification by an authorized officer. Once confirmed, a parking fine is issued, and the corresponding notification along with the penalty amount is sent to the vehicle owner.
 
 ## Social mode
+In Social Mode, RoboCat switches to an interactive listening state. Its integrated microphone detects when someone speaks to it, and its camera analyzes facial expressions to recognize emotions such as "Happy", "Sad", or "Angry", which are visually displayed on both LED screens in its eyes.
+
+When greeted with "Hello", RoboCat responds by slightly moving its head and emitting sounds through its speaker, creating a friendly and engaging interaction with people around it.
  
 # License
 The MIT License (MIT)
