@@ -26,13 +26,13 @@
 
  <!---Modificar per els nostres casos--->
 <p align="center">
-  <a href="What-is-RoboCat?">What is RoboCat?</a> •
-  <a href="Requirements">Requirements</a> •
-  <a href="How-To-Use">How to use</a> •
-  <a href="Components">Components</a> •
-  <a href="Software">Software</a> •
+  <a href="#What-is-RoboCat?">What is RoboCat?</a> •
+  <a href="#Requirements">Requirements</a> •
+  <a href="#How-To-Use">How to use</a> •
+  <a href="#Components">Components</a> •
+  <a href="#Software">Software</a> •
   <a href="#Tech-Stack">Tech Stack</a> •
-  <a href="License">License</a> •
+  <a href="#License">License</a> •
   <a href="#Contribution">Contribution</a> •
   <a href="#Credits">Credits</a>
 </p>
