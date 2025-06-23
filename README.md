@@ -26,7 +26,7 @@
 
  <!---Modificar per els nostres casos--->
 <p align="center">
-  <a href="#What-is-RoboCat?">What is RoboCat?</a> •
+  <a href="#What-is-RoboCat-?">What is RoboCat?</a> •
   <a href="#Requirements">Requirements</a> •
   <a href="#How-To-Use">How to use</a> •
   <a href="#Components">Components</a> •
