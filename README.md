@@ -26,7 +26,7 @@
 
  <!---Modificar per els nostres casos--->
 <p align="center">
-  <a href="#What-is-RoboCat-?">What is RoboCat?</a> •
+  <a href="#What-is-RoboCat">What is RoboCat?</a> •
   <a href="#Requirements">Requirements</a> •
   <a href="#How-To-Use">How to use</a> •
   <a href="#Components">Components</a> •
@@ -37,7 +37,7 @@
   <a href="#Credits">Credits</a>
 </p>
 
-![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
+![screenshot](https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/model_360.gif)
 
 
 # What is RoboCat?
@@ -124,4 +124,4 @@ However, feel free to fork the repository and experiment with it for learning an
 
 # Credits
 
-# Gallery
+# Gallery
