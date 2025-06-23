@@ -55,6 +55,31 @@ The project main goals are to:
 
 # How To Use
 
+To set up and run RoboCat on your system, follow these simple stemps:
+### Step 1: Download the repository
+Open your terminal and run the following command:
+```bash
+git clone https://github.com/joanmarc28/Robocat.git
+```
+### Step 2: Install dependencies
+Make sure you have Python installed. You can set up the required environment using pip by running requirements.txt file:
+```bash
+pip install -r requeriments/requeriments.txt
+```
+#### How do I install Python?
+If you don't have Python installed, download it from the official website:
+[https://www.python.org/downloads/](https://www.python.org/downloads/)
+You can check your Python version by running:
+```bash
+python --version
+```
+### Step 3: Run the system
+Once everything is installed, you can run the setup file:
+```bash
+bash setup_robocat.sh
+```
+Make sure the robot is powered on and properly connected before executing th .sh file.
+
 # Components
 
 ## Hardware 
