@@ -13,7 +13,7 @@ os.environ["SDL_AUDIODRIVER"] = "dsp"
 
 class Micro:
     def __init__(self, agent: Agent = None, wake_word="hola", language="ca-ES",
-                 device_index=None, debug=True, log_file="micro.log"):
+                 device_index=None, debug=True, log_file="logs/micro.log"):
         self.agent = agent
         self.wake_word = wake_word.lower()
         self.language = language
@@ -97,7 +97,7 @@ class Micro:
         ratio = difflib.SequenceMatcher(None, text, self.wake_word).ratio()
         if self.debug:
             print(f"[Similitud wake word] {ratio:.2f}")
-        return ratio > 0.7  # Posa-ho més alt si vols més exigència
+        return ratio > 0.5  # Posa-ho més alt si vols més exigència
 
     def run(self):
         while self._running:
