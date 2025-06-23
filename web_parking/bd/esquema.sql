@@ -91,3 +91,30 @@ CREATE TABLE robot (
     estat TEXT, -- "online", "offline"
     ultima_connexio TIMESTAMP
 );
+
+-- Taula infraccio
+CREATE TABLE Infraccio (
+    id SERIAL PRIMARY KEY,
+    DNI_Usuari TEXT REFERENCES Client(DNI),
+    Matricula_Cotxe TEXT REFERENCES Cotxe(Matricula),
+    id_Zona INTEGER REFERENCES Zona(id),
+    Data_Infraccio TIMESTAMP,
+    Descripcio TEXT,
+    Preu DECIMAL
+); 
+
+-- Taula possibles infraccions
+CREATE TABLE Possibles_Infractors (
+    id VARCHAR(255) PRIMARY KEY,
+    infraccio TEXT,
+    matricula VARCHAR(20),
+    timestamp TIMESTAMP
+);
+
+-- Taula Ruta
+CREATE TABLE Ruta (
+    id SERIAL PRIMARY KEY,
+    origen TEXT NOT NULL,
+    desti TEXT NOT NULL,
+    coords TEXT NOT NULL,
+);
