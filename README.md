@@ -1,44 +1,44 @@
 <h1 align="center">
   <br>
-  <img src="https://i.ibb.co/Gfq6n7K3/robocat-logo.png" alt="RoboCat Logo" width="250">
+    <img src="https://i.ibb.co/Gfq6n7K3/robocat-logo.png" alt="RoboCat Logo" width="250">
   <br>
-  RoboCat
+    RoboCat
   <br>
 </h1>
 
-<h4 align="center">Autonomous quadruped created by Computer Engineering students at UAB.</h4>
+<h4 align="center">A quadruped robot developed by third-year Computer Science students at the Universitat Autònoma de Barcelona.</h4>
 
 <p align="center">
- 
- <!----------------------- UAB | Robótica ----------------------->
+  <!----------------------- UAB | Robótica ----------------------->
   <a href="https://rlpengineeringschooluab.wordpress.com">
-    <img alt="UAB | RLP" src="https://img.shields.io/badge/UAB-RLP-01853A">
+    <img src="https://img.shields.io/badge/UAB-RLP-3FB911" alt="UAB | RLP">
   </a>
- <!--------------------------- Status --------------------------->
-     <img alt="Status | Prototype" src="https://img.shields.io/badge/status-prototype-yellow">
-  
-  <!-------------------------- Version -------------------------->
-  <a href="https://saythanks.io/to/bullredeyes@gmail.com">
-      <img alt="Static Badge" src="https://img.shields.io/badge/version-%3F%3F%3F-green">
+  <!--------------------------- Status --------------------------->
+  <img src="https://img.shields.io/badge/status-prototype-4CB696" alt="Status | Prototype">
+  <!---------------------------  Raspi --------------------------->
+  <a href="https://www.raspberrypi.com/">
+   <img src="https://img.shields.io/badge/-Raspberry%20Pi-A22846?logo=Raspberry%20Pi&logoColor=white" alt="Raspberry Pi Badge">
   </a>
+  <!--------------------------- THX U ---------------------------->
+  <img alt="Thank You <3!" src="https://img.shields.io/badge/%3C3-Thank_you!-blue">
   
-  <!--------------------------- THX U --------------------------->
-   <img alt="Static Badge" src="https://img.shields.io/badge/Thank%20you%20%3C3!-blue">
 </p>
 
  <!---Modificar per els nostres casos--->
 <p align="center">
-  <a href="#What-is-RoboCat?">What is RoboCat?</a> •
-  <a href="#Requeriments">Requeriments</a> •
-  <a href="#How-To-Use">How-To-Use</a> •
-  <a href="#Components">Components</a> •
-  <a href="#Functions">Functions</a> •
-  <a href="#License">License</a> •
-  <a href="#Bibliography">Bibliography</a> 
-  
+  <a href="what-is-robocat">What is RoboCat?</a> •
+  <a href="requirements">Requirements</a> •
+  <a href="how-to-use">How to use</a> •
+  <a href="components">Components</a> •
+  <a href="software">Software</a> •
+  <a href="#tech-stack">Tech Stack</a> •
+  <a href="license">License</a> •
+  <a href="#contribution">Contribution</a> •
+  <a href="#credits">Credits</a>
 </p>
 
 ![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
+
 
 # What is RoboCat?
 
@@ -46,14 +46,14 @@ RoboCat is an autonomous quadruped robot designed to patrol public streets and m
 Equipped with sensors, cameras and onboard computing, RoboCat can detect whether a parked vehicle has an active parking permit or not, combining robotics, computer vision and real-time data processing to offer a smart, mobile solution for urban mobility enforcement.
 
 The project main goals are to:
-  - Automate parking control in regulated areas </u>
-  - Reduce the need for manual inspection </u>
-  - Integrate urban robotics with a friendly and non-threatening design </u>
-  - Demonstrate the application of robotics in real-world city environments </u>
+  - Automate parking control in regulated areas
+  - Reduce the need for manual inspection
+  - Integrate urban robotics with a friendly and non-threatening design
+  - Demonstrate the application of robotics in real-world city environments
 
-# Requeriments
+# Requirements
 
-# How To Use
+# How to use
 
 To set up and run RoboCat on your system, follow these simple steps:
 ### Step 1: Download the repository
@@ -80,27 +80,19 @@ bash setup_robocat.sh
 ```
 Make sure the robot is powered on and properly connected before executing the .sh file.
 
+
 # Components
 
 ## Hardware 
 
 ## 3D Design
 
-## Computer Vision
+# Software
 
-## Web application
+# Tech Stack
+ tinked card .............
+ vs code 
 
-# Functions
-## Patrol Mode
-In Patrol Mode, RoboCat autonomously patrols public streets with the main goal of detecting vehicle plates to identify parking violations. Using a CNN-based OCR (Optical Character Recognition) model, it reads license plates in real-time. When a license plate is detected, the recognized text is sent to the web application, which checks the database for matching records to verify if the parking has been paid correctly. If the car owner hasn't made the payment, the plate number is recorded in the infraction table within the application database used by an officer.
-
-If a possible infraction is detected, RoboCat captures evidence and flags it for manual verification by an authorized officer. Once confirmed, a parking fine is issued, and the corresponding notification along with the penalty amount is sent to the vehicle owner.
-
-## Social mode
-In Social Mode, RoboCat switches to an interactive listening state. Its integrated microphone detects when someone speaks to it, and its camera analyzes facial expressions to recognize emotions such as "Happy", "Sad", or "Angry", which are visually displayed on both LED screens in its eyes.
-
-When greeted with "Hello", RoboCat responds by slightly moving its head and emitting sounds through its speaker, creating a friendly and engaging interaction with people around it.
- 
 # License
 The MIT License (MIT)
 
@@ -125,4 +117,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
 SOFTWARE.
 
-# Bibliography
+# Contribution
+This project was created as part of a university assignment and is not open to external contributions.
+
+However, feel free to fork the repository and experiment with it for learning and improvement purposes.
+
+# Credits
+
+# Gallery
