@@ -108,7 +108,7 @@ CREATE TABLE Possibles_Infractors (
     id VARCHAR(255) PRIMARY KEY,
     infraccio TEXT,
     matricula VARCHAR(20),
-    temps TIMESTAMP
+    data_posInfraccio TIMESTAMP
 );
 
 -- Taula Ruta
