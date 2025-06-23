@@ -1,27 +1,30 @@
 # Robocat
 
-## How to use
+# Taula de Continguts
 
-## Requirements
+# Què és Robocat?
 
-## Components
+# Requeriments
+
+# Descàrrega
+
+# Components
 
 ## Hardware 
 
 ## 3D Design
 
 
-## Built With
+# Contrucció amb
  tinked card .............
  vs code 
  
-## license
+# Llicència
 create comouns
 
-## Bibliografy 
-
-
-## How to contribute
+# Contribució
 si es obert
 
-## Authors
+# Autors
+
+# Bibliografia
