@@ -42,6 +42,15 @@
 
 # What is RoboCat?
 
+RoboCat is an autonomous quadruped robot designed to patrol public streets and monitor parking zones that are regulated by payment. Its structure and external appearance is inspired by the shape of a cat, making it not only functional but also friendly and approachable for pedestrians.
+Equipped with sensors, cameras and onboard computing, RoboCat can detect whether a parked vehicle has an active parking permit or not, combining robotics, computer vision and real-time data processing to offer a smart, mobile solution for urban mobility enforcement.
+
+The project main goals are to:
+  - Automate parking control in regulated areas </u>
+  - Reduce the need for manual inspection </u>
+  - Integrate urban robotics with a friendly and non-threatening design </u>
+  - Demonstrate the application of robotics in real-world city environments </u>
+
 # Requeriments
 
 # How To Use
@@ -52,10 +61,14 @@
 
 ## 3D Design
 
+## Computer Vision
+
+## Web application
 
 # Functions
- tinked card .............
- vs code 
+## Patrol mode
+
+## Social mode
  
 # License
 create comouns
