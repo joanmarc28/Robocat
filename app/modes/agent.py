@@ -52,7 +52,7 @@ class Agent:
         if self.mode == "human":
             self.human.express_emotion(self.submode)
         elif self.mode == "police":
-            if self.submode == "detect":
+            if self.submode == "default":
                 self.police.detect_license_plate()
             else:
                 print(f"Submode policial desconegut: {self.submode}")

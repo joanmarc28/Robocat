@@ -27,6 +27,14 @@ class RobotCamera:
         """Capture a single frame from the camera."""
         return self.picam2.capture_array()
 
+    def capture(self):
+        """Return a 3-channel frame for CV/ML pipelines."""
+        frame = self.capture_frame()
+        if frame is not None and len(frame.shape) == 3 and frame.shape[2] == 4:
+            # Picamera2 can return RGBA/BGRA frames. Remove the alpha channel.
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2RGB)
+        return frame
+    
     def detect_faces(self, frame):
         """Draw rectangles around detected faces, eyes and smiles."""
         gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)

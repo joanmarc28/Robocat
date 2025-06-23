@@ -12,40 +12,41 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropou
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
+PATH = "/home/Robocat/Robocat"
 class PlateDetection:
     #funcions de train (nomes s'executen un cop per crear models yolo i cnn)
     def car_train():
-        model = YOLO("app/assets/models/yolov8n.pt")
+        model = YOLO(PATH+"/app/assets/models/yolov8n.pt")
         results = model.train(
-            data="app/assets/yolo/car_model/config_car.yaml",
+            data=PATH+"/app/assets/yolo/car_model/config_car.yaml",
             epochs=15,          
             imgsz=416,          
             batch=8,            
             device="cpu",  #0 -> gpu, "cpu" -> cpu
             cache=True,         
             workers=4,          
-            project="app/assets/yolo/car_model/runs/train_fast",
+            project=PATH+"/app/assets/yolo/car_model/runs/train_fast",
             name="yolov8n_cotxes"
         )
         return results
 
     def plate_train():
-        model = YOLO("app/assets/models/yolov8n.pt")
+        model = YOLO(PATH+"/app/assets/models/yolov8n.pt")
         results = model.train(
-            data="app/assets/yolo/plate_model/config_plate.yaml",
+            data=PATH+"/app/assets/yolo/plate_model/config_plate.yaml",
             epochs=15,          
             imgsz=416,          
             batch=8,            
             device="cpu",  # 0 -> gpu, "cpu" -> cpu
             cache=True,         
             workers=4,          
-            project="app/assets/yolo/plate_model/runs/train_fast",
+            project=PATH+"/app/assets/yolo/plate_model/runs/train_fast",
             name="yolov8n_plates"
         )
         return results
 
     def ocr_train():
-        dataset_path = "app/assets/database/plate_ocr/chars74k/"
+        dataset_path = PATH+"/app/assets/database/plate_ocr/chars74k/"
         images = []
         labels = []
 
@@ -73,7 +74,7 @@ class PlateDetection:
         labels_encoded = label_encoder.fit_transform(labels)
         labels_categorical = to_categorical(labels_encoded)
 
-        with open("app/assets/models/label_encoder/label_encoder.pkl", "wb") as f:
+        with open(PATH+"/app/assets/models/label_encoder/label_encoder.pkl", "wb") as f:
             pickle.dump(label_encoder, f)
 
         X_train, X_test, y_train, y_test = train_test_split(images, labels_categorical, test_size=0.2, random_state=42)
@@ -105,11 +106,11 @@ class PlateDetection:
                 epochs=20,
                 validation_data=(X_test, y_test))
 
-        cnn.save("app/assets/models/cnn_plate.h5")
+        cnn.save(PATH+"/app/assets/models/cnn_plate.h5")
 
     #funcions de deteccio
     def detect_car(frame):
-        model = YOLO("app/assets/yolo/car_model/runs/train_fast/yolov8n_cotxes/weights/best.pt")
+        model = YOLO(PATH+"/app/assets/yolo/car_model/runs/train_fast/yolov8n_cotxes/weights/best.pt")
         results = model.predict(frame, save=True, imgsz=416)  # 0 -> gpu, "cpu" -> cpu
         if results:
             for result in results:
@@ -119,7 +120,7 @@ class PlateDetection:
         return None
 
     def detect_plate(car):
-        model = YOLO("app/assets/yolo/plate_model/runs/train_fast/yolov8n_plates4/weights/best.pt")
+        model = YOLO(PATH+"/app/assets/yolo/plate_model/runs/train_fast/yolov8n_plates4/weights/best.pt")
         results = model.predict(car, save=True, imgsz=416)
         if results:
             for result in results:
@@ -188,7 +189,7 @@ class PlateDetection:
         
         return char_imgs
     
-    def predict_plate_text(plate_img, model_path="app/assets/models/cnn_plate.h5", label_encoder_path="app/assets/models/label_encoder/label_encoder.pkl"):
+    def predict_plate_text(plate_img, model_path=PATH+"/app/assets/models/cnn_plate.h5", label_encoder_path=PATH+"/app/assets/models/label_encoder/label_encoder.pkl"):
         char_imgs = PlateDetection.segment_characters(plate_img)
         text = "" #per guardar el text de la matricula
         model = load_model(model_path)
