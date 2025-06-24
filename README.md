@@ -95,8 +95,7 @@ Make sure the robot is powered on and properly connected before executing the .s
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/lipo.png" width="100"> | [3500mAh 2S 25C LiPo Battery (7.4V)](https://tienda.bricogeek.com/baterias-lipo/1156-bateria-lipo-3500mah-2s-25c-74v.html) | 2 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/polulu.jpg" width="100"> | [DC-DC 5V 3A - S13V30F5 Voltage Conversor](https://tienda.bricogeek.com/convertidores-de-voltaje/1746-conversor-dc-5v-3a-s13v30f5.html) | 2 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/amplificador.jpg" width="100"> | [FEICHAO 8A UBEC 2-6S LiPo (In 7V-25.5V, Out 12A)](https://www.amazon.es/dp/B07DD9L6P6?ref=ppx_yo2ov_dt_b_fed_asin_title) | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/microfon.jpg" width="100"> | 
-[eModwey Microphone Lavalier USB 2M](https://www.amazon.es/dp/B0DNDT5DRQ?ref=ppx_yo2ov_dt_b_fed_asin_title) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/microfon.jpg" width="100"> | [eModwey Microphone Lavalier USB 2M](https://www.amazon.es/dp/B0DNDT5DRQ?ref=ppx_yo2ov_dt_b_fed_asin_title) | 1 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/amplificador.jpg" width="100"> | [Audio Amplificator I2S MAX98357 (3W)](https://tienda.bricogeek.com/accesorios-raspberry-pi/867-amplificador-de-audio-i2s-max98357a-3w.html?gad_source=1&gad_campaignid=17337431439&gbraid=0AAAAADkb14fI-X2E-Gh7r06Difb1Wd5aD&gclid=Cj0KCQjwrPHABhCIARIsAFW2XBPmEQGgPAAcVo2H_3N5DqCXDw7oVZT2QkZupvooRj8hKRmd9Y1jEiYaAq5tEALw_wcB) | 1 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/altaveu.jpg" width="100"> | [Speaker in Box (Ref: PRO-0162)](https://tienda.bricogeek.com/varios/938-altavoz-con-caja-3w.html?_gl=1*1r6tjg0*_up*MQ..*_gs*MQ..&gclid=Cj0KCQjwrPHABhCIARIsAFW2XBOtxb4ms0BOJzoKjZsUEEGlDNfoNcSNstp5hDVbZeetJuUue8356fEaAuGHEALw_wcB&gbraid=0AAAAADkb14cQMXRSKfpouRgVtJaYG1zOD) | 1 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/oled.png" width="100"> | [OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64)](https://goldenmorninglcd.com/es/m%C3%B3dulo-de-pantalla-oled/0.96-pulgadas-128x64-ssd1306-gme12864-11/) | 2 |
@@ -121,11 +120,11 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Chassis | Second Floor Plate |
 |---------|--------------------|
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/chassis/chassis_video.gif" width="250"> <br> [Chassis (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/chassis/chassis.stl) | [2FloorPlate IMG] <br> [2nd Floor Plate (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/2nFloor_Plate/2nFloor_Plate.stl) |
+| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/chassis/chassis_video.gif" width="250"> <br> [Chassis (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/chassis/chassis.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/2nFloor_Plate/2nFloor_plate_video.gif" width="250">  <br> [2nd Floor Plate (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/2nFloor_Plate/2nFloor_Plate.stl) </div>|
 
 | Front Body | Middle Body | Back Body |
 |------------|-------------|-----------|
-| [FrontBody IMG] <br> [Front Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/front_body/front_body.stl) | [MiddleBody IMG] <br> [Middle Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/middle_body/middle_body.stl) | [BackBody IMG] <br> [Back Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/back_body/back_body.stl) |
+| <div align ="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/front_body/front_body_video.gif" width="250"> <br> [Front Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/front_body/front_body.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/middle_body/middle_body_video.gif" width="250"> <br> [Middle Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/middle_body/middle_body.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/back_body/back_body_video.gif" width="250"> <br> [Back Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/back_body/back_body.stl) </div> |
 
 ---
 
@@ -133,7 +132,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Neck | Head Model | Head Back Panel |
 |------|------------|-----------------|
-| [NeckModel IMG] <br>  [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) | [HeadModel IMG] <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) | [Head Back Panel] <br> [Head Back Panel (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl)
+| <div align = "center"> [NeckModel IMG] <br>  [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) | [HeadModel IMG] <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) | [Head Back Panel] <br> [Head Back Panel (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl) </div> |
 
 ---
 
@@ -141,7 +140,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Tail | Fan Blades | Fan Holder |
 |------|------------|------------|
-| [Tail IMG] <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) | [FanBlades IMG] <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) | [FanHolder IMG] <br> [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl) |
+| <div align = "center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/tail/tail_video.gif" width="250"> <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) | [FanBlades IMG] <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) | [FanHolder IMG] <br> [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl) </div> |
 
 ---
 
