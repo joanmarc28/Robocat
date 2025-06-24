@@ -87,11 +87,11 @@ Make sure the robot is powered on and properly connected before executing the .s
 All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure is divided into the following sections:
 
 ### Legs
-
+<p align="center">
 | Full Leg |
 |----------|
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/legs/leg_video.gif" width="500"> <br> [Upper Leg Front (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legFront.stl) <br> [Upper Leg Back (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legBack.stl) <br> [Lower Leg Paw (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/paw_leg.stl) |
-
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/legs/leg_video.gif" width="400"> <br> [Upper Leg Front (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legFront.stl) <br> [Upper Leg Back (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legBack.stl) <br> [Lower Leg Paw (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/paw_leg.stl) |
+</p>
 ---
 
 ### Body
