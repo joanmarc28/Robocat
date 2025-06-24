@@ -89,6 +89,7 @@ CREATE TABLE robot (
     identificador TEXT UNIQUE,
     ip TEXT,
     estat TEXT, -- "online", "offline"
+    id_ruta INTEGER REFERENCES Ruta(id),
     ultima_connexio TIMESTAMP
 );
 
@@ -104,17 +105,35 @@ CREATE TABLE Infraccio (
 ); 
 
 -- Taula possibles infraccions
-CREATE TABLE Possibles_Infractors (
+CREATE TABLE PossibleInfraccio (
     id VARCHAR(255) PRIMARY KEY,
-    infraccio TEXT,
-    matricula VARCHAR(20),
+    Descripcio TEXT,
+    Matricula_Cotxe TEXT REFERENCES Cotxe(Matricula),
     data_posInfraccio TIMESTAMP
 );
-
+-- Taula PuntRuta (llista de punts d'una ruta)
+CREATE TABLE PuntRuta (
+    id SERIAL PRIMARY KEY,
+    id_Ruta INTEGER REFERENCES Ruta(id),
+    latitud DECIMAL(9,6) NOT NULL,
+    longitud DECIMAL(9,6) NOT NULL,
+    ordre INTEGER NOT NULL -- ordre del punt dins de la ruta
+);
 -- Taula Ruta
 CREATE TABLE Ruta (
     id SERIAL PRIMARY KEY,
+    id_policia INTEGER REFERENCES Policia(user_id),
+    id_zona INTEGER REFERENCES Zona(id),
+    data_creacio TIMESTAMP NOT NULL
     origen TEXT NOT NULL,
     desti TEXT NOT NULL,
-    coords TEXT NOT NULL,
+);
+
+-- Taula RoboCatRuta (assignació de RoboCat a Ruta)
+CREATE TABLE RoboCatRuta (
+    id SERIAL PRIMARY KEY,
+    id_RoboCat INTEGER REFERENCES robot(id),
+    id_Ruta INTEGER REFERENCES Ruta(id),
+    data_inici TIMESTAMP,
+    data_fi TIMESTAMP
 );
