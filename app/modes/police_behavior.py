@@ -10,6 +10,7 @@ class PoliceBehavior:
     def detect_license_plate(self):
         #print("[POLICE] Detectant matrícula...")
         frame = self.camera.capture()
+        #PlateDetection.ocr_train()
         car = PlateDetection.detect_car(frame)
         #print("[POLICE] Cotxe detectat")
         plate = PlateDetection.detect_plate(car)

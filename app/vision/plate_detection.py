@@ -8,7 +8,8 @@ import logging
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.models import Sequential, load_model
+#from tensorflow.keras.models import Sequential, load_model
+from keras.models import Sequential, load_model
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -109,7 +110,8 @@ class PlateDetection:
                 epochs=20,
                 validation_data=(X_test, y_test))
 
-        cnn.save(PATH+"/app/assets/models/cnn_plate.h5")
+        #cnn.save(PATH+"/app/assets/models/cnn_plate.h5")
+        cnn.save(PATH+"/app/assets/models/cnn_plate.keras", save_format="keras")
 
     #funcions de deteccio
     def detect_car(frame):
@@ -198,11 +200,12 @@ class PlateDetection:
         
         return char_imgs
     
-    def predict_plate_text(plate_img, model_path=PATH+"/app/assets/models/cnn_plate.h5", label_encoder_path=PATH+"/app/assets/models/label_encoder/label_encoder.pkl"):
+    def predict_plate_text(plate_img, model_path=PATH+"/app/assets/models/cnn_plate.keras", label_encoder_path=PATH+"/app/assets/models/label_encoder/label_encoder.pkl"):
         logger.info("Processant imatge de matrícula per OCR")
         char_imgs = PlateDetection.segment_characters(plate_img)
         text = "" #per guardar el text de la matricula
-        model = load_model(model_path)
+        #model = load_model(model_path)
+        model = load_model(model_path, compile=False, safe_mode=False)
         with open(label_encoder_path, "rb") as f:
             label_encoder = pickle.load(f)
         for char_img in char_imgs:
