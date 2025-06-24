@@ -120,11 +120,11 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Chassis | Second Floor Plate |
 |---------|--------------------|
-| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/chassis/chassis_video.gif" width="200"> <br> [Chassis (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/chassis/chassis.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/2nFloor_Plate/2nFloor_plate_video.gif" width="200">  <br> [2nd Floor Plate (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/2nFloor_Plate/2nFloor_Plate.stl) </div>|
+| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/chassis/chassis_video.gif" width="200"> <br> [Chassis (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/chassis/chassis.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/2nFloor_Plate/2nFloor_plate_video.gif" width="200">  <br> [2nd Floor Plate (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/2nFloor_Plate/2nFloor_Plate.stl) </div>|
 
 | Front Body | Middle Body | Back Body |
 |------------|-------------|-----------|
-| <div align ="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/front_body/front_body_video.gif" width="200"> <br> [Front Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/front_body/front_body.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/middle_body/middle_body_video.gif" width="250"> <br> [Middle Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/middle_body/middle_body.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/back_body/back_body_video.gif" width="250"> <br> [Back Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/back_body/back_body.stl) </div> |
+| <div align ="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/front_body/front_body_video.gif" width="200"> <br> [Front Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/front_body/front_body.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/middle_body/middle_body_video.gif" width="250"> <br> [Middle Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/middle_body/middle_body.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/back_body/back_body_video.gif" width="250"> <br> [Back Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/back_body/back_body.stl) </div> |
 
 ---
 
@@ -132,7 +132,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Neck | Head Model | Head Back Panel |
 |------|------------|-----------------|
-| <div align = "center"> [NeckModel IMG] <br>  [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/head/head_video.gif" width="200"> <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) | [Head Back Panel] <br> [Head Back Panel (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl) </div> |
+| <div align = "center"> [NeckModel IMG] <br>  [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/head/head_video.gif" width="200"> <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) </div> | <div align="center"> [Head Back Panel] <br> [Head Back Panel (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl) </div> |
 
 ---
 
@@ -140,7 +140,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Tail | Fan Blades | Fan Holder |
 |------|------------|------------|
-| <div align = "center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/tail/tail_video.gif" width="200"> <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) | [FanBlades IMG] <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) | [FanHolder IMG] <br> [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl) </div> |
+| <div align = "center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/tail/tail_video.gif" width="200"> <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) </div> | <div align="center"> [FanBlades IMG] <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) </div> | <div align="center"> [FanHolder IMG] <br> [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl) </div> |
 
 ---
 
