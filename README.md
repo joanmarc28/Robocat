@@ -167,8 +167,15 @@ A custom CNN (Convolutional Neural Network) using Tensorflow is applied to conve
 ## Inverse Kinematics for Walking
 
 ## Web Application
+The RoboCat system relies on a centralized relational database designed to securely manage all operational data. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
 
-The RoboCat web application includes two user profiles.
+Below is the entity-relationship and model view diagrams representing the main structure of the database:
+
+<p float="left">
+  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="27%" />
+  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_modelview.png" width="45%" />
+</p>
+As we can see, the web application includes two user profiles.
 
 ### Police Officer
 Authorized officers can access a control interface to monitor and manage RoboCat units in real-time:
