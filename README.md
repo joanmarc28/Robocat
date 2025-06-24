@@ -90,7 +90,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Full Leg |
 |----------|
-| [Leg IMG] <br> Upper Leg Front (View File) <br> Upper Leg Back (View File) <br> Lower Leg Paw (View File) |
+| [Leg IMG] <br> [Upper Leg Front (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legFront.stl) <br> [Upper Leg Back (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legBack.stl) <br> [Lower Leg Paw (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/paw_leg.stl) |
 
 ---
 
@@ -98,12 +98,11 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Chassis | Second Floor Plate | Front Body |
 |---------|--------------------|------------|
-| [Chassis IMG] <br> Chassis (View File) | [2FloorPlate IMG] <br> 2nd Floor Plate (View File) |
- [FrontBody IMG] <br> Front Body (View File) |
+| [Chassis IMG] <br> [Chassis (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/chassis/chassis.stl) | [2FloorPlate IMG] <br> [2nd Floor Plate (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/2nFloor_Plate/2nFloor_Plate.stl) | [FrontBody IMG] <br> [Front Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/front_body/front_body.stl) |
 
 | Middle Body | Back Body | Neck |
 |-------------|-----------|------|
-| [MiddleBody IMG] <br> Middle Body (View File) | [BackBody IMG] <br> Back Body (View File) | [Neck IMG] <br> Neck (View File) |
+| [MiddleBody IMG] <br> [Middle Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/middle_body/middle_body.stl) | [BackBody IMG] <br> [Back Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/back_body/back_body.stl) | [Neck IMG] <br> [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) |
 
 ---
 
@@ -111,7 +110,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Head Model | Head Back Panel |
 |------------|-----------------|
-| [HeadModel IMG] <br> Head Model (View Files) | [Head Back Panel] <br> Head Back Panel (View Files)
+| [HeadModel IMG] <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) | [Head Back Panel] <br> [Head Back Panel (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl)
 
 ---
 
@@ -119,7 +118,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Tail | Fan Blades | Fan Holder |
 |------|------------|------------|
-| [Tail IMG] <br> Tail (View Files) | [FanBlades IMG] <br> Fan Blades (View File) | [FanHolder IMG] <br> Fan Holder (View Files) |
+| [Tail IMG] <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) | [FanBlades IMG] <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) | [FanHolder IMG] <br> [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl) |
 
 ---
 
