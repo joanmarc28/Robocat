@@ -85,18 +85,21 @@ Make sure the robot is powered on and properly connected before executing the .s
 ### Required components
 | Component | Model | Units |
 |-----------|-------|-------|
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/raspberrypi4.jpg" width="100"> | Raspberry Pi 4 Model B | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/controlador_servos.jpg" width="100"> | PCA9685 (16 channel PWM controller) | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/servo.jpg" width="100"> | MG996R Digital Servomotor | 9 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/gps.jpg" width="100"> | GPS BN-880 (Dual GPS/GLONASS with integrated compass) | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/camera.png" width="100"> | Camera OV5647 for Raspberry Pi | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/ultrasons.jpg" width="100"> | Ultrasonic Distance Sensor HC-SR04 | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/accelero-giro.jpg" width="100"> | GY-521 MODULE (MPU-6050 accelerometer and gyro) | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/lipo.png" width="100"> | 3500mAh 2S 25C LiPo Battery (7.4V) | 2 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/polulu.jpg" width="100"> | DC-DC 5V 3A - S13V30F5 Voltage Conversor | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/microfon.jpg" width="100"> | eModwey Microphone Lavalier USB 2M | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/amplificador.jpg" width="100"> | Audio Amplificator I2S MAX98357 (3W) | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/oled.png" width="100"> | OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64) | 2 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/raspberrypi4.jpg" width="100"> | [Raspberry Pi 4 Model B](https://tienda.bricogeek.com/placas-raspberry-pi/1330-raspberry-pi-4-model-b-4-gb.html) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/controlador_servos.jpg" width="100"> | [PCA9685 (16 channel PWM controller)](https://tienda.bricogeek.com/controladores-motores/1764-controlador-pwm-16-canales-i2c-pca9685.html) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/servo.jpg" width="100"> | [MG996R Digital Servomotor](https://tienda.bricogeek.com/servomotores/1684-servomotor-digital-mg996r.html?gad_source=1&gclid=CjwKCAjwwLO_BhB2EiwAx2e-3w-vAP7yfwU6gmF38uj6yTVi2fuEX_7WWVGUK1a4Pqmh1sUbJGIflBoC-XYQAvD_BwE) | 9 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/gps.jpg" width="100"> | [GPS BN-880 (Dual GPS/GLONASS with integrated compass)](https://tienda.bricogeek.com/modulos-gps/1638-gps-glonass-dual-bn-880-con-antena.html) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/camera.png" width="100"> | [Camera OV5647 for Raspberry Pi (V2)](https://tienda.bricogeek.com/accesorios-raspberry-pi/822-camara-raspberry-pi-v2-8-megapixels.html) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/ultrasons.jpg" width="100"> | [Ultrasonic Distance Sensor HC-SR04](https://tienda.bricogeek.com/sensores-distancia/741-sensor-de-distancia-por-ultrasonidos-hc-sr04.html) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/accelero-giro.jpg" width="100"> | [GY-521 MODULE (MPU-6050 accelerometer and gyro)](https://tienda.bricogeek.com/acelerometros/1682-modulo-gy-521-acelerometro-y-giroscopio-mpu-6050.html) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/lipo.png" width="100"> | [3500mAh 2S 25C LiPo Battery (7.4V)](https://tienda.bricogeek.com/baterias-lipo/1156-bateria-lipo-3500mah-2s-25c-74v.html) | 2 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/polulu.jpg" width="100"> | [DC-DC 5V 3A - S13V30F5 Voltage Conversor](https://tienda.bricogeek.com/convertidores-de-voltaje/1746-conversor-dc-5v-3a-s13v30f5.html) | 2 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/amplificador.jpg" width="100"> | [FEICHAO 8A UBEC 2-6S LiPo (In 7V-25.5V, Out 12A)](https://www.amazon.es/dp/B07DD9L6P6?ref=ppx_yo2ov_dt_b_fed_asin_title) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/microfon.jpg" width="100"> | 
+[eModwey Microphone Lavalier USB 2M](https://www.amazon.es/dp/B0DNDT5DRQ?ref=ppx_yo2ov_dt_b_fed_asin_title) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/amplificador.jpg" width="100"> | [Audio Amplificator I2S MAX98357 (3W)](https://tienda.bricogeek.com/accesorios-raspberry-pi/867-amplificador-de-audio-i2s-max98357a-3w.html?gad_source=1&gad_campaignid=17337431439&gbraid=0AAAAADkb14fI-X2E-Gh7r06Difb1Wd5aD&gclid=Cj0KCQjwrPHABhCIARIsAFW2XBPmEQGgPAAcVo2H_3N5DqCXDw7oVZT2QkZupvooRj8hKRmd9Y1jEiYaAq5tEALw_wcB) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/altaveu.jpg" width="100"> | [Speaker in Box (Ref: PRO-0162)](https://tienda.bricogeek.com/varios/938-altavoz-con-caja-3w.html?_gl=1*1r6tjg0*_up*MQ..*_gs*MQ..&gclid=Cj0KCQjwrPHABhCIARIsAFW2XBOtxb4ms0BOJzoKjZsUEEGlDNfoNcSNstp5hDVbZeetJuUue8356fEaAuGHEALw_wcB&gbraid=0AAAAADkb14cQMXRSKfpouRgVtJaYG1zOD) | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/oled.png" width="100"> | [OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64)](https://goldenmorninglcd.com/es/m%C3%B3dulo-de-pantalla-oled/0.96-pulgadas-128x64-ssd1306-gme12864-11/) | 2 |
 
 ### Wiring Schematics
 [IMG ESQUEMA]
