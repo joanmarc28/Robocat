@@ -176,16 +176,16 @@ If a vehicle is parked without a valid registration in a regulated area and Robo
 
 ### Simulation & Development Tools
 ![CoppeliaSIM](https://img.shields.io/badge/coppelia-robotics-c80000.svg?style=for-the-badge&logo=Circle&logoColor=ffffff&labelColor=c80000)
-![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) (Development environment)
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 ![Python DotEnv](https://img.shields.io/badge/python-dotenv-3776ab.svg?style=for-the-badge&logo=Python&logoColor=ffffff&labelColor=3776ab)
 
 ### Web Application
-- **Backend:** ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi) (High-perfomance Python web framework)
-- **Frontend:** ![Jinja](https://img.shields.io/badge/jinja-white.svg?style=for-the-badge&logo=jinja&logoColor=black) (Dynamic HTML rendering)
-- **Database:** ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) (With SQLAlchemy ORM)
+- **Backend:** ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+- **Frontend:** ![Jinja](https://img.shields.io/badge/jinja-white.svg?style=for-the-badge&logo=jinja&logoColor=black)
+- **Database:** ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 - **APIs & External services**:
   - ![CloudVision](https://img.shields.io/badge/cloud-vision-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4)
-  - ![badge](https://img.shields.io/badge/google-cloud-speech-4285f4.svg?style=for-the-badge&logo=Google Cloud&logoColor=ffffff&labelColor=4285f4)
+  - ![badge](https://img.shields.io/badge/cloud-speech-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4)
   - ![Google Gemini](https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white)
   - ![badge](https://img.shields.io/badge/AIORTC-2c5bb4.svg?style=for-the-badge&logo=AIOHTTP&logoColor=ffffff&labelColor=2c5bb4)
   
