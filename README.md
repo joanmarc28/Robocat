@@ -170,7 +170,7 @@ If a vehicle is parked without a valid registration in a regulated area and Robo
 ![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white)
   
 ### 3D Design & Hardware
-![AutoDeskFusion](https://img.shields.io/badge/autodesk fusion-ff944d.svg?style=for-the-badge&logo=Autodesk&logoColor=ffffff&labelColor=ff944d)
+![AutodeskFusion](https://img.shields.io/badge/autodesk-fusion-ff781f.svg?style=for-the-badge&logo=Autodesk&logoColor=ffffff&labelColor=ff781f)
 ![Fritzing](https://img.shields.io/badge/FRITZING-bf0000.svg?style=for-the-badge&logo=FileZilla&logoColor=ffffff&labelColor=bf0000)
 ![EasyEDA](https://img.shields.io/badge/easyeda-2b96da.svg?style=for-the-badge&logo=EDEKA&logoColor=ffffff&labelColor=2b96da)
 
