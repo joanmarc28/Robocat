@@ -98,6 +98,10 @@ Make sure the robot is powered on and properly connected before executing the .s
 | [img ampli] | Audio Amplificator I2S MAX98357 (3W) | 1x |
 | [img_pantalles] | OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64) | 2x |
 
+### Wiring Schematics
+[IMG ESQUEMA]
+However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit.
+
 ## 3D Design
 
 All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure is divided into the following sections:
@@ -105,7 +109,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 ### Legs
 | Full Leg |
 |----------|
-| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/legs/leg_video.gif" width="400"> <br><br> [Upper Leg Front (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legFront.stl) • [Upper Leg Back (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legBack.stl) • [Lower Leg Paw (View File)](https://github.com/joanmarc28/Robocat/main/3D_files/legs/paw_leg.stl) </div> |
+| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/legs/leg_video.gif" width="250"> <br><br> [Upper Leg Front (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legFront.stl) • [Upper Leg Back (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs/upper_legBack.stl) • [Lower Leg Paw (View File)](https://github.com/joanmarc28/Robocat/main/3D_files/legs/paw_leg.stl) </div> |
 
 
 ---
