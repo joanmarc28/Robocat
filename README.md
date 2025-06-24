@@ -118,7 +118,7 @@ However, a custom PCB has been designed using EasyEDA to ensure a compact assemb
 
 ## 3D Design
 
-All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure is divided into the following sections:
+All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure is divided into the following parts, and the printing parameters for each piece can be found in its corresponding folder.
 
 ### Legs
 | Full Leg |
