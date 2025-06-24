@@ -152,8 +152,8 @@ def coord_to_servo(coord, show=False):
 
     D = 2*np.arccos(R)
 
-    servo = (float(U), float(D))
-    valid_servo(servo)
+    servo = (float(U)*180/np.pi, float(D)*180/np.pi)
+    #valid_servo(servo)
 
     if show: print(f"{coord} -> {servo}")
     return servo
@@ -172,13 +172,13 @@ def servo_to_coord(servo, show=False):
     Y = R * np.sin(A)
 
     coord = (float(X), float(Y))
-    valid_coord(coord)
+    #valid_coord(coord)
 
     if show: print(f"{servo} -> {coord}")
     return coord
 
 
-if __name__ == '__main__':
+"""if __name__ == '__main__':
     coords = [
         (0, -1), 
         (1, 0), 
@@ -198,5 +198,5 @@ if __name__ == '__main__':
         servos.append(polar_to_servo(polars[i], show=True))
 
     for i in range(len(coords)):
-        polar_to_coord(polars[i], show=True)
+        polar_to_coord(polars[i], show=True)"""
 

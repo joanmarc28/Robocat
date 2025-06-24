@@ -7,7 +7,7 @@ Tenim 4 tipus de interpolacions:
     3. Square (coord)
     4. Direct (servo)
 '''
-import inverse_kinematics as ik
+import movement.inverse_kinematics.position as ik
 import numpy as np
 
 def linear_interploation(prev_coord, next_coord, factor):

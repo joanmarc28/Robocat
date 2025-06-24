@@ -7,8 +7,10 @@ X_PLANE = math.sqrt(5)/3
 
 position_states = {
     #basic positions
-    "start":            ( 0, -1),
+    "start":            ( 0, -1/2),
     "sit"  :            ( 0,  -1/2),
+    "normal":           (0.5, -0.5),
+    "up":               (0, -7/12),
 
     #short stand positions
     "center" :          (   0*X_PLANE,  Y_PLANE),

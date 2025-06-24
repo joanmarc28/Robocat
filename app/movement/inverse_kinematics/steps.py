@@ -1,16 +1,16 @@
-from positions import coord_to_servo
-from interpolation import interpolation
+from movement.inverse_kinematics.position import coord_to_servo
+from movement.inverse_kinematics.interpolation import interpolation
 
 
 ALTURA = 0.5
 
 
-def correction(position, correction_factor=(0,0))
+def correction(position, correction_factor=(0,0)):
     (A, B) = position
     (C, D) = correction_factor
     return (C(A), D(B))
 
-def position_steps(old_position, new_position, steps, inter_method, correction_factor=(0,0))
+def position_steps(old_position, new_position, steps, inter_method, correction_factor=(0,0)):
     position_steps_list = []
 
     prev_postition_coord = None

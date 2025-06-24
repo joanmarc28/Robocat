@@ -8,9 +8,8 @@ from adafruit_pca9685 import PCA9685
 from adafruit_motor import servo
 import threading
 from sensors.ultrasonic import ModulUltrasons
-from movement.simulation_data import *#positions, walk_states
+from movement.simulation_data import *
 from movement.inverse_kinematics.steps import position_steps
-
 # Inicialització del bus I2C i la controladora PCA9685
 i2c = busio.I2C(board.SCL, board.SDA)
 pca = PCA9685(i2c)
@@ -52,7 +51,7 @@ class Pota:
 
         up_steps = [pos[0] for pos in pos_steps]
         down_steps = [pos[1] for pos in pos_steps]
-
+        print(up_steps, down_steps)
         t1 = threading.Thread(target=new_angles, args=(self.servo_up,up_steps,t/steps))
         t1.start()
         
@@ -79,7 +78,7 @@ class Pota:
     
     def set_state(self, new_state):
         """Estableix un nou estat per a la pota."""
-        assert new_state in positions.keys(), "Invalid state"
+        assert new_state in position_states.keys(), "Invalid state"
         self.old_state = self.state
         self.state = new_state
     
@@ -207,11 +206,11 @@ class EstructuraPotes:
             leg = legs[leg_n]
             legs = [leg]
 
-            if   action ==  'f': 
+            if direction ==  'f': 
                 leg.forward()
-            elif action ==  'b':
+            elif direction ==  'b':
                 leg.backwards()
-            elif action == 'ff':
+            elif direction == 'ff':
                 leg.forward()
                 leg.forward()
         
