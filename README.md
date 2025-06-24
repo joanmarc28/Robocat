@@ -169,7 +169,7 @@ A custom CNN (Convolutional Neural Network) using Tensorflow is applied to conve
 ## Web Application
 The RoboCat system relies on a centralized relational database designed to securely manage all operational data. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
 
-Below is the entity-relationship diagram representing the main structure of the database:
+Below is the entity-relationship and model view diagrams representing the main structure of the database:
 
 <p float="left">
   <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="27%" />
