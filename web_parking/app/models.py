@@ -48,7 +48,7 @@ class Client(Base):
 
     usuari = relationship("Usuari", back_populates="client")
     cotxes = relationship("Cotxe", secondary=possessio_table, back_populates="clients")
-    targetes = relationship("ClientTargeta", back_populates="client")
+    #targetes = relationship("ClientTargeta", back_populates="client")
     estades = relationship("Estada", back_populates="client")
 
 

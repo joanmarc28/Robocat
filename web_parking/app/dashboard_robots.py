@@ -4,13 +4,15 @@ from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import Robot
+from app.models import Robot, Policia, Usuari, Client
 from datetime import datetime
 import json
 import requests
 import copy
 import os
 from dotenv import load_dotenv
+from app.session import get_user_from_cookie
+from fastapi.responses import RedirectResponse
 
 #Video en directe
 from typing import Dict
@@ -110,19 +112,46 @@ def video_feed(robot_id: str, db: Session = Depends(get_db)):
 
 #interficie control
 @router.get("/robocat/{robot_id}")
-def robocat_ui(robot_id: str, request: Request):
+def robocat_ui(robot_id: str, request: Request, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
+    if not user_id:
+        return RedirectResponse(url="/login", status_code=303)  # si no esta loguejat, a login
+
+    user = db.query(Usuari).get(user_id)  # agafa usuari per id
+    if db.query(Client).filter_by(user_id=user.id).first():  # si es client, redirigeix a welcome
+        return RedirectResponse(url="/welcome", status_code=303)
+
+    role = "policia"  # si no es client, es policia
+
     return templates.TemplateResponse("robocat.html", {
         "request": request,
         "robot_id": robot_id,
+        "user_id": user_id,
+        "user": user,
+        "role": role,
         "google_maps_key": os.getenv("GOOGLE_MAPS_KEY")
     })
 
 @router.get("/robots")
 def llista_robots(request: Request, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
+    if not user_id:
+        return RedirectResponse(url="/login", status_code=303)  # si no esta loguejat, a login
+
+    user = db.query(Usuari).get(user_id)  # agafa usuari per id
+    if db.query(Client).filter_by(user_id=user.id).first():  # si es client, redirigeix a welcome
+        return RedirectResponse(url="/welcome", status_code=303)
+
+    role = "policia"  # si no es client, es policia
+
     robots = db.query(Robot).all()
+
     return templates.TemplateResponse("robots.html", {
         "request": request,
-        "robots": robots
+        "robots": robots,
+        "user_id": user_id,
+        "user": user,
+        "role": role
     })
 
 @router.websocket("/ws/stream/{robot_id}")

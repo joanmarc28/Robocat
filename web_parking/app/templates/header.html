@@ -31,27 +31,43 @@
     <div class="collapse navbar-collapse justify-content-end" id="navigation" style="padding-left: 0px;">
       <ul class="navbar-nav">
         {% if user_id %}
-        {% if role == "policia" %}
-        <div class="p-2">
-          <a href="/zones" class="col-12 btn btn-neutral btn-round">Zones de Pagament</a>
-        </div>
-        {% else %}
-        <div class="p-2">
-          <a href="/parking" class="col-12 btn btn-neutral btn-round">Registrar Aparcament</a>
-        </div>
-        <div class="p-2">
-          <a href="/historial" class="col-12 btn btn-neutral btn-round">Historial</a>
-        </div>
-        <div class="p-2">
-          <a href="/cars" class="col-12 btn btn-neutral btn-round">Els Meus Cotxes</a>
-        </div>
-        <div class="p-2">
-          <a href="/perfil" class="col-12 btn btn-neutral btn-round">Perfil</a>
-        </div>
-        <div class="p-2">
-          <a href="/logout" class="col-12 btn btn-neutral btn-round">Sortir</a>
-        </div>
-        {% endif %}
+          {% if role == "policia" %}
+            <div class="p-2">
+              <a href="/zones" class="col-12 btn btn-neutral btn-round">Zones</a>
+            </div>
+            <div class="p-2">
+              <a href="/robots" class="col-12 btn btn-neutral btn-round">Robots</a>
+            </div>
+            <div class="p-2">
+              <a href="/routing" class="col-12 btn btn-neutral btn-round">Planificador</a>
+            </div>
+            <div class="p-2">
+              <a href="/deteccio" class="col-12 btn btn-neutral btn-round">Anàlisis</a>
+            </div>
+            <div class="p-2">
+              <a href="/infraccions" class="col-12 btn btn-neutral btn-round">Infraccions</a>
+            </div>
+
+            {% else %}
+            <div class="p-2">
+              <a href="/parking" class="col-12 btn btn-neutral btn-round">Registrar Aparcament</a>
+            </div>
+            <div class="p-2">
+              <a href="/historial" class="col-12 btn btn-neutral btn-round">Historial</a>
+            </div>
+            <div class="p-2">
+              <a href="/cars" class="col-12 btn btn-neutral btn-round">Els Meus Cotxes</a>
+            </div>
+            <div class="p-2">
+              <a href="/infraccions" class="col-12 btn btn-neutral btn-round">Infraccions</a>
+            </div>
+            <div class="p-2">
+              <a href="/perfil" class="col-12 btn btn-neutral btn-round">Perfil</a>
+            </div>
+            {% endif %}
+            <div class="p-2">
+              <a href="/logout" class="col-12 btn btn-neutral btn-round">Sortir</a>
+            </div>
         {% else %}
 
         <!--<li class="p-2">

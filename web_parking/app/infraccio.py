@@ -66,7 +66,7 @@ def veure_infraccions(request: Request, db: Session = Depends(get_db)):
             "imatge": i.imatge
         } for i in infraccions]
 
-    return templates.TemplateResponse("infractors.html", {
+    return templates.TemplateResponse("infraccions.html", {
         "request": request,
         "user_id": user_id,
         "user": usuari,
@@ -161,10 +161,16 @@ async def afegir_infraccio(
     ).delete()
 
     db.commit()
+    
+    deleted = db.query(PossibleInfraccio).filter_by(
+        matricula_cotxe=matricula,
+        data_posinfraccio=data_parsed
+    ).delete()
+
+    print(f"🔍 PossibleInfraccio eliminada: {deleted} registre(s)")  # opcional
     return RedirectResponse(url="/infraccions?success=1", status_code=303)
 
-
-@router.get("/afegir-infraccio-form")
+@router.get("/nova_infraccio")
 def afegir_infraccio_form(request: Request, matricula: str, timestamp: str, db: Session = Depends(get_db)):
     user_id = get_user_from_cookie(request)
     if not user_id:
@@ -183,7 +189,7 @@ def afegir_infraccio_form(request: Request, matricula: str, timestamp: str, db: 
     client = db.query(Client).join(Client.cotxes).filter_by(matricula=matricula).first()
     dni = client.dni if client else ""
 
-    return templates.TemplateResponse("form_infraccio_real.html", {
+    return templates.TemplateResponse("nova_infraccio.html", {
         "request": request,
         "matricula": matricula,
         "timestamp": timestamp,

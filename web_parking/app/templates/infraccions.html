@@ -13,7 +13,7 @@
         <div class="row justify-content-center">
             {% if role == "policia" %}
             <!-- POSSIBLES INFRACCIONS -->
-            <div class="col-12 col-md-10 col-lg-8">
+            <div class="col-12 col-md-10 col-lg-10">
                 <div class="card" data-color="white">
                     <div class="card-body">
                         <h3 class="text-center">Llista de possibles infraccions</h3>
@@ -41,19 +41,15 @@
                                         </td>
                                         <td>{{ i.matricula }}</td>
                                         <td>{{ i.infraccio }}</td>
-                                        <td>{{ i.timestamp }}</td>
-                                        <td class="d-flex gap-1">
-                                            <form method="POST" style="margin:0;">
+                                        <td>{{ i.timestamp.strftime("%d/%m/%Y %H:%M") }}</td>
+                                        <td>
+                                            <form method="POST" style="margin:0;" class="mb-2">
                                                 <input type="hidden" name="accio" value="eliminar">
                                                 <input type="hidden" name="matricula" value="{{ i.matricula }}">
                                                 <input type="hidden" name="timestamp" value="{{ i.timestamp }}">
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar infracció">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Eliminar">🗑️</button>
                                             </form>
-                                            <a href="/afegir-infraccio-form?matricula={{ i.matricula }}&timestamp={{ i.timestamp }}" class="btn btn-success btn-sm" title="Confirmar com a infracció real">
-                                                ✅ Confirmar
-                                            </a>
+                                            <a href="/nova_infraccio?matricula={{ i.matricula }}&timestamp={{ i.timestamp }}" class="btn btn-outline-success btn-sm" title="Confirmar">✅</a>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -69,7 +65,7 @@
             {% endif %}
 
             <!-- INFRACTORS (TOTS O PERSONALS) -->
-            <div class="col-12 col-md-10 col-lg-8">
+            <div class="col-12 col-md-10 col-lg-10">
                 <div class="card" data-color="white">
                     <div class="card-body">
                         <h3 class="text-center">Llista d'infractors</h3>
@@ -102,7 +98,7 @@
                                         <td>{{ i.dni }}</td>
                                         <td>{{ i.matricula }}</td>
                                         <td>{{ i.data }}</td>
-                                        <td>{{ i.import }}</td>
+                                        <td>{{ i.import }} €</td>
                                         <td>{{ i.infraccio }}</td>
                                         <td>
                                             {% if role == "policia" %}
@@ -110,9 +106,7 @@
                                                 <input type="hidden" name="accio" value="eliminar">
                                                 <input type="hidden" name="dni" value="{{ i.dni }}">
                                                 <input type="hidden" name="data" value="{{ i.data }}">
-                                                <button type="submit" class="btn btn-danger btn-sm">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Eliminar">🗑️</button>
                                             </form>
                                             {% endif %}
                                         </td>

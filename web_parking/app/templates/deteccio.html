@@ -15,8 +15,15 @@
                             <video autoplay playsinline id="webcam" width="640" height="480"></video>
 
                             <div class="mt-3 d-flex justify-content-between">
-                                <button id="mode-emocions" class="btn btn-outline-primary btn-sm">Mode emocions</button>
+                                <button id="mode-emocions" class="btn btn-outline-primary btn-sm active">Mode emocions</button>
                                 <button id="mode-policia" class="btn btn-outline-danger btn-sm">Mode policia</button>
+                            </div>
+
+                            <div id="loader" style="display: none;" class="text-center mt-3">
+                                <div class="spinner-border text-primary" role="status">
+                                    <!--<span class="visually-hidden">Carregant...</span>-->
+                                </div>
+                                <p class="mt-2">Analitzant...</p>
                             </div>
 
                             <div id="resultat" class="mt-3">
@@ -27,7 +34,7 @@
                                     <p><strong>Infracció:</strong> <span id="infraccio">Cap</span></p>
                                 </div>
 
-                                <div id="bloc-emocions" style="display: none;">
+                                <div id="bloc-emocions">
                                     <p><strong>Emocions:</strong> <span id="emocions">Carregant...</span></p>
                                     <p><strong>Resum emocional:</strong> <span id="analisi">Cap</span></p>
                                 </div>
@@ -49,14 +56,23 @@
 <script>
     let mode = "emocions"; // Mode inicial per defecte
 
-    document.getElementById("mode-emocions").addEventListener("click", () => {
+    const btnEmocions = document.getElementById("mode-emocions");
+    const btnPolicia = document.getElementById("mode-policia");
+
+    btnEmocions.addEventListener("click", () => {
         mode = "emocions";
+        btnEmocions.classList.add("active");
+        btnPolicia.classList.remove("active");
+
         document.getElementById("bloc-emocions").style.display = "block";
         document.getElementById("bloc-policia").style.display = "none";
     });
 
-    document.getElementById("mode-policia").addEventListener("click", () => {
+    btnPolicia.addEventListener("click", () => {
         mode = "policia";
+        btnPolicia.classList.add("active");
+        btnEmocions.classList.remove("active");
+
         document.getElementById("bloc-policia").style.display = "block";
         document.getElementById("bloc-emocions").style.display = "none";
     });
@@ -66,7 +82,15 @@
         .then(stream => { video.srcObject = stream; })
         .catch(err => { alert("No s'ha pogut accedir a la càmera: " + err); });
 
-    setInterval(enviarFrame, 5000);
+    setInterval(enviarFrame, 10000);
+
+    function mostrarLoader() {
+        document.getElementById("loader").style.display = "block";
+    }
+
+    function amagarLoader() {
+        document.getElementById("loader").style.display = "none";
+    }
 
     async function enviarFrame() {
         if (video.readyState < 2) return;
@@ -77,6 +101,8 @@
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
         const dataURL = canvas.toDataURL('image/jpeg');
+
+        mostrarLoader();
 
         try {
             const res = await fetch('/api/deteccio-frame', {
@@ -92,13 +118,14 @@
             if (mode === 'policia') {
                 document.getElementById('matricules').textContent = data.matricules?.join(', ') || 'Cap';
                 document.getElementById('infraccio').textContent = data.infraccio || 'Cap';
-
             } else {
                 document.getElementById('emocions').textContent = data.emocions?.join(', ') || 'Cap';
                 document.getElementById('analisi').textContent = data.analisi || 'Cap';
             }
         } catch (error) {
             console.error('Error enviant frame:', error);
+        } finally {
+            amagarLoader();
         }
     }
 </script>

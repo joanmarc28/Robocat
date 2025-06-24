@@ -152,6 +152,24 @@ def cars(request: Request, db: Session = Depends(get_db)):
         "cotxes": cotxes
     })
 
+@app.get("/deteccio", response_class=HTMLResponse)
+async def mostra_deteccio(request: Request, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)  # agafa l'id usuari de la cookie
+    if not user_id:
+        return RedirectResponse(url="/login", status_code=303)  # si no esta loguejat, a login
+
+    user = db.query(Usuari).get(user_id)  # agafa usuari per id
+    if db.query(Client).filter_by(user_id=user.id).first():  # si es client, redirigeix a welcome
+        return RedirectResponse(url="/welcome", status_code=303)
+
+    role = "policia"  # si no es client, es policia
+    return templates.TemplateResponse("deteccio.html", {
+        "request": request,
+        "user_id": user_id,
+        "user": user,
+        "role": role
+    })
+
 @app.post("/extract-plate")
 async def analitzar_matricula(capturedImage: str = Form(...)):
     try:

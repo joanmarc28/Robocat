@@ -16,7 +16,8 @@ from sqlalchemy.orm import Session  #sessio per a consultes ORM
 from dotenv import load_dotenv  #per carregar variables d'entorn
 from datetime import datetime
 import uuid
-
+import json
+import re
 
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")  #clau de gemini des del .env
@@ -149,6 +150,7 @@ def generar_audio(text):  #funcio per convertir text a veu
 
 class FrameModel(BaseModel):
     imatge: str
+    mode: str  # L'afegim perquè JS l'envia per JSON body
 
 @router.post("/api/deteccio-frame")
 async def deteccio_frame(request: Request, frame: FrameModel, db: Session = Depends(get_db)):
@@ -156,17 +158,16 @@ async def deteccio_frame(request: Request, frame: FrameModel, db: Session = Depe
     if not user_id:
         return {"error": "No autenticat"}
 
-    # Mode passat per JSON body (JS envia 'mode')
-    mode = request.query_params.get("mode", "emocions")
+    mode = frame.mode or "emocions"
+    print(f"📷 Mode seleccionat: {mode}")
 
-    # Decodificació de la imatge
     try:
         imatge_base64 = frame.imatge.split(",")[1]
         image_bytes = base64.b64decode(imatge_base64)
     except Exception as e:
+        print("❌ Error en decodificar la imatge:", e)
         return {"error": "Error en decodificar la imatge"}
 
-    # Prompt segons mode
     if mode == "emocions":
         prompt = (
             "Analitza aquesta imatge d’un vídeo. "
@@ -180,45 +181,55 @@ async def deteccio_frame(request: Request, frame: FrameModel, db: Session = Depe
             "Retorna un JSON amb 'matricules' (llista) i 'infraccio' (comença amb si, no o possible i després una descripció breu sense accents)."
         )
 
-    # Enviament a Gemini
+    print(f"🧠 Prompt enviat a Gemini:\n{prompt}")
+
     model = genai.GenerativeModel('gemini-2.0-flash-lite')
+
     resposta = model.generate_content([
         prompt,
         {"mime_type": "image/jpeg", "data": image_bytes}
     ])
 
-    text = resposta.text
+    text = resposta.text.strip()
+    print("📨 Resposta crua de Gemini:")
+    print(text)
+
+    # 🔧 Netegem si ve amb triple backticks
+    if text.startswith("```"):
+        text = re.sub(r"```[a-zA-Z]*", "", text)  # Elimina ```json o ``` qualsevol format
+        text = text.replace("```", "").strip()
+
+    try:
+        data = json.loads(text)
+    except Exception as e:
+        print("❌ Error parsejant JSON:", e)
+        return {"error": "Error en el format de resposta de Gemini"}
+
+    print("✅ JSON deserialitzat correctament:")
+    print(data)
 
     if mode == "emocions":
-        try:
-            data = eval(text) if isinstance(text, str) else text
-            return {
-                "emocions": data.get("emocions", []),
-                "analisi": data.get("analisi", "Cap")
-            }
-        except Exception as e:
-            return {"emocions": [], "analisi": "Error de format"}
+        return {
+            "emocions": data.get("emocions", []),
+            "analisi": data.get("analisi", "Cap")
+        }
 
     else:
-        try:
-            data = eval(text) if isinstance(text, str) else text
-            matricules = data.get("matricules", [])
-            infraccio = data.get("infraccio")
+        matricules = data.get("matricules", [])
+        infraccio = data.get("infraccio", "Cap")
 
-            if matricules and infraccio:
-                nova = PossibleInfraccio(
-                    id=f"pos_{datetime.utcnow().isoformat()}",
-                    descripcio=infraccio,
-                    matricula_cotxe=matricules[0],
-                    data_posInfraccio=datetime.utcnow(),
-                    imatge=frame.imatge
-                )
-                db.add(nova)
-                db.commit()
+        if matricules and infraccio:
+            nova = PossibleInfraccio(
+                id=f"pos_{datetime.utcnow().isoformat()}",
+                descripcio=infraccio,
+                matricula_cotxe=matricules[0],
+                data_posinfraccio=datetime.utcnow(),
+                imatge=frame.imatge
+            )
+            db.add(nova)
+            db.commit()
 
-            return {
-                "matricules": matricules,
-                "infraccio": infraccio or "Cap"
-            }
-        except Exception as e:
-            return {"matricules": [], "infraccio": "Error de format"}
+        return {
+            "matricules": matricules,
+            "infraccio": infraccio or "Cap"
+        }
