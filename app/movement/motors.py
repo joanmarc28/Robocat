@@ -8,7 +8,8 @@ from adafruit_pca9685 import PCA9685
 from adafruit_motor import servo
 import threading
 from sensors.ultrasonic import ModulUltrasons
-from movement.simulation_data import positions, walk_states
+from movement.simulation_data import *#positions, walk_states
+from movement.inverse_kinematics.steps import position_steps
 
 # Inicialització del bus I2C i la controladora PCA9685
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -31,14 +32,31 @@ class Pota:
         self.front = front
         self.old_state = "start"
 
-    def set_new_position(self,t):
-        pos = get_angle(self.state,self.right)
-        old_pos = get_angle(self.old_state,self.right)
+    def set_new_position(self,t, inter_method='linear'):
+        new_pos = position(self.state)
+        old_pos = position(self.old_state)
 
-        t1 = threading.Thread(target=new_angle, args=(self.servo_up,pos[0],old_pos[0],t))
+        up = 0
+        down = 0
+        if self.right:
+            up = lambda a : 90 - a
+            down = lambda a : a
+        else:
+            up = lambda a : 90 + a
+            down = lambda a : 180 - a
+        
+        correction_factor = (up, down)
+        steps = int(t/0.1)
+
+        pos_steps = position_steps(old_pos, new_pos, steps, inter_method, correction_factor)
+
+        up_steps = [pos[0] for pos in pos_steps]
+        down_steps = [pos[1] for pos in pos_steps]
+
+        t1 = threading.Thread(target=new_angles, args=(self.servo_up,up_steps,t/steps))
         t1.start()
         
-        t2 = threading.Thread(target=new_angle, args=(self.servo_down,pos[1],old_pos[1],t))
+        t2 = threading.Thread(target=new_angles, args=(self.servo_down,down_steps,t/steps))
         t2.start()
 
         t1.join()
@@ -46,33 +64,18 @@ class Pota:
 
 
     def up(self):
-        assert self.state != "up", "Already in 'up' position"
-        assert self.state != "sit", "Cannot go to 'up' from 'sit' position"
-        assert self.state in ["center", "front", "back", "long_front", "long_back"], "State must be one of 'center', 'front', 'back', 'long_front', or 'long_back'"
-
-        self.set_state("up")
+        #DEPRECATED
+        pass
 
     def down(self, new_state):
-        assert self.state == "up", "Can only go to from 'up' positions"
-        assert new_state in ["center", "front", "back", "long_back"], "New state must be one of 'center', 'front', or 'back'"
-
-        self.set_state(new_state)
+        #DEPRECATED
+        pass
 
     def forward(self):  
-        assert self.state != "long_front", "Cannot move backward from 'long_front' position"
-
-        if self.state == "front": self.set_state("long_front")
-        if self.state == "center": self.set_state("front")
-        if self.state == "back": self.set_state("center")
-        if self.state == "long_back": self.set_state("back")
+        self.set_state(forwards(self.state))
 
     def backward(self):
-        assert self.state != "long_back", "Cannot move forward from 'long_back' position"
-
-        if self.state == "back": self.set_state("long_back")
-        if self.state == "center": self.set_state("back")
-        if self.state == "front": self.set_state("center")
-        if self.state == "long_front": self.set_state("front")
+        self.set_state(backwards(self.state))
     
     def set_state(self, new_state):
         """Estableix un nou estat per a la pota."""
@@ -136,6 +139,7 @@ class EstructuraPotes:
             
     def sit_hind_legs(self, t=0.2):
         """Sit using only the hind legs while front legs are raised."""
+        '''
         # hind legs
         self.legs[2].set_state("sit")
         self.legs[3].set_state("sit")
@@ -151,9 +155,11 @@ class EstructuraPotes:
 
         for th in threads:
             th.join()
+        '''
             
     def strech(self, t=0.2):
         """Sit using only the hind legs while front legs are raised."""
+        '''
         # hind legs
         self.legs[2].set_state("up")
         self.legs[3].set_state("up")
@@ -169,10 +175,7 @@ class EstructuraPotes:
 
         for th in threads:
             th.join()
-    """def init_bot(self,t):
-        for leg in self.legs:
-            leg.state = "sit"
-            leg.set_new_position(t)"""
+        '''
     
     #set_positions
     def get_states(self):
@@ -181,38 +184,43 @@ class EstructuraPotes:
     """def follow_order(self, order, states, t=1):"""
     def follow_order(self, order,states = None, t=1):
         legs = self.legs
-        action, *args = order
-        old_states = self.get_states()
-        if action == 'move_body':
-            if args[0] == "backward":
-                self.body_backward()
-                
-            elif args[0] == "forward":
+        inter_method = 'linear'
+
+        direction, leg_n, method = order
+        
+        if inter_method == 'p':
+            inter_method = 'parabolic'
+
+        #BODY
+        if leg_n == 4:
+            if   direction == 'f': 
                 self.body_forward()
-                
-            elif args[0] == "upward":
+            elif direction == 'b': 
+                self.body_backward()
+            elif direction == 'u': 
                 self.body_upward()
-                
-            elif args[0] == "downward":
+            elif direction == 'd': 
                 self.body_downward()
-            else:
-                self.set_body_state(args[0])
+        
+        #LEG
+        else:
+            leg = legs[leg_n]
+            legs = [leg]
 
-        elif action == 'raise_leg':
-            legs = [self.legs[args[0]]]
-            self.legs[args[0]].up()        
-
-        elif action == 'lower_leg':
-            legs = [self.legs[args[0]]]
-            self.legs[args[0]].down(args[1])
-
+            if   action ==  'f': 
+                leg.forward()
+            elif action ==  'b':
+                leg.backwards()
+            elif action == 'ff':
+                leg.forward()
+                leg.forward()
+        
         new_states = self.get_states()
+
         #Function move Body
-        """for leg in self.legs:
-            t1 = threading.Thread(target=leg.set_new_position, args=(t,)).start()"""
         threads = []
         for leg in legs:
-            th = threading.Thread(target=leg.set_new_position, args=(t,))
+            th = threading.Thread(target=leg.set_new_position, args=(t,inter_method))
             threads.append(th)
             th.start()
 
@@ -241,16 +249,8 @@ class EstructuraPotes:
         
         print(f"Final states: {states}")
 
-
-
-
-
-
-
-
-
 def get_angle(state,right):
-    (up, down) = positions[state]
+    (up, down) = position(state)
     if right:
         up = 90 - up
         down = down
@@ -266,6 +266,11 @@ def new_angle(servo,angle_final,angle_inicial, duracio, passos=30):
     for i in range(passos + 1):
         angle_actual = angle_inicial + i * pas
         servo.angle = max(0, min(180, angle_actual))  # Protecció límits
+        time.sleep(delay)
+
+def new_angles(servo,angles, delay):
+    for angle in angles:
+        servo.angle = max(0, min(180, angle))  # Protecció límits
         time.sleep(delay)
 
 # Crear potes (ajusta els canals segons com els tinguis connectats)
