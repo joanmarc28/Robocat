@@ -59,25 +59,33 @@ To set up and run RoboCat on your system, follow these simple steps:
 Open your terminal and run the following command:
 ```bash
 git clone https://github.com/joanmarc28/Robocat.git
+cd Robocat
 ```
 ### Step 2: Install dependencies
-Make sure you have Python installed. You can set up the required environment using pip by running requirements.txt file:
+Make sure you have Python installed. You can install the required environment simply by running the file setup_robocat.sh:
 ```bash
-pip install -r requeriments.txt
+bash setup_robocat.sh
 ```
+You can run this command even if the robot is powered off. The setup process only installs software on your computer.
+
 #### How do I install Python?
 If you don't have Python installed, download it from the [official website](https://www.python.org/downloads/)
 You can check your Python version by running:
 ```bash
 python --version
 ```
-### Step 3: Run the system
-Once everything is installed, you can run the setup file:
+### Step 3: Activate the environment
+Once the installation is complete, activate the virtual environment:
 ```bash
-bash setup_robocat.sh
+source robocat_env/bin/activate
 ```
-Make sure the robot is powered on and properly connected before executing the .sh file.
 
+### Step 4: Run the main program and enjoy!
+With the environment activated, run the main program:
+```bash
+cd app
+python main.py
+```
 
 # Components
 
