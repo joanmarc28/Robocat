@@ -13,7 +13,7 @@ import io
 from fastapi.responses import JSONResponse
 import requests
 from passlib.context import CryptContext
-from app import auth, zones, cars, assistent, dashboard_robots
+from app import auth, zones, cars, assistent, dashboard_robots, infraccio
 from app.database import Base, engine
 from app.session import get_user_from_cookie
 from app.database import get_db
@@ -36,6 +36,7 @@ app.include_router(zones.router)  # registra les rutes de zones
 app.include_router(cars.router)  # registra les rutes de cotxes
 app.include_router(assistent.router)  # registra les rutes de l'assistent
 app.include_router(dashboard_robots.router)  # registra les rutes del dashboard robots
+app.include_router(infraccio.router)  # registra les rutes de infraccions
 
 @app.get("/")
 def index(request: Request, db: Session = Depends(get_db)):

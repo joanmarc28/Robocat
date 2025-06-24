@@ -75,23 +75,6 @@ class Cotxe(Base):
     estades = relationship("Estada", back_populates="cotxe")
 
 
-class Targeta(Base):
-    __tablename__ = "targeta"
-    num = Column(String, primary_key=True)
-    tipus = Column(String)
-
-    clients = relationship("ClientTargeta", back_populates="targeta")
-
-
-class ClientTargeta(Base):
-    __tablename__ = "client_targeta"
-    dni_usuari = Column(String, ForeignKey("client.dni"), primary_key=True)
-    num_targeta = Column(String, ForeignKey("targeta.num"), primary_key=True)
-
-    client = relationship("Client", back_populates="targetes")
-    targeta = relationship("Targeta", back_populates="clients")
-
-
 class Zona(Base):
     __tablename__ = "zona"
     id = Column(Integer, primary_key=True, index=True)
@@ -120,3 +103,68 @@ class Estada(Base):
     client = relationship("Client", back_populates="estades")
     cotxe = relationship("Cotxe", back_populates="estades")
     zona = relationship("Zona", back_populates="estades")
+
+class Infraccio(Base):
+    __tablename__ = "infraccio"
+    id = Column(Integer, primary_key=True, index=True)
+    dni_usuari = Column(String, ForeignKey("client.dni"))
+    matricula_cotxe = Column(String, ForeignKey("cotxe.matricula"))
+    id_zona = Column(Integer, ForeignKey("zona.id"))
+    data_infraccio = Column(TIMESTAMP)
+    descripcio = Column(String)
+    preu = Column(DECIMAL)
+    imatge = Column(String)
+
+    # Relacions (opcionals)
+    client = relationship("Client", backref="infraccions")
+    cotxe = relationship("Cotxe", backref="infraccions")
+    zona = relationship("Zona", backref="infraccions")
+
+
+class PossibleInfraccio(Base):
+    __tablename__ = "possibleinfraccio"
+    id = Column(String, primary_key=True, index=True)
+    descripcio = Column(String)
+    matricula_cotxe = Column(String, ForeignKey("cotxe.matricula"))
+    data_posinfraccio = Column(TIMESTAMP)
+    imatge = Column(String)
+
+    cotxe = relationship("Cotxe", backref="possibles_infraccions")
+
+
+class Ruta(Base):
+    __tablename__ = "ruta"
+    id = Column(Integer, primary_key=True, index=True)
+    id_policia = Column(Integer, ForeignKey("policia.user_id"))
+    id_zona = Column(Integer, ForeignKey("zona.id"))
+    data_creacio = Column(TIMESTAMP, nullable=False)
+    origen = Column(String, nullable=False)
+    desti = Column(String, nullable=False)
+
+    policia = relationship("Policia", backref="rutes")
+    zona = relationship("Zona", backref="rutes")
+    punts = relationship("PuntRuta", back_populates="ruta", cascade="all, delete-orphan")
+    robocats_assignats = relationship("RoboCatRuta", back_populates="ruta")
+
+
+class PuntRuta(Base):
+    __tablename__ = "puntruta"
+    id = Column(Integer, primary_key=True, index=True)
+    id_ruta = Column(Integer, ForeignKey("ruta.id"))
+    latitud = Column(DECIMAL(9, 6), nullable=False)
+    longitud = Column(DECIMAL(9, 6), nullable=False)
+    ordre = Column(Integer, nullable=False)
+
+    ruta = relationship("Ruta", back_populates="punts")
+
+
+class RoboCatRuta(Base):
+    __tablename__ = "robocatruta"
+    id = Column(Integer, primary_key=True, index=True)
+    id_robocat = Column(Integer, ForeignKey("robot.id"))
+    id_ruta = Column(Integer, ForeignKey("ruta.id"))
+    data_inici = Column(TIMESTAMP)
+    data_fi = Column(TIMESTAMP)
+
+    robocat = relationship("Robot", backref="assignacions")
+    ruta = relationship("Ruta", back_populates="robocats_assignats")

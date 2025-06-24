@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, Request, Form, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.crud_users import create_user
+from app.crud.crud_users import create_user
 from fastapi.responses import RedirectResponse
 from passlib.context import CryptContext
 from fastapi.templating import Jinja2Templates

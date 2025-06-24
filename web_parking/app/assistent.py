@@ -4,16 +4,20 @@ import os
 import tempfile
 import subprocess
 from app.database import get_db  #funcio per obtenir sessio de base de dades
-from fastapi import APIRouter, Request, UploadFile, File, Depends  #importem fastapi
+from fastapi import APIRouter, Request, UploadFile, File, Depends,HTTPException  #importem fastapi
 from pydantic import BaseModel  #per validar dades d'entrada
 import google.generativeai as genai  #llibreria de gemini
 from google.cloud import texttospeech  #per generar audio
-
-from app.models import Cotxe, Estada  #models de la base de dades
+from fastapi.responses import JSONResponse  #per retornar resposta json
+import base64
+from app.models import Cotxe, Estada, Usuari, Zona, PossibleInfraccio   #models de la base de dades
 from app.session import get_user_from_cookie  #per obtenir usuari des de cookies
 from sqlalchemy.orm import Session  #sessio per a consultes ORM
-
 from dotenv import load_dotenv  #per carregar variables d'entorn
+from datetime import datetime
+import uuid
+
+
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")  #clau de gemini des del .env
 
@@ -60,10 +64,6 @@ async def transcripcio(audio: UploadFile = File(...)):
 
     return {"transcripcio": resultat}  #retornem transcripcio
 
-from fastapi.responses import JSONResponse  #per retornar resposta json
-from app.models import Cotxe, Estada, Usuari, Zona  #models
-import base64
-import io
 
 @router.post("/assistente-gemini")  #endpoint per xat amb assistent
 async def assistente_gemini(pregunta: PreguntaModel, db: Session = Depends(get_db)):
@@ -145,3 +145,80 @@ def generar_audio(text):  #funcio per convertir text a veu
     )
 
     return response.audio_content  #retornem audio
+
+
+class FrameModel(BaseModel):
+    imatge: str
+
+@router.post("/api/deteccio-frame")
+async def deteccio_frame(request: Request, frame: FrameModel, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)
+    if not user_id:
+        return {"error": "No autenticat"}
+
+    # Mode passat per JSON body (JS envia 'mode')
+    mode = request.query_params.get("mode", "emocions")
+
+    # Decodificació de la imatge
+    try:
+        imatge_base64 = frame.imatge.split(",")[1]
+        image_bytes = base64.b64decode(imatge_base64)
+    except Exception as e:
+        return {"error": "Error en decodificar la imatge"}
+
+    # Prompt segons mode
+    if mode == "emocions":
+        prompt = (
+            "Analitza aquesta imatge d’un vídeo. "
+            "Detecta emocions de les persones. "
+            "Retorna un JSON amb 'emocions' (llista) i 'analisi' (descripció breu sense accents)."
+        )
+    else:
+        prompt = (
+            "Analitza aquesta imatge d’un vídeo. "
+            "Detecta matrícules de cotxes, identifica vehicles i descriu qualsevol infracció de trànsit. "
+            "Retorna un JSON amb 'matricules' (llista) i 'infraccio' (comença amb si, no o possible i després una descripció breu sense accents)."
+        )
+
+    # Enviament a Gemini
+    model = genai.GenerativeModel('gemini-2.0-flash-lite')
+    resposta = model.generate_content([
+        prompt,
+        {"mime_type": "image/jpeg", "data": image_bytes}
+    ])
+
+    text = resposta.text
+
+    if mode == "emocions":
+        try:
+            data = eval(text) if isinstance(text, str) else text
+            return {
+                "emocions": data.get("emocions", []),
+                "analisi": data.get("analisi", "Cap")
+            }
+        except Exception as e:
+            return {"emocions": [], "analisi": "Error de format"}
+
+    else:
+        try:
+            data = eval(text) if isinstance(text, str) else text
+            matricules = data.get("matricules", [])
+            infraccio = data.get("infraccio")
+
+            if matricules and infraccio:
+                nova = PossibleInfraccio(
+                    id=f"pos_{datetime.utcnow().isoformat()}",
+                    descripcio=infraccio,
+                    matricula_cotxe=matricules[0],
+                    data_posInfraccio=datetime.utcnow(),
+                    imatge=frame.imatge
+                )
+                db.add(nova)
+                db.commit()
+
+            return {
+                "matricules": matricules,
+                "infraccio": infraccio or "Cap"
+            }
+        except Exception as e:
+            return {"matricules": [], "infraccio": "Error de format"}
