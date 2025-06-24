@@ -186,7 +186,7 @@ If a vehicle is parked without a valid registration in a regulated area and Robo
 
 | Database | APIs & External Services |
 |----------|--------------------------|
-| ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) | ![CloudVision](https://img.shields.io/badge/cloud-vision-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4) <br> ![badge](https://img.shields.io/badge/cloud-speech-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4) <br> ![Google Gemini](https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white) <br> ![badge](https://img.shields.io/badge/AIORTC-2c5bb4.svg?style=for-the-badge&logo=AIOHTTP&logoColor=ffffff&labelColor=2c5bb4) |
+| ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) | ![CloudVision](https://img.shields.io/badge/cloud-vision-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4) ![badge](https://img.shields.io/badge/cloud-speech-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4) <br> ![Google Gemini](https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white) ![badge](https://img.shields.io/badge/AIORTC-2c5bb4.svg?style=for-the-badge&logo=AIOHTTP&logoColor=ffffff&labelColor=2c5bb4) |
   
 # License
 This project is licensed under the [MIT License](LICENSE).  
