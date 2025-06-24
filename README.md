@@ -84,6 +84,45 @@ Make sure the robot is powered on and properly connected before executing the .s
 
 ## 3D Design
 
+All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure is divided into the following sections:
+
+### Legs
+
+| Full Leg |
+|----------|
+| [Leg IMG] <br> Upper Leg Front (View File) <br> Upper Leg Back (View File) <br> Lower Leg Paw (View File) |
+
+---
+
+### Body
+
+| Chassis | Second Floor Plate | Front Body |
+|---------|--------------------|------------|
+| [Chassis IMG] <br> Chassis (View File) | [2FloorPlate IMG] <br> 2nd Floor Plate (View File) |
+ [FrontBody IMG] <br> Front Body (View File) |
+
+| Middle Body | Back Body | Neck |
+|-------------|-----------|------|
+| [MiddleBody IMG] <br> Middle Body (View File) | [BackBody IMG] <br> Back Body (View File) | [Neck IMG] <br> Neck (View File) |
+
+---
+
+### Head
+
+| Head Model | Head Back Panel |
+|------------|-----------------|
+| [HeadModel IMG] <br> Head Model (View Files) | [Head Back Panel] <br> Head Back Panel (View Files)
+
+---
+
+### Miscellaneous
+
+| Tail | Fan Blades | Fan Holder |
+|------|------------|------------|
+| [Tail IMG] <br> Tail (View Files) | [FanBlades IMG] <br> Fan Blades (View File) | [FanHolder IMG] <br> Fan Holder (View Files) |
+
+---
+
 # Software
 The RoboCat software is composed of two main components:
 - License Plate Detection Algorithm
