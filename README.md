@@ -101,7 +101,7 @@ Make sure the robot is powered on and properly connected before executing the .s
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/oled.png" width="75"> | [OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64)](https://goldenmorninglcd.com/es/m%C3%B3dulo-de-pantalla-oled/0.96-pulgadas-128x64-ssd1306-gme12864-11/) | 2 |
 
 ### Wiring Schematics
-[IMG ESQUEMA]
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/Esquema%20B.png" width="600">
 However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit.
 
 ## 3D Design
