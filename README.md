@@ -132,7 +132,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Neck | Head Model | Head Back Panel |
 |------|------------|-----------------|
-| <div align = "center"> [NeckModel IMG] <br>  [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/head/head_video.gif" width="200"> <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) </div> | <div align="center"> [Head Back Panel] <br> [Head Back Panel (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl) </div> |
+| <div align = "center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/neck/neck_video.gif" width="200"> <br>  [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/head/head_video.gif" width="200"> <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) </div> | <div align="center">  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/head/head_back_panel_video.gif" width="200"> <br> [Head Back Panel (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl) </div> |
 
 ---
 
@@ -140,7 +140,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Tail | Fan Blades | Fan Holder |
 |------|------------|------------|
-| <div align = "center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/tail/tail_video.gif" width="200"> <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) </div> | <div align="center"> [FanBlades IMG] <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) </div> | <div align="center"> [FanHolder IMG] <br> [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl) </div> |
+| <div align = "center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/tail/tail_video.gif" width="200"> <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) </div> | <div align="center">  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/fan/fan_blades_video.gif" width="200"> <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) </div> | <div align="center">  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/fan/fan_holder_video.gif" width="200"> <br> [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl) </div> |
 
 ---
 
