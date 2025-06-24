@@ -124,9 +124,34 @@ Registered users can manage their vehicles and parking sessions through the web 
 If a vehicle is parked without a valid registration in a regulated area and RoboCat scans its license plate, and infraction is automatically recorded. The system notifies the vehicle owner of the violation and provides the fine details.
 
 # Tech Stack
- tinked card .............
- vs code 
+## Programming & AI
+- Python
+- OpenCV (Computer Vision processing)
+- Ultralytics YOLOv8n (Vehicle and license plate detection)
+- Tensorflow/Keras (CNN-based OCR for license plate recognition)
+- Numpy
+  
+## 3D Design & Hardware
+- Autodesk Fusion 360 (3D design an prototyping of robot components)
+- Fritzing (Hardware schematics)
 
+## Simulation & Development Tools
+- CoppeliaSim (Robot simulation and movement testing)
+- Visual Studio Code (Development environment)
+- Python Dotenv (Environment variable management)
+
+## Web Application
+- **Backend:** FastAPI (High-perfomance Python web framework)
+- **Frontend:** Jinja2 Templates (Dynamic HTML rendering)
+- **Server:** Uvicorn ASGI Server
+- **Database:** PostgreSQL with SQLAlchemy ORM
+- **APIs & External services**:
+  - *Google Cloud Vision* (Image processing)
+  - *Google Cloud Speech-To-text*
+  - *Google Generative AI* (AI integration)
+  - *AIORTC* (WebRTC real-time communication)
+  - *Requests for HTTP communication*
+  
 # License
 This project is licensed under the [MIT License](LICENSE).  
 © 2025–present [Contributors](https://github.com/joanmarc28/Robocat/contributors)
