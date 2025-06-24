@@ -24,7 +24,6 @@
  <!---Modificar per els nostres casos--->
 <p align="center">
   <a href="#What-is-RoboCat">What is RoboCat?</a> •
-  <a href="#Requirements">Requirements</a> •
   <a href="#How-To-Use">How to use</a> •
   <a href="#Components">Components</a> •
   <a href="#Software">Software</a> •
@@ -50,8 +49,6 @@ The project main goals are to:
   - Integrate urban robotics with a friendly and non-threatening design
   - Demonstrate the application of robotics in real-world city environments
 
-# Requirements
-
 # How to use
 
 To set up and run RoboCat on your system, follow these simple steps:
@@ -75,17 +72,11 @@ You can check your Python version by running:
 python --version
 ```
 ### Step 3: Activate the environment
-Once the installation is complete, activate the virtual environment:
+Once the installation is complete, activate the virtual environment and run the main program by running the following command:
 ```bash
-source robocat_env/bin/activate
+bash start_robocat.sh
 ```
-
-### Step 4: Run the main program and enjoy!
-With the environment activated, run the main program:
-```bash
-cd app
-python main.py
-```
+Now you can just enjoy!
 
 # Components
 
