@@ -224,14 +224,14 @@ This project was created as part of a university assignment and is not open to e
 However, feel free to fork the repository and experiment with it for learning and improvement purposes.
 
 # References
-1 | Tutorial EasyEDA ([Link](https://www.youtube.com/watch?v=BvvHJ-H79l8&ab_channel=ELECTRONOOBSenEspa%C3%B1ol))
-2 | The LAD Dog V1.0 - Assembly Instructions ([Link](https://www.youtube.com/watch?v=YNgyFZvyQP4&ab_channel=LADRobotics))
-3 | OpenCat by PetoiCamp ([Link](https://github.com/PetoiCamp/OpenCat))
-4 | Boston Dynamics Robot ([Link](https://www.youtube.com/watch?v=9KdLYhsh0zw&ab_channel=SabinIngenier%C3%ADaCivil))
-5 | Beitian BN220 GPS Installation ([Link](https://www.youtube.com/watch?v=30FU0_7-G3w&ab_channel=Unboxingexperience7))
-6 | Sistema de detección de matrículas con OpenCV (Jorge Navacerrada) ([Link](https://oa.upm.es/51869/1/TFG_JORGE_NAVACERRADA.pdf))
-7 | Car License Plate Detection Database ([Link](https://www.kaggle.com/datasets/andrewmvd/car-plate-detection/data))
-8 | Chars74K Database for OCR Training ([Link](https://www.kaggle.com/datasets/supreethrao/chars74kdigitalenglishfont))
+**1** | Tutorial EasyEDA ([Link](https://www.youtube.com/watch?v=BvvHJ-H79l8&ab_channel=ELECTRONOOBSenEspa%C3%B1ol)) <br>
+**2** | The LAD Dog V1.0 - Assembly Instructions ([Link](https://www.youtube.com/watch?v=YNgyFZvyQP4&ab_channel=LADRobotics)) <br>
+**3** | OpenCat by PetoiCamp ([Link](https://github.com/PetoiCamp/OpenCat)) <br>
+**4** | Boston Dynamics Robot ([Link](https://www.youtube.com/watch?v=9KdLYhsh0zw&ab_channel=SabinIngenier%C3%ADaCivil)) <br>
+**5** | Beitian BN220 GPS Installation ([Link](https://www.youtube.com/watch?v=30FU0_7-G3w&ab_channel=Unboxingexperience7)) <br>
+**6** | Sistema de detección de matrículas con OpenCV (Jorge Navacerrada) ([Link](https://oa.upm.es/51869/1/TFG_JORGE_NAVACERRADA.pdf)) <br>
+**7** | Car License Plate Detection Database ([Link](https://www.kaggle.com/datasets/andrewmvd/car-plate-detection/data)) <br>
+**8** | Chars74K Database for OCR Training ([Link](https://www.kaggle.com/datasets/supreethrao/chars74kdigitalenglishfont))
 
 # Credits
 
