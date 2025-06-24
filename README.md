@@ -98,7 +98,7 @@ Using YOLOv8n object detection model, RoboCat identifies vehicles present in its
 Once a vehicle is detected, a second YOLOv8n model is used to accurately locate the license plate area. The system also detects and extracts the nationality region by identifying the blue section commonly present on Spanish license plates. Since our project only focuses on Spanish license plates, the blue section is cropped for further processing.
 
 #### 3. Optical Character Recognition (OCR)
-A custom CNN (Convolutional Neural Network) is applied to convert the plate characters into text. The algorithm validated the result to ensure it follows the standard Spanish license plate format (1234 BCD). Additional correction steps are included to handle character misinterpretations and adapt the output to the expected structure.
+A custom CNN (Convolutional Neural Network) using Tensorflow is applied to convert the plate characters into text. The algorithm validated the result to ensure it follows the standard Spanish license plate format (1234 BCD). Additional correction steps are included to handle character misinterpretations and adapt the output to the expected structure.
 
 ## Web Application
 
@@ -125,21 +125,21 @@ If a vehicle is parked without a valid registration in a regulated area and Robo
 
 # Tech Stack
 ### Programming & AI
-- ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-- ![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white) (Computer Vision processing)
-- **Ultralytics YOLOv8n** (Vehicle and license plate detection)
-- ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) (CNN-based OCR for license plate recognition)
-- ![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)
+**Ultralytics YOLOv8n**
+![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
+![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white)
   
 ### 3D Design & Hardware
-- **Autodesk Fusion 360** (3D design an prototyping of robot components)
-- **Fritzing** (Hardware schematics)
-- **EasyEDA** (PCB design)
+**Autodesk Fusion 360** (3D design an prototyping of robot components)
+**Fritzing** (Hardware schematics)
+**EasyEDA** (PCB design)
 
 ### Simulation & Development Tools
-- **CoppeliaSim** (Robot simulation and movement testing)
-- ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) (Development environment)
-- **Python Dotenv** (Environment variable management)
+**CoppeliaSim** (Robot simulation and movement testing)
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) (Development environment)
+**Python Dotenv** (Environment variable management)
 
 ### Web Application
 - **Backend:** ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi) (High-perfomance Python web framework)
