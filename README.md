@@ -175,16 +175,16 @@ If a vehicle is parked without a valid registration in a regulated area and Robo
 ![EasyEDA](https://img.shields.io/badge/easyeda-2b96da.svg?style=for-the-badge&logo=EDEKA&logoColor=ffffff&labelColor=2b96da)
 
 ### Simulation & Development Tools
-![CoppeliaSim](https://img.shields.io/badge/coppelia robotics-cc0000.svg?style=for-the-badge&logo=Conan&logoColor=ffffff&labelColor=cc0000)
+![CoppeliaSIM](https://img.shields.io/badge/coppelia-robotics-c80000.svg?style=for-the-badge&logo=Circle&logoColor=ffffff&labelColor=c80000)
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) (Development environment)
-![Python DotEnv](https://img.shields.io/badge/python dotenv-3776ab.svg?style=for-the-badge&logo=Python&logoColor=ffffff&labelColor=3776ab)
+![Python DotEnv](https://img.shields.io/badge/python-dotenv-3776ab.svg?style=for-the-badge&logo=Python&logoColor=ffffff&labelColor=3776ab)
 
 ### Web Application
 - **Backend:** ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi) (High-perfomance Python web framework)
 - **Frontend:** ![Jinja](https://img.shields.io/badge/jinja-white.svg?style=for-the-badge&logo=jinja&logoColor=black) (Dynamic HTML rendering)
 - **Database:** ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) (With SQLAlchemy ORM)
 - **APIs & External services**:
-  - ![badge](https://img.shields.io/badge/google-cloud-vision-4285f4.svg?style=for-the-badge&logo=Google Cloud&logoColor=ffffff&labelColor=4285f4)
+  - ![CloudVision](https://img.shields.io/badge/cloud-vision-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4)
   - ![badge](https://img.shields.io/badge/google-cloud-speech-4285f4.svg?style=for-the-badge&logo=Google Cloud&logoColor=ffffff&labelColor=4285f4)
   - ![Google Gemini](https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white)
   - ![badge](https://img.shields.io/badge/AIORTC-2c5bb4.svg?style=for-the-badge&logo=AIOHTTP&logoColor=ffffff&labelColor=2c5bb4)
