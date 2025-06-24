@@ -85,18 +85,18 @@ Make sure the robot is powered on and properly connected before executing the .s
 ### Required components
 | Component | Model | Units |
 |-----------|-------|-------|
-| [img raspi] | Raspberry Pi 4 Model B | 1x |
-| [img controlador servos] | PCA9685 (16 channel PWM controller) | 1x |
-| [img servo] | MG996R Digital Servomotor | 9x |
-| [img gps] | GPS BN-880 (Dual GPS/GLONASS with integrated compass) | 1x |
-| [img camera] | Camera OV5647 for Raspberry Pi | 1x |
-| [img ultrasons] | Ultrasonic Distance Sensor HC-SR04 | 1x |
-| [img giro/accelerometre] | GY-521 MODULE (MPU-6050 accelerometer and gyro)
-| [img_lipo] | 3500mAh 2S 25C LiPo Battery (7.4V) | 2x |
-| [img conversor voltatge] | DC-DC 5V 3A - S13V30F5 Voltage Conversor | 1x |
-| [img_micro] | Digital Microphone MEMS I2S SPH0645 | 1x |
-| [img ampli] | Audio Amplificator I2S MAX98357 (3W) | 1x |
-| [img_pantalles] | OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64) | 2x |
+| [img raspi] | Raspberry Pi 4 Model B | 1u |
+| [img controlador servos] | PCA9685 (16 channel PWM controller) | 1u |
+| [img servo] | MG996R Digital Servomotor | 9u |
+| [img gps] | GPS BN-880 (Dual GPS/GLONASS with integrated compass) | 1u |
+| [img camera] | Camera OV5647 for Raspberry Pi | 1u |
+| [img ultrasons] | Ultrasonic Distance Sensor HC-SR04 | 1u |
+| [img giro/accelerometre] | GY-521 MODULE (MPU-6050 accelerometer and gyro) | 1u |
+| [img_lipo] | 3500mAh 2S 25C LiPo Battery (7.4V) | 2u |
+| [img conversor voltatge] | DC-DC 5V 3A - S13V30F5 Voltage Conversor | 1u |
+| [img_micro] | Digital Microphone MEMS I2S SPH0645 | 1u |
+| [img ampli] | Audio Amplificator I2S MAX98357 (3W) | 1u |
+| [img_pantalles] | OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64) | 2u |
 
 ### Wiring Schematics
 [IMG ESQUEMA]
