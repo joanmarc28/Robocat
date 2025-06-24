@@ -94,7 +94,7 @@ Make sure the robot is powered on and properly connected before executing the .s
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/accelero-giro.jpg" width="100"> | GY-521 MODULE (MPU-6050 accelerometer and gyro) | 1 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/lipo.png" width="100"> | 3500mAh 2S 25C LiPo Battery (7.4V) | 2 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/polulu.jpg" width="100"> | DC-DC 5V 3A - S13V30F5 Voltage Conversor | 1 |
-| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/microfon.jpg" width="100"> | Digital Microphone MEMS I2S SPH0645 | 1 |
+| <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/microfon.jpg" width="100"> | eModwey Microphone Lavalier USB 2M | 1 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/amplificador.jpg" width="100"> | Audio Amplificator I2S MAX98357 (3W) | 1 |
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/oled.png" width="100"> | OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64) | 2 |
 
