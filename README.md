@@ -125,11 +125,11 @@ If a vehicle is parked without a valid registration in a regulated area and Robo
 
 # Tech Stack
 ### Programming & AI
-- **Python**
-- **OpenCV** (Computer Vision processing)
+- ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+- ![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white) (Computer Vision processing)
 - **Ultralytics YOLOv8n** (Vehicle and license plate detection)
-- **Tensorflow/Keras** (CNN-based OCR for license plate recognition)
-- **Numpy**
+- ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) (CNN-based OCR for license plate recognition)
+- ![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white)
   
 ### 3D Design & Hardware
 - **Autodesk Fusion 360** (3D design an prototyping of robot components)
@@ -138,18 +138,18 @@ If a vehicle is parked without a valid registration in a regulated area and Robo
 
 ### Simulation & Development Tools
 - **CoppeliaSim** (Robot simulation and movement testing)
-- **Visual Studio Code** (Development environment)
+- ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) (Development environment)
 - **Python Dotenv** (Environment variable management)
 
 ### Web Application
-- **Backend:** FastAPI (High-perfomance Python web framework)
-- **Frontend:** Jinja2 Templates (Dynamic HTML rendering)
+- **Backend:** ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi) (High-perfomance Python web framework)
+- **Frontend:** ![Jinja](https://img.shields.io/badge/jinja-white.svg?style=for-the-badge&logo=jinja&logoColor=black) (Dynamic HTML rendering)
 - **Server:** Uvicorn ASGI Server
-- **Database:** PostgreSQL with SQLAlchemy ORM
+- **Database:** ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) (With SQLAlchemy ORM)
 - **APIs & External services**:
   - *Google Cloud Vision* (Image processing)
   - *Google Cloud Speech-To-text*
-  - *Google Generative AI* (AI integration)
+  - ![Google Gemini](https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white) (AI integration)
   - *AIORTC* (WebRTC real-time communication)
   - *Requests for HTTP communication*
   
