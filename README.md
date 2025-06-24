@@ -120,7 +120,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Chassis | Second Floor Plate |
 |---------|--------------------|
-| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/chassis/chassis_video.gif" width="200"> <br> [Chassis (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/chassis/chassis.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/2nFloor_Plate/2nFloor_plate_video.gif" width="250">  <br> [2nd Floor Plate (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/2nFloor_Plate/2nFloor_Plate.stl) </div>|
+| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/chassis/chassis_video.gif" width="200"> <br> [Chassis (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/chassis/chassis.stl) | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/2nFloor_Plate/2nFloor_plate_video.gif" width="200">  <br> [2nd Floor Plate (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/2nFloor_Plate/2nFloor_Plate.stl) </div>|
 
 | Front Body | Middle Body | Back Body |
 |------------|-------------|-----------|
