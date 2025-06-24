@@ -1,11 +1,11 @@
 #!/bin/bash
 
-set -e  # Atura l’script si hi ha algun error
+set -e 
 
-echo "🔁 Actualitzant llistes de paquets..."
+echo "Actualitzant llistes de paquets..."
 sudo apt update
 
-echo "📦 Instal·lant dependències del sistema..."
+echo "Instal·lant dependències del sistema..."
 sudo apt install -y \
 build-essential cmake pkg-config \
 libjpeg-dev libtiff5-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev \
@@ -18,20 +18,20 @@ libhdf5-dev libhdf5-serial-dev libqt5gui5 libopenjp2-7-dev libopenexr-dev \
 libgstreamer1.0-dev libimath-dev libreadline-dev libncurses-dev \
 libudev-dev libfreetype6-dev libharfbuzz-dev libxcb1-dev libffi-dev
 
-echo "🧼 Eliminant entorn antic si existeix..."
+echo "Eliminant entorn antic si existeix..."
 rm -rf robocat_env
 
-echo "🐍 Creant nou entorn virtual..."
+echo "Creant nou entorn virtual..."
 python3 -m venv robocat_env
 source robocat_env/bin/activate
 
-echo "⬆️ Actualitzant pip..."
+echo "⬆Actualitzant pip..."
 pip install --upgrade pip
 
-echo "📥 Instal·lant llibreries de Python (pot trigar uns minuts)..."
+echo "Instal·lant llibreries de Python (pot trigar uns minuts)..."
 pip install numpy==1.23.5 tensorflow==2.13.0 opencv-python-headless
 
-echo "📥 Instal·lant la resta del requirements..."
+echo "Instal·lant la resta del requirements..."
 cat > requirements_robocat.txt <<EOF
 adafruit-blinka
 adafruit-circuitpython-busdevice
@@ -121,7 +121,7 @@ pip install -r requirements_robocat.txt
 
 pip install --index-url https://pypi.org/simple speechrecognition
 
-echo "🧪 Verificant numpy..."
-python3 -c "import numpy; print('✅ numpy version:', numpy.__version__, '| path:', numpy.__file__)"
+echo "Verificant numpy..."
+python3 -c "import numpy; print('numpy version:', numpy.__version__, '| path:', numpy.__file__)"
 
-echo "🎉 Instal·lació finalitzada correctament!"
+echo "Instal·lació finalitzada correctament!"
