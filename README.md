@@ -128,7 +128,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Front Body | Middle Body | Back Body |
 |------------|-------------|-----------|
-| <div align ="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/front_body/front_body_video.gif" width="200"> <br> [Front Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/front_body/front_body.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/middle_body/middle_body_video.gif" width="250"> <br> [Middle Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/middle_body/middle_body.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/back_body/back_body_video.gif" width="250"> <br> [Back Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/back_body/back_body.stl) </div> |
+| <div align ="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/front_body/front_body_video.gif" width="200"> <br> [Front Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/front_body/front_body.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/middle_body/middle_body_video.gif" width="200"> <br> [Middle Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/middle_body/middle_body.stl) </div> | <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/back_body/back_body_video.gif" width="200"> <br> [Back Body (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/back_body/back_body.stl) </div> |
 
 ---
 
@@ -142,15 +142,16 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 ### Miscellaneous
 
-| Tail | Fan Blades | Fan Holder |
-|------|------------|------------|
-| <div align = "center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/tail/tail_video.gif" width="200"> <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) </div> | <div align="center">  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/fan/fan_blades_video.gif" width="200"> <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) </div> | <div align="center">  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/fan/fan_holder_video.gif" width="200"> <br> [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl) </div> |
+| Tail | Fan |
+|------|-----|
+| <div align = "center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/tail/tail_video.gif" width="200"> <br> [Tail (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/tail/tail.stl) </div> | <div align="center">  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/fan/fan_video.gif" width="200"> <br> [Fan Blades (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_blades.stl) • [Fan Holder (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/fan/fan_holder.stl)</div> |
 
 ---
 
 # Software
-The RoboCat software is composed of two main components:
+The RoboCat software is composed of three main components:
 - License Plate Detection Algorithm
+- Inverse Kinematics for Walking
 - Web Application
 
 ## License Plate Detection Algorithm
@@ -163,6 +164,8 @@ Once a vehicle is detected, a second YOLOv8n model is used to accurately locate 
 
 #### 3. Optical Character Recognition (OCR)
 A custom CNN (Convolutional Neural Network) using Tensorflow is applied to convert the plate characters into text. The algorithm validated the result to ensure it follows the standard Spanish license plate format (1234 BCD). Additional correction steps are included to handle character misinterpretations and adapt the output to the expected structure.
+
+## Inverse Kinematics for Walking
 
 ## Web Application
 
