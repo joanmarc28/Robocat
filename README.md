@@ -81,6 +81,8 @@ Make sure the robot is powered on and properly connected before executing the .s
 
 ## Hardware 
 
+The RoboCat prototype integrates various electronic modules connected to the Raspberry Pi 4, which serves as the central processing unit.
+
 ### Required components
 | Component | Model | Units |
 |-----------|-------|-------|
@@ -100,8 +102,9 @@ Make sure the robot is powered on and properly connected before executing the .s
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/img_components/oled.png" width="75"> | [OLED Screen Module SSD1306 GME12864-11-12-13 (0.96in, 128x64)](https://goldenmorninglcd.com/es/m%C3%B3dulo-de-pantalla-oled/0.96-pulgadas-128x64-ssd1306-gme12864-11/) | 2 |
 
 ### Wiring Schematics
+The wiring schematics shown below have been created using Fritzing for clarity during the assembly process.
 <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/Esquema%20B.png" width="800">
-However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit.
+However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit, which can be seen in the following [link](https://github.com/joanmarc28/Robocat/blob/main/Hardware/PCB%20Robocat%20Disseny.png)
 
 ## 3D Design
 
