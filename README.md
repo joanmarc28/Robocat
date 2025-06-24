@@ -116,8 +116,8 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 ### Body
 
-| Chassis | Second Floor Plate | Front Body |
-|---------|--------------------|------------|
+| Chassis | Second Floor Plate |
+|---------|--------------------|
 | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/chassis/chassis_video.gif" width="250"> <br> [Chassis (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/chassis/chassis.stl) | [2FloorPlate IMG] <br> [2nd Floor Plate (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/2nFloor_Plate/2nFloor_Plate.stl) |
 
 | Front Body | Middle Body | Back Body |
@@ -130,7 +130,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 
 | Neck | Head Model | Head Back Panel |
 |------|------------|-----------------|
-| [NeckModel IMG] <br>  [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) | [HeadModel IMG] <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) | [Head Back Panel] <br> [Head Back Panel (View Files)(https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl)
+| [NeckModel IMG] <br>  [Neck (View File)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/neck/neck.stl) | [HeadModel IMG] <br> [Head Model (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head.stl) | [Head Back Panel] <br> [Head Back Panel (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/head/head_back_panel.stl)
 
 ---
 
