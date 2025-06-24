@@ -104,7 +104,7 @@ A custom CNN (Convolutional Neural Network) is applied to convert the plate char
 
 The RoboCat web application includes two user profiles.
 
-## Police Officer
+### Police Officer
 Authorized officers can access a control interface to monitor and manage RoboCat units in real-time:
 - Live location tracking (GPS coordinates)
 - Internal system monitoring, including controllers temperature
@@ -114,7 +114,7 @@ Authorized officers can access a control interface to monitor and manage RoboCat
 In addition, officers can manage regulated parking areas through the Parking Zone Management page, where new parking zones can be defined by specifying latitude and longitude boundaries.
 Officers also have access to the Infraction Database, where they can review all detected violations, manually validate or dismiss possible infractions, and issue fines when necessary.
 
-## Client (Vehicle Owner)
+### Client (Vehicle Owner)
 
 Registered users can manage their vehicles and parking sessions through the web platform:
 - Register one or more vehicles by providing license plate, brand, model and official DGT data.
