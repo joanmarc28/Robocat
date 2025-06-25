@@ -163,7 +163,8 @@ Using YOLOv8n object detection model, RoboCat identifies vehicles present in its
 Once a vehicle is detected, a second YOLOv8n model is used to accurately locate the license plate area. The system also detects and extracts the nationality region by identifying the blue section commonly present on Spanish license plates. Since our project only focuses on Spanish license plates, the blue section is cropped for further processing.
 
 #### 3. Optical Character Recognition (OCR)
-A custom CNN (Convolutional Neural Network) using Tensorflow is applied to convert the plate characters into text. The algorithm validated the result to ensure it follows the standard Spanish license plate format (1234 BCD). Additional correction steps are included to handle character misinterpretations and adapt the output to the expected structure.
+For text extraction from license plates, RoboCat uses Gemini AI, a multimodal system capable of performing OCR tasks with high accuracy, eliminating the need for manual character segmentation and traditional CNN-based recognition.
+However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassifications.
 
 ## Inverse Kinematics for Walking
 
