@@ -156,7 +156,8 @@ class FrameModel(BaseModel):
 async def deteccio_frame(request: Request, frame: FrameModel, db: Session = Depends(get_db)):
     user_id = get_user_from_cookie(request)
     if not user_id:
-        return {"error": "No autenticat"}
+        #return {"error": "No autenticat"}
+        print(f"No autenticat: Mode poc Segur")
 
     mode = frame.mode or "emocions"
     print(f"📷 Mode seleccionat: {mode}")

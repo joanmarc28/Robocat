@@ -178,6 +178,9 @@ def main():
     """if micro:
         threading.Thread(target=micro.run, daemon=True).start()"""
 
+
+    config.SESSION_TOKEN = get_session_token()
+    print("🔐 Sessió iniciada amb token:", config.SESSION_TOKEN)
     if agent:
         threading.Thread(target=agent.run, daemon=True).start()
     

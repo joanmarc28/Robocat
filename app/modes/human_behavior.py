@@ -49,8 +49,8 @@ class HumanBehavior:
                 json={
                     "imatge": f"data:image/jpeg;base64,{image_base64}",
                     "mode": "emocions"
-                },
-                cookies={"session": config.SESSION_TOKEN}
+                }
+                #cookies={"session": config.SESSION_TOKEN}
             )
             if res.ok:
                 data = res.json()

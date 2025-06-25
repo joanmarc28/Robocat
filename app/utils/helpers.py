@@ -22,8 +22,8 @@ def check_internet(host="8.8.8.8", port=53, timeout=3):
 def get_session_token():
     try:
         res = requests.post(
-            f"https://{config.SERVER_IP}/auth/login",
-            data={"username": config.ROBOCAT_USER, "password": config.ROBOCAT_PASSWORD}
+            f"https://{config.SERVER_IP}/login",
+            data={"email": config.ROBOCAT_USER, "password": config.ROBOCAT_PASSWORD}
         )
         if res.ok:
             print("🔓 Login correcte del Robocat.")

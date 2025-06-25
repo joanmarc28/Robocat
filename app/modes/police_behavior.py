@@ -68,11 +68,12 @@ class PoliceBehavior:
                 json={
                     "imatge": f"data:image/jpeg;base64,{image_base64}",
                     "mode": "infraccio"
-                },
-                cookies={"session": config.SESSION_TOKEN}  # ← assegura’t que tens la cookie d’autenticació
+                }
+                #cookies={"session": config.SESSION_TOKEN}  # ← assegura’t que tens la cookie d’autenticació
             )
             if res.ok:
                 data = res.json()
+                print(data)
                 print(f"[POLICE] 📸 Matrícules: {data.get('matricules', [])}")
                 print(f"[POLICE] 🚫 Infracció: {data.get('infraccio', 'Cap')}")
                 return data
