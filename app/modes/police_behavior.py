@@ -8,20 +8,27 @@ class PoliceBehavior:
         self.camera = camera
 
     def detect_license_plate(self):
-        #print("[POLICE] Detectant matrícula...")
-        """frame = self.camera.capture()
-        #PlateDetection.ocr_train()
-        car = PlateDetection.detect_car(frame)
-        #print("[POLICE] Cotxe detectat")
-        plate = PlateDetection.detect_plate(car)
-        #print("[POLICE] Matrícula detectada")
-        if plate is not None:
-            plate_text,_,_ = PlateDetection.detect_ocr(plate)
-            #print(f"[POLICE] Matrícula reconeguda: {plate_text}")
-            return plate_text
-        else:
-            #print("[POLICE] No s'ha pogut detectar la matrícula")
-            return None"""
+        try:
+            frame = self.camera.capture()
+            # PlateDetection.ocr_train()
+            car = PlateDetection.detect_car(frame)
+            # print("[POLICE] Cotxe detectat")
+
+            plate = PlateDetection.detect_plate(car)
+            # print("[POLICE] Matrícula detectada")
+
+            if plate is not None:
+                plate_text, _, _ = PlateDetection.detect_ocr(plate)
+                # print(f"[POLICE] Matrícula reconeguda: {plate_text}")
+                return plate_text
+            else:
+                # print("[POLICE] No s'ha pogut detectar la matrícula")
+                return None
+
+        except Exception as e:
+            print(f"[ERROR] Error en la detecció de matrícula: {e}")
+            return None
+
 
 
 

@@ -232,7 +232,7 @@ class EstructuraPotes:
         states = self.get_states()
         print(f"Initial states: {states}")
 
-        for order in sequance["initial"]:
+        for order in sequance["start"]:
             states = self.follow_order(order, states, t)
             print(f"After order {order}: {states}")
         

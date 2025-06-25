@@ -50,3 +50,33 @@ async def create_user(
 
     db.commit()  # confirma la transaccio per policia o client
     return nou_usuari  # retorna l'usuari creat
+
+async def get_user(db: Session, user_id: int):
+    return db.query(Usuari).filter(Usuari.id == user_id).first()
+
+
+async def get_user_by_email(db: Session, email: str):
+    return db.query(Usuari).filter(Usuari.email == email).first()
+
+
+async def get_all_users(db: Session):
+    return db.query(Usuari).all()
+
+
+async def update_user(db: Session, user_id: int, updates: dict):
+    user = await get_user(db, user_id)
+    if not user:
+        return None
+    for key, value in updates.items():
+        setattr(user, key, value)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+async def delete_user(db: Session, user_id: int):
+    user = await get_user(db, user_id)
+    if user:
+        db.delete(user)
+        db.commit()
+    return user

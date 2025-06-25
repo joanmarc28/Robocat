@@ -2,7 +2,7 @@ from movement.inverse_kinematics.position import coord_to_servo
 from movement.inverse_kinematics.interpolation import interpolation
 
 
-ALTURA = 0.5
+ALTURA = 1/12
 
 
 def correction(position, correction_factor=(0,0)):

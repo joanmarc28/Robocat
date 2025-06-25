@@ -20,3 +20,13 @@ async def delete_possible_infraccio(db: Session, pid: str):
         db.delete(p)
         db.commit()
     return p
+
+async def update_possible_infraccio(db: Session, pid: str, updates: dict):
+    p = await get_possible_infraccio(db, pid)
+    if not p:
+        return None
+    for key, value in updates.items():
+        setattr(p, key, value)
+    db.commit()
+    db.refresh(p)
+    return p
