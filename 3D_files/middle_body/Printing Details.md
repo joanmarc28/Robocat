@@ -1,4 +1,4 @@
-| STL FILE       |   Tail      |
+| STL FILE       | middle_body |
 |----------------|-------------|
 | Material       | Sunlu PLA+  |
 | Resolution     | 0.16mm      |
