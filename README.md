@@ -40,10 +40,10 @@
 
 # What is RoboCat?
 
-RoboCat is an autonomous quadruped robot designed to patrol public streets and monitor parking zones that are regulated by payment. Its structure and external appearance is inspired by the shape of a cat, making it not only functional but also friendly and approachable for pedestrians.
+RoboCat is an autonomous quadruped robot designed to patrol public streets and monitor parking zones regulated by payment. Its structure and external appearance are inspired by a cat's shape, making it functional but also friendly and approachable for pedestrians.
 Equipped with sensors, cameras and onboard computing, RoboCat can detect whether a parked vehicle has an active parking permit or not, combining robotics, computer vision and real-time data processing to offer a smart, mobile solution for urban mobility enforcement.
 
-The project main goals are to:
+The project's main goals are to:
   - Automate parking control in regulated areas
   - Reduce the need for manual inspection
   - Integrate urban robotics with a friendly and non-threatening design
@@ -106,7 +106,7 @@ The RoboCat prototype integrates various electronic modules connected to the Ras
 ### Wiring Schematics
 The wiring schematics shown below have been created using Fritzing for clarity during the assembly process.
 <div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/Esquema%20B.png" width="800"> </div> <br>
-However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit, which can be seen in the following [link](https://github.com/joanmarc28/Robocat/blob/main/Hardware/PCB%20Robocat%20Disseny.png)
+However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit, which can be seen in the following <a href="https://github.com/joanmarc28/Robocat/blob/main/Hardware/PCB%20Robocat%20Disseny.png">link.</a>
 
 ## 3D Design
 
@@ -171,7 +171,7 @@ However, the project includes a complete implementation of an OCR system based o
 ## Web Application
 The RoboCat system relies on a centralized relational database designed to securely manage all operational data. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
 
-Below is the entity-relationship and model view diagrams representing the main structure of the database:
+Below are the entity-relationship and model view diagrams representing the main structure of the database:
 
 <div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="800"> </div><br>
 As we can see, the web application includes two user profiles.
@@ -179,7 +179,7 @@ As we can see, the web application includes two user profiles.
 ### Police Officer
 Authorized officers can access a control interface to monitor and manage RoboCat units in real-time:
 - Live location tracking (GPS coordinates)
-- Internal system monitoring, including controllers temperature
+- Internal system monitoring, including controller temperature
 - Real-time video feed from RoboCat's onboard camera
 - Remote control commands such as "Crouch" or "Stand Up"
 
@@ -193,34 +193,34 @@ Registered users can manage their vehicles and parking sessions through the web 
 - Pay for parking in regulated zones by selecting a registered vehicle and specifying the desired parking duration
 - Active parking sessions are displayed on the main dashboard with a countdown timer showing the remaining time.
 
-If a vehicle is parked without a valid registration in a regulated area and RoboCat scans its license plate, and infraction is automatically recorded. The system notifies the vehicle owner of the violation and provides the fine details.
+If a vehicle is parked without a valid registration in a regulated area and RoboCat scans its license plate, an infraction is automatically recorded. The system notifies the vehicle owner of the violation and provides the fine details.
 
 # Tech Stack
 ### Programming & AI
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)
-![Ultralytics](https://img.shields.io/badge/ultralytics-a061ff.svg?style=for-the-badge&logo=YOLO&logoColor=ffffff&labelColor=a061ff)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
-![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white)
+<a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="python"></a>
+<a href="https://opencv.org/"><img src="https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white" alt="OpenCV"></a>
+<a href="https://www.ultralytics.com/"><img src="https://img.shields.io/badge/ultralytics-a061ff.svg?style=for-the-badge&logo=YOLO&logoColor=ffffff&labelColor=a061ff" alt="Ultralytics"></a>
+<a href="https://www.tensorflow.org/"><img src="https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white" alt="TensorFlow"></a>
+<a href="https://numpy.org/"><img src="https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white" alt="NumPy"></a>
   
 ### 3D Design & Hardware
-![AutodeskFusion](https://img.shields.io/badge/autodesk-fusion-ff781f.svg?style=for-the-badge&logo=Autodesk&logoColor=ffffff&labelColor=ff781f)
-![Fritzing](https://img.shields.io/badge/FRITZING-bf0000.svg?style=for-the-badge&logo=FileZilla&logoColor=ffffff&labelColor=bf0000)
-![EasyEDA](https://img.shields.io/badge/easyeda-2b96da.svg?style=for-the-badge&logo=EDEKA&logoColor=ffffff&labelColor=2b96da)
+<a href="https://www.autodesk.com/"><img src="https://img.shields.io/badge/autodesk-fusion-ff781f.svg?style=for-the-badge&logo=Autodesk&logoColor=ffffff&labelColor=ff781f" alt="Fusion 360"></a>
+<a href="https://fritzing.org/"><img src="https://img.shields.io/badge/FRITZING-bf0000.svg?style=for-the-badge&logo=FileZilla&logoColor=ffffff&labelColor=bf0000" alt="Fritzing"></a>
+<a href="https://easyeda.com/"><img src="https://img.shields.io/badge/easyeda-2b96da.svg?style=for-the-badge&logo=EDEKA&logoColor=ffffff&labelColor=2b96da" alt="EasyEDA"></a>
 
 ### Simulation & Development Tools
-![CoppeliaSIM](https://img.shields.io/badge/coppelia-robotics-c80000.svg?style=for-the-badge&logo=Circle&logoColor=ffffff&labelColor=c80000)
-![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
-![Python DotEnv](https://img.shields.io/badge/python-dotenv-3776ab.svg?style=for-the-badge&logo=Python&logoColor=ffffff&labelColor=3776ab)
+<a href="https://www.coppeliarobotics.com/"><img src="https://img.shields.io/badge/coppelia-robotics-c80000.svg?style=for-the-badge&logo=Circle&logoColor=ffffff&labelColor=c80000" alt="CoppeliaSIM"></a>
+<a href="https://code.visualstudio.com/"><img src="https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="VS Code"></a>
+<a href="https://pypi.org/project/python-dotenv/"><img src="https://img.shields.io/badge/python-dotenv-3776ab.svg?style=for-the-badge&logo=Python&logoColor=ffffff&labelColor=3776ab" alt="Python DotEnv"></a>
 
 ### Web Application
 | Backend | Frontend |
 |---------|----------|
-| ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi) | ![Jinja](https://img.shields.io/badge/jinja-white.svg?style=for-the-badge&logo=jinja&logoColor=black) |
+| <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi" alt="FastAPI"></a> | <a href="https://jinja.palletsprojects.com/en/stable//"><img src="https://img.shields.io/badge/jinja-white.svg?style=for-the-badge&logo=jinja&logoColor=black" alt="Jinja"></a> |
 
 | Database | APIs & External Services |
 |----------|--------------------------|
-| ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) | ![CloudVision](https://img.shields.io/badge/cloud-vision-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4) ![badge](https://img.shields.io/badge/cloud-speech-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4) <br> ![Google Gemini](https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white) ![badge](https://img.shields.io/badge/AIORTC-2c5bb4.svg?style=for-the-badge&logo=AIOHTTP&logoColor=ffffff&labelColor=2c5bb4) |
+| <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"></a> | <a href="https://cloud.google.com/vision"><img src="https://img.shields.io/badge/cloud-vision-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4" alt="CloudVision"></a> <a href="https://cloud.google.com/speech-to-text"><img src="https://img.shields.io/badge/cloud-speech-4285f4.svg?style=for-the-badge&logo=GoogleCloud&logoColor=ffffff&labelColor=4285f4" alt="CloudSpeech"></a> <br> <a href="https://ai.google.dev/?utm_source=website&utm_medium=referral&utm_campaign=geminichat&utm_contentn"><img src="https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white" alt="Google Gemini"></a> <a href="https://github.com/aiortc"><img src="https://img.shields.io/badge/AIORTC-2c5bb4.svg?style=for-the-badge&logo=AIOHTTP&logoColor=ffffff&labelColor=2c5bb4" alt="Aiortc"></a> |
   
 # License
 This project is licensed under the [MIT License](LICENSE).  
