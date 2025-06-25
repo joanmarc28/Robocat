@@ -104,7 +104,7 @@ The RoboCat prototype integrates various electronic modules connected to the Ras
 
 ### Wiring Schematics
 The wiring schematics shown below have been created using Fritzing for clarity during the assembly process.
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/Esquema%20B.png" width="800"> <br>
+<div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/Esquema%20B.png" width="800"> </div> <br>
 However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit, which can be seen in the following [link](https://github.com/joanmarc28/Robocat/blob/main/Hardware/PCB%20Robocat%20Disseny.png)
 
 ## 3D Design
@@ -171,7 +171,7 @@ The RoboCat system relies on a centralized relational database designed to secur
 
 Below is the entity-relationship and model view diagrams representing the main structure of the database:
 
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="800"> <br>
+<div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="800"> </div><br>
 As we can see, the web application includes two user profiles.
 
 ### Police Officer
