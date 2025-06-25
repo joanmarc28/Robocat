@@ -106,7 +106,9 @@ The RoboCat prototype integrates various electronic modules connected to the Ras
 ### Wiring Schematics
 The wiring schematics shown below have been created using Fritzing for clarity during the assembly process.
 <div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/Hardware/Esquema%20B.png" width="800"> </div> <br>
-However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit, which can be seen in the following <a href="https://github.com/joanmarc28/Robocat/blob/main/Hardware/PCB%20Robocat%20Disseny.png">link.</a>
+
+> [!NOTE]
+> However, a custom PCB has been designed using EasyEDA to ensure a compact assembly for the final RoboCat unit, which can be seen in the following <a href="https://github.com/joanmarc28/Robocat/blob/main/Hardware/PCB%20Robocat%20Disseny.png">link.</a>
 
 ## 3D Design
 
@@ -254,31 +256,30 @@ However, feel free to fork the repository and experiment with it for learning an
   <tr>
     <td align="center" style="border:none;">
       <img src="" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Martí Armengod Villar"/><br/>
-      <strong>Martí Armengod Villar</strong><br/>
-      <em>SW Lead</em>
+      <span style="font-size:14px;"><strong>Martí Armengod Villar</strong></span><br/>
+      <span style="font-size:12px;"><em>SW Lead</em></span>
     </td>
     <td align="center" style="border:none;">
       <img src="https://drive.google.com/uc?export=view&id=10n86a7ojWd_smrINd2Kd0ascUYU9XNRo" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Lara Castillejo Roig"/><br/>
-      <strong>Lara Castillejo Roig</strong><br/>
-      <em>Testing & Validation Lead</em>
+      <span style="font-size:14px;"><strong>Lara Castillejo Roig</strong></span><br/>
+      <span style="font-size:12px;"><em>Testing & Validation Lead</em></span>
     </td>
     <td align="center" style="border:none;">
       <img src="https://drive.google.com/uc?export=view&id=1beCsVFoD9ogQ_LeVuKoXPReSoyoeAkFH" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Julia Lipin Gener Rey"/><br/>
-      <strong>Julia Lipin Gener Rey</strong><br/>
-      <em>3D & Mechanical Lead</em>
+      <span style="font-size:14px;"><strong>Julia Lipin Gener Rey</strong></span><br/>
+      <span style="font-size:12px;"><em>3D & Mechanical Lead</em></span>
     </td>
     <td align="center" style="border:none;">
       <img src="https://drive.google.com/uc?export=view&id=1vqmqJ6zK3hYvRlv5AfvEHue0tsL_oQew" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Joan Marc Samó Rojas"/><br/>
-      <strong>Joan Marc Samó Rojas</strong><br/>
-      <em>Product Owner</em>
+      <span style="font-size:14px;"><strong>Joan Marc Samó Rojas</strong></span><br/>
+      <span style="font-size:12px;"><em>Product Owner</em></span>
     </td>
     <td align="center" style="border:none;">
       <img src="https://drive.google.com/uc?export=view&id=16fCYusOWvp_Bf6fR0YFLo8GPbOtSsn5x" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Luís Vera Albarca"/><br/>
-      <strong>Luís Vera Albarca</strong><br/>
-      <em>HW Lead</em>
+      <span style="font-size:14px;"><strong>Luís Vera Albarca</strong></span><br/>
+      <span style="font-size:12px;"><em>HW Lead</em></span>
     </td>
   </tr>
 </table>
 
-  
 # Gallery
