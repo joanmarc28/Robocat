@@ -6,6 +6,6 @@
 /web_patrol/versiolocal
 /app/logs
 /app/runs
-/app/.env
+/app/utils/secret.py
 __pycache__/
 *.pyc

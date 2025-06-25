@@ -3,6 +3,7 @@ import psutil
 import subprocess
 import requests
 import config
+import os
 
 # Comrpovar conexio a internet
 def check_internet(host="8.8.8.8", port=53, timeout=3):
