@@ -247,34 +247,36 @@ However, feel free to fork the repository and experiment with it for learning an
 **8** | *Chars74K Database for OCR Training* ([Link](https://www.kaggle.com/datasets/supreethrao/chars74kdigitalenglishfont))
 
 # Credits
+
 <table align="center">
   <tr>
-    <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=10n86a7ojWd_smrINd2Kd0ascUYU9XNRo" alt="Martí Armengod Villar" width="40%"/><br/>
+    <td align="center" style="border:none;">
+      <img src="" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Martí Armengod Villar"/><br/>
       <strong>Martí Armengod Villar</strong><br/>
       <em>SW Lead</em>
     </td>
-    <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=10n86a7ojWd_smrINd2Kd0ascUYU9XNRo" alt="Lara Castillejo Roig" width="40%"/><br/>
+    <td align="center" style="border:none;">
+      <img src="https://drive.google.com/uc?export=view&id=10n86a7ojWd_smrINd2Kd0ascUYU9XNRo" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Lara Castillejo Roig"/><br/>
       <strong>Lara Castillejo Roig</strong><br/>
       <em>Testing & Validation Lead</em>
     </td>
-    <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=1beCsVFoD9ogQ_LeVuKoXPReSoyoeAkFH" alt="Julia Lipin Gener Rey" width="40%"/><br/>
+    <td align="center" style="border:none;">
+      <img src="https://drive.google.com/uc?export=view&id=1beCsVFoD9ogQ_LeVuKoXPReSoyoeAkFH" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Julia Lipin Gener Rey"/><br/>
       <strong>Julia Lipin Gener Rey</strong><br/>
       <em>3D & Mechanical Lead</em>
     </td>
-    <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=1vqmqJ6zK3hYvRlv5AfvEHue0tsL_oQew" alt="Joan Marc Samó Rojas" width="40%"/><br/>
+    <td align="center" style="border:none;">
+      <img src="https://drive.google.com/uc?export=view&id=1vqmqJ6zK3hYvRlv5AfvEHue0tsL_oQew" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Joan Marc Samó Rojas"/><br/>
       <strong>Joan Marc Samó Rojas</strong><br/>
       <em>Product Owner</em>
     </td>
-    <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=16fCYusOWvp_Bf6fR0YFLo8GPbOtSsn5x" alt="Luís Vera Albarca" width="40%"/><br/>
+    <td align="center" style="border:none;">
+      <img src="https://drive.google.com/uc?export=view&id=16fCYusOWvp_Bf6fR0YFLo8GPbOtSsn5x" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Luís Vera Albarca"/><br/>
       <strong>Luís Vera Albarca</strong><br/>
       <em>HW Lead</em>
     </td>
   </tr>
 </table>
+
   
 # Gallery
