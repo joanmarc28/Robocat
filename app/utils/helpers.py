@@ -1,6 +1,8 @@
 import socket
 import psutil
 import subprocess
+import requests
+import config
 
 # Comrpovar conexio a internet
 def check_internet(host="8.8.8.8", port=53, timeout=3):
@@ -15,6 +17,22 @@ def check_internet(host="8.8.8.8", port=53, timeout=3):
     except socket.error as ex:
         print(f"[ERROR] Connexió fallida: {ex}")
         return False
+
+def get_session_token():
+    try:
+        res = requests.post(
+            f"https://{config.SERVER_IP}/auth/login",
+            data={"username": config.ROBOCAT_USER, "password": config.ROBOCAT_PASSWORD}
+        )
+        if res.ok:
+            print("🔓 Login correcte del Robocat.")
+            return res.cookies.get("session")
+        else:
+            print(f"❌ Error al fer login del Robocat: {res.status_code}")
+            return None
+    except Exception as e:
+        print(f"⚠️ Error en la connexió de login: {e}")
+        return None
 
 # Obtenir IP local
 def get_local_ip():

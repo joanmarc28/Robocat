@@ -2,15 +2,15 @@ import math
 #STATES POSITION
 
 # 1^2 = Y_PLANE^2 + X_PLANE^2
-Y_PLANE = -2/3
-X_PLANE = math.sqrt(5)/3
+Y_PLANE = -0.85
+X_PLANE = math.sqrt(1 - Y_PLANE**2)
 
 position_states = {
     #basic positions
     "start":            ( 0, -1/2),
     "sit"  :            ( 0,  -1/2),
     "normal":           (0.5, -0.5),
-    "up":               (0, -7/12),
+    "up":               (0, Y_PLANE),
 
     #short stand positions
     "center" :          (   0*X_PLANE,  Y_PLANE),
@@ -20,6 +20,7 @@ position_states = {
     #long stand positions
     "long_front" :      ( 1/2*X_PLANE, Y_PLANE),
     "long_back" :       (-1/2*X_PLANE, Y_PLANE),
+    "ll_back" :         (-3/4*X_PLANE, Y_PLANE),
 }
 def position(state):
     if isinstance(state, list):
@@ -36,6 +37,7 @@ forwards_states = {
     "center"     : "front",   
     "back"       : "center",
     "long_back"  : "back",
+    "ll_back"  : "long_back",
 }
 
 backwards_states = {
@@ -43,6 +45,7 @@ backwards_states = {
     "front"      : "center",
     "center"     : "back",   
     "back"       : "long_back",
+    "long_back"  : "ll_back",
 }
 
 def forwards(old_state):
@@ -87,13 +90,13 @@ sit_sequence = {
 
 # Define the walk states
 walk_states = {
-    "start" : [ ( 'u', 4, 'l'), 
+    "start" : [ ( 'u', 4, 'l'), ( 'f', 4, 'l'),
                 ( 'f', 0, 'p'), ( 'f', 4, 'l'), ( 'f', 3, 'p')
     ],
     "cycle" : [ ('ff', 1, 'p'), ( 'f', 4, 'l'), ('ff', 2, 'p'), 
                 ('ff', 0, 'p'), ( 'f', 4, 'l'), ('ff', 3, 'p')
     ],
-    "end"   : [ ( 'f', 1, 'p'), ( 'f', 4, 'l'), ( 'f', 2, 'p'), 
+    "end"   : [ ( 'f', 1, 'p'), ( 'f', 2, 'p'), 
                 ( 'b', 4, 'l'), 
                 ( 'd', 4, 'l')
     ]

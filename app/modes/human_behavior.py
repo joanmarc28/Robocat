@@ -1,13 +1,15 @@
-from interface.display import clear_displays, displays_show_frames
-from interface.speaker import Speaker
-import config
+import os
 import time
-from vision.camera import RobotCamera
 import threading
 import base64
 import json
-import re
-import google.generativeai as genai
+import cv2
+import requests
+
+from interface.display import clear_displays, displays_show_frames
+from interface.speaker import Speaker
+from vision.camera import RobotCamera
+import config
 
 class HumanBehavior:
     def __init__(self, speaker: Speaker = None, camera: RobotCamera = None):
@@ -15,68 +17,49 @@ class HumanBehavior:
         self.camera = camera
 
     def express_emotion(self, emotion, duration=3):
-
         if emotion not in config.STATES:
             print(f"[HUMAN] Emoció desconeguda: {emotion}")
             return
-
         if not self.speaker:
             print("[HUMAN] Altaveu no disponible")
             return
 
-        # Funció per parlar en un fil separat
         def speak():
             self.speaker.say_emotion(emotion)
 
-        # Inicia el fil de veu
         t_speak = threading.Thread(target=speak)
         t_speak.start()
 
-        # Mostra l'emoció mentre el fil de veu està funcionant
         t_inici = time.time()
         while time.time() - t_inici < duration:
             displays_show_frames(emotion)
 
-        # Espera que el fil acabi per si no ha acabat encara
         t_speak.join()
         clear_displays()
-    """import base64
-    import json
-    import re
-    import google.generativeai as genai
 
-    # Assegura't que la API key ja estigui configurada
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-    def detectar_emocions_gemini(frame_rgb):
-        _, jpeg = cv2.imencode(".jpg", frame_rgb)
-        image_bytes = jpeg.tobytes()
-
-        prompt = (
-            "Analitza aquesta imatge d’un vídeo. "
-            "Detecta emocions de les persones. "
-            "Retorna un JSON amb 'emocions' (llista) i 'analisi' (descripció breu sense accents)."
-        )
-
-        model = genai.GenerativeModel('gemini-2.0-flash-lite')
-
-        resposta = model.generate_content([
-            prompt,
-            {"mime_type": "image/jpeg", "data": image_bytes}
-        ])
-
-        text = resposta.text.strip()
-
-        if text.startswith("```"):
-            text = re.sub(r"```[a-zA-Z]*", "", text).replace("```", "").strip()
+    def analitza_emocions(self):
+        """Captura un frame i l'envia al servidor per analitzar emocions amb Gemini."""
+        frame = self.camera.capture()
+        _, jpeg = cv2.imencode(".jpg", frame)
+        image_base64 = base64.b64encode(jpeg.tobytes()).decode("utf-8")
 
         try:
-            data = json.loads(text)
+            res = requests.post(
+                f"https://{config.SERVER_IP}/api/deteccio-frame",
+                json={
+                    "imatge": f"data:image/jpeg;base64,{image_base64}",
+                    "mode": "emocions"
+                },
+                cookies={"session": config.SESSION_TOKEN}
+            )
+            if res.ok:
+                data = res.json()
+                print(f"[HUMAN] Emocions detectades: {data.get('emocions', [])}")
+                print(f"[HUMAN] Anàlisi: {data.get('analisi', 'Cap')}")
+                return data
+            else:
+                print(f"[ERROR] No s'ha pogut fer l'anàlisi d’emocions: {res.status_code} - {res.text}")
+                return {"emocions": [], "analisi": "Error"}
         except Exception as e:
-            print("❌ Error parsejant JSON:", e)
+            print(f"[ERROR] Fallo durant l'anàlisi d'emocions: {e}")
             return {"emocions": [], "analisi": "Error"}
-
-        return {
-            "emocions": data.get("emocions", []),
-            "analisi": data.get("analisi", "Cap")
-        }"""

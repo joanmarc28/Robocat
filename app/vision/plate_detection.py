@@ -200,7 +200,7 @@ class PlateDetection:
         
         return char_imgs
     
-    def predict_plate_text(plate_img, model_path=PATH+"/app/assets/models/cnn_plate.keras", label_encoder_path=PATH+"/app/assets/models/label_encoder/label_encoder.pkl"):
+    def predict_plate_text(plate_img, model_path=PATH+"/app/assets/models/cnn.keras", label_encoder_path=PATH+"/app/assets/models/label_encoder/label_encoder.pkl"):
         logger.info("Processant imatge de matrícula per OCR")
         char_imgs = PlateDetection.segment_characters(plate_img)
         text = "" #per guardar el text de la matricula

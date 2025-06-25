@@ -187,7 +187,7 @@ class EstructuraPotes:
 
         direction, leg_n, method = order
         
-        if inter_method == 'p':
+        if method == 'p':
             inter_method = 'parabolic'
 
         #BODY

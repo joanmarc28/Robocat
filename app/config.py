@@ -1,7 +1,11 @@
 # config.py
-
+from utils import get_session_token
 ROBOT_ID = "robocat001"  # ID percada robot
 SERVER_IP = "robocat.jmprojects.cat"  # IP del servidor web
+
+ROBOCAT_USER = "robocat"
+ROBOCAT_PASSWORD = "contrasenya_secreta"
+SESSION_TOKEN = get_session_token()
 
 # I2C pins 
 I2C_BUS_OLED_LEFT = 3
