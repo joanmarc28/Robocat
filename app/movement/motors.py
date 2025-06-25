@@ -209,7 +209,7 @@ class EstructuraPotes:
             if direction ==  'f': 
                 leg.forward()
             elif direction ==  'b':
-                leg.backwards()
+                leg.backward()
             elif direction == 'ff':
                 leg.forward()
                 leg.forward()
@@ -238,9 +238,9 @@ class EstructuraPotes:
         
         for _ in range(cycles):
             for order in sequance["cycle"]:
-                if self.ultrasons and self.ultrasons.mesura_distancia() > config.LLINDAR_ULTRASONIC:
-                    states = self.follow_order(order, states, t)
-                    print(f"After order {order}: {states}")
+                #if self.ultrasons and self.ultrasons.mesura_distancia() > config.LLINDAR_ULTRASONIC:
+                states = self.follow_order(order, states, t)
+                print(f"After order {order}: {states}")
             
         for order in sequance["end"]:
             states = self.follow_order(order, states, t)

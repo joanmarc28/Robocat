@@ -102,3 +102,26 @@ walk_states = {
     ]
 }
 
+rot_states = {
+    "start" : [],
+    "cycle" : [],
+    "end" : []
+}
+
+# Initial state
+rot_states["start"] = [
+    ('u', 4, 'l'),
+]
+
+# Cycle state
+rot_states["cycle"] = [
+    ('f', 0, 'p'),
+    ('f', 4, 'l'),
+    ('b', 0, 'l'),
+    ('b', 4, 'l'),
+]
+
+# End state
+rot_states["end"] = [   
+    ('d', 4, 'l'),
+]

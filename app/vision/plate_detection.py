@@ -134,8 +134,14 @@ class PlateDetection:
             for result in results:
                 if result.boxes:
                     plate = PlateDetection.crop(result, car)
-                    only_plate = PlateDetection.crop_nationality(plate) 
-                    return only_plate
+                    if plate is not None:
+                        logger.info("Matrícula detectada")
+                        #retalla la part de nacionalitat si es troba blau
+                        only_plate = PlateDetection.crop_nationality(plate) 
+                        return only_plate
+                    else:
+                        logger.warning("No s'ha pogut retallar la matrícula")
+                        return None
         return None
 
     def detect_ocr(plate):
@@ -146,11 +152,16 @@ class PlateDetection:
 
     #funcions d'ajuda
     def crop(result, image):
-        box = result[0].boxes[0]
-        x1, y1, x2, y2 = box.xyxy[0].tolist()
-        x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
-        cropped_img = image[y1:y2, x1:x2]
-        return cropped_img
+        if result and result[0].boxes and len(result[0].boxes) > 0:
+            box = result[0].boxes[0]
+            x1, y1, x2, y2 = box.xyxy[0].tolist()
+            x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+            cropped_img = image[y1:y2, x1:x2]
+            return cropped_img
+        else:
+            logger.warning("No s'han trobat cap box a la detecció")
+            return None
+
     
     def preprocess(img): #resize a 32x32 i normalitzacio
         img = cv2.resize(img, (32, 32))

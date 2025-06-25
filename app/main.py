@@ -16,7 +16,7 @@ from telemetria_shared import telemetria_data, sensors_status
 import asyncio
 import websockets
 import json
-from movement.simulation_data import walk_states
+from movement.simulation_data import walk_states,rot_states
 #from vision.slam import start_autonomous_slam
 from queue import Queue
 #from interface.micro import Micro  # el fitxer on tens la classe de veu
@@ -58,7 +58,7 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
     else:
         displays_message(f"  Ultrasons ..... Fail")
         sensors_status["ultrasons"] = False
-        errors += 1
+        #errors += 1
     time.sleep(temps)
 
     if gps and gps.read_heading() is not None:
@@ -198,7 +198,8 @@ def main():
                 """estructura.follow_sequance(up_sequence, cycles=1, t=0.2)"""
                 estructura.set_position("normal")
             elif accio == "hind_sit":
-                estructura.sit_hind_legs()
+                estructura.follow_sequance(rot_states, cycles=6, t=0.2)
+                #estructura.sit_hind_legs()
             elif accio == "up":
                 estructura.set_position("up")
             elif accio == "happy":
