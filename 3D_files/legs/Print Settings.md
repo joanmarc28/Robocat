@@ -8,5 +8,5 @@
 | Raft           | No          | No          | No           |
 
 
-> [!IMPORTANT]
+> [!TIP]
 > To ensure maximum stability, the two upper leg pieces should be permanently bonded using glue or welding after assembly.
