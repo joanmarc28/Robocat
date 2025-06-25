@@ -171,9 +171,7 @@ The RoboCat system relies on a centralized relational database designed to secur
 
 Below is the entity-relationship and model view diagrams representing the main structure of the database:
 
-<p float="left">
-  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="50%" />
-</p>
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="800"> <br>
 As we can see, the web application includes two user profiles.
 
 ### Police Officer
