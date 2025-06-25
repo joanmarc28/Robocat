@@ -114,7 +114,7 @@ All RoboCat 3D parts have been designed using Autodesk Fusion 360. The structure
 ### Legs
 | Full Leg |
 |----------|
-| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/legs/leg_video.gif" width="200"><br>[Leg_(View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs)</div> |
+| <div align="center"> <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/3D_files/legs/leg_video.gif" width="200"><br>[Leg (View Files)](https://github.com/joanmarc28/Robocat/blob/main/3D_files/legs)</div> |
 
 
 ---
@@ -172,8 +172,7 @@ The RoboCat system relies on a centralized relational database designed to secur
 Below is the entity-relationship and model view diagrams representing the main structure of the database:
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="27%" />
-  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_modelview.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="50%" />
 </p>
 As we can see, the web application includes two user profiles.
 
@@ -265,7 +264,7 @@ However, feel free to fork the repository and experiment with it for learning an
     <td align="center" style="border: none;">
       <img src="https://drive.google.com/uc?export=view&id=1beCsVFoD9ogQ_LeVuKoXPReSoyoeAkFH" alt="Julia Lipin Gener Rey" width="40%"/><br/>
       <strong>Julia Lipin Gener Rey</strong><br/>
-      <em>3D Parts & Mechanical Lead</em>
+      <em>3D & Mechanical Lead</em>
     </td>
     <td align="center" style="border: none;">
       <img src="https://drive.google.com/uc?export=view&id=1vqmqJ6zK3hYvRlv5AfvEHue0tsL_oQew" alt="Joan Marc Samó Rojas" width="40%"/><br/>
