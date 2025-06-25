@@ -253,27 +253,27 @@ However, feel free to fork the repository and experiment with it for learning an
 <table align="center">
   <tr>
     <td align="center" style="border: none;">
-      <img src="" alt="Martí Armengod Villar" width="150"/><br/>
+      <img src="https://drive.google.com/uc?export=view&id=10n86a7ojWd_smrINd2Kd0ascUYU9XNRo" alt="Martí Armengod Villar" width="40%"/><br/>
       <strong>Martí Armengod Villar</strong><br/>
       <em>SW Lead</em>
     </td>
     <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=10n86a7ojWd_smrINd2Kd0ascUYU9XNRo" alt="Lara Castillejo Roig" width="155"/><br/>
+      <img src="https://drive.google.com/uc?export=view&id=10n86a7ojWd_smrINd2Kd0ascUYU9XNRo" alt="Lara Castillejo Roig" width="55%"/><br/>
       <strong>Lara Castillejo Roig</strong><br/>
       <em>Testing & Validation Lead</em>
     </td>
     <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=1beCsVFoD9ogQ_LeVuKoXPReSoyoeAkFH" alt="Julia Lipin Gener Rey" width="155"/><br/>
+      <img src="https://drive.google.com/uc?export=view&id=1beCsVFoD9ogQ_LeVuKoXPReSoyoeAkFH" alt="Julia Lipin Gener Rey" width="55%"/><br/>
       <strong>Julia Lipin Gener Rey</strong><br/>
       <em>3D Parts & Mechanical Lead</em>
     </td>
     <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=1vqmqJ6zK3hYvRlv5AfvEHue0tsL_oQew" alt="Joan Marc Samó Rojas" width="155"/><br/>
+      <img src="https://drive.google.com/uc?export=view&id=1vqmqJ6zK3hYvRlv5AfvEHue0tsL_oQew" alt="Joan Marc Samó Rojas" width="55%"/><br/>
       <strong>Joan Marc Samó Rojas</strong><br/>
       <em>Product Owner</em>
     </td>
     <td align="center" style="border: none;">
-      <img src="https://drive.google.com/uc?export=view&id=16fCYusOWvp_Bf6fR0YFLo8GPbOtSsn5x" alt="Luís Vera Albarca" width="155"/><br/>
+      <img src="https://drive.google.com/uc?export=view&id=16fCYusOWvp_Bf6fR0YFLo8GPbOtSsn5x" alt="Luís Vera Albarca" width="55%"/><br/>
       <strong>Luís Vera Albarca</strong><br/>
       <em>HW Lead</em>
     </td>
