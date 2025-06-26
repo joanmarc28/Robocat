@@ -12,6 +12,7 @@ position_states = {
     #basic positions
     "start":            ( 0, -1/2),
     "sit"  :            ( 0,  -1/2),
+    "sit_down"  :       ( 0,  -0.35),
     "normal":           (0.5, -0.5),
     "recte":            (0, -1),
     "strech":           (math.cos(math.pi/3), math.sin(math.pi/3)),

@@ -43,18 +43,18 @@ class Agent:
                 self._execute_mode()
                 self.last_action_time = now
 
-            if now - self.last_action_time >= self.frequencia*2:
                 def speak():
                     self.speaker.say_emotion(self.submode)
 
                 t_speak = threading.Thread(target=speak)
                 t_speak.start()
+                t_speak.join()
                             
             if self.mode == "human":
                 self.time = 0.1  # Més ràpid per a interaccions humanes
                 self.frequencia = 5  # Accions humanes més freqüents
             elif self.mode == "police":
-                self.time = 0.5  # Més lent per a accions policialsç
+                self.time = 0.1  # Més lent per a accions policialsç
                 self.frequencia = 10  # Accions policials menys freqüents
 
             time.sleep(self.time)  # Redueix ús de CPU

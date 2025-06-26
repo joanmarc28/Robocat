@@ -140,8 +140,8 @@ class EstructuraPotes:
         """Sit using only the hind legs while front legs are raised."""
         
         # hind legs
-        self.legs[2].set_state("sit")
-        self.legs[3].set_state("sit")
+        self.legs[2].set_state("sit_down")
+        self.legs[3].set_state("sit_down")
         # raise front legs
         self.legs[0].set_state("up")
         self.legs[1].set_state("up")
