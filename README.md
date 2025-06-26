@@ -169,6 +169,7 @@ For text extraction from license plates, RoboCat uses Gemini AI, a multimodal sy
 However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassifications.
 
 ## Inverse Kinematics for Walking
+ <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/inverse_kinematics_demo.gif" width="300">
 
 ## Web Application
 The RoboCat system relies on a centralized relational database designed to securely manage all operational data. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
