@@ -14,8 +14,9 @@ position_states = {
     "sit"  :            ( 0,  -1/2),
     "normal":           (0.5, -0.5),
     "recte":            (0, -1),
-    "front_zero":     (1, 0),
-    "back_zero":      (-1, 0),
+    "strech":           (math.cos(math.pi/3), math.sin(math.pi/3)),
+    "front_zero":       (1, 0),
+    "back_zero":        (-1, 0),
     "up":               (0+X_CENTER, Y_PLANE),
 
     #short stand positions
@@ -188,7 +189,7 @@ maneta_states = {
 
 # Initial state
 maneta_states["start"] = [
-    ('u', 'A', 'l'),
+    ('u', 4, 'l'),
     ('center_up', [2,3], 'l'),
     ('center_down', [0,1], 'l'),
 
@@ -210,7 +211,7 @@ maneta_states["cycle"] = [
 # End state
 maneta_states["end"] = [   
     ('center_up', [0], 'l'),
-    ('d', 'A', 'l'),
+    ('d', 4, 'l'),
 ]
 
 
@@ -222,7 +223,7 @@ sit_states = {
 }
 # Initial state
 sit_states["start"] = [
-    ('u', 'A', 'l'),
+    ('u', 4, 'l'),
     ('center_up', [2,3], 'l'),
     ('center_down', [0,1], 'l'),
 
@@ -243,7 +244,7 @@ sit_states["cycle"] = [
 
 # End state
 sit_states["end"] = [   
-    ('d', 'A', 'l'),
+    ('d', 4, 'l'),
 ]
 
 
@@ -260,28 +261,28 @@ walk_back_states = {
 
 # Initial state for walking back
 walk_back_states["start"] = [
-    ('u', 'A', 'l'),
-    ('f', 'A', 'l'),
+    ('u', 4, 'l'),
+    ('f', 4, 'l'),
     ('b', 3, 'p'),
-    ('b', 'A', 'l'),
+    ('b', 4, 'l'),
     ('b', 0, 'p'),
 ]
 
 # Cycle state for walking back
 walk_back_states["cycle"] = [
     ('bb', 2, 'p'),
-    ('b', 'A', 'l'),
+    ('b', 4, 'l'),
     ('bb', 1, 'p'),
 
     ('bb', 3, 'p'),
-    ('b', 'A', 'l'),
+    ('b', 4, 'l'),
     ('bb', 0, 'p'),
 ]
 
 # End state for walking back
 walk_back_states["end"] = [
     ('b', 2, 'p'),
-    ('b', 'A', 'l'),
+    ('b', 4, 'l'),
     ('b', 2, 'p'),
-    ('u', 'A', 'l'),
+    ('u', 4, 'l'),
 ]

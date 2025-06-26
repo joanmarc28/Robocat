@@ -16,7 +16,7 @@ from telemetria_shared import telemetria_data, sensors_status
 import asyncio
 import websockets
 import json
-from movement.simulation_data import walk_states,rot_states
+from movement.simulation_data import *
 #from vision.slam import start_autonomous_slam
 from queue import Queue
 from interface.micro import Micro  # el fitxer on tens la classe de veu
@@ -193,18 +193,24 @@ def main():
                 estructura.follow_sequance(walk_states, cycles=6, t=0.2)
             if accio == "rotar":
                 estructura.follow_sequance(rot_states, cycles=6, t=0.8)
+            if accio == "maneta":
+                estructura.follow_sequance(maneta_states, cycles=6, t=0.8)
+            if accio == "enrere":
+                estructura.follow_sequance(walk_back_states, cycles=6, t=0.8)
             elif accio == "ajupir":
                 estructura.set_position("sit")
-                """estructura.follow_sequance(sit_sequence, cycles=1, t=0.2)"""
             elif accio == "normal":
-                """estructura.follow_sequance(up_sequence, cycles=1, t=0.2)"""
                 estructura.set_position("normal")
             elif accio == "hind_sit":
-                """estructura.sit_hind_legs()"""
+                """estructura.follow_sequance(walk_states, cycles=6, t=0.2)"""
+                estructura.sit_hind_legs()
+            elif accio == "recte":
                 estructura.set_position("recte")
-
+            elif accio == "strech":
+                estructura.strech()
             elif accio == "up":
                 estructura.set_position("up")
+
             elif accio == "happy":
                 agent.set_mode("human")
                 agent.set_submode("happy")
@@ -214,14 +220,12 @@ def main():
             elif accio == "angry":
                 agent.set_mode("human")
                 agent.set_submode("angry")
-                mou_cap()
+                #mou_cap()
 
             elif accio == "patrol":
                 #Provisional
                 agent.set_mode("human")
                 agent.set_submode("patrol")
-            elif accio == "strech":
-                """estructura.strech()"""
                 estructura.init_bot()
             elif accio == "autonom":
                 """if slam_controller is None:

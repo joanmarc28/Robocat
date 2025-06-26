@@ -177,7 +177,6 @@ class EstructuraPotes:
             
     def sit_hind_legs(self, t=0.2):
         """Sit using only the hind legs while front legs are raised."""
-        '''
         # hind legs
         self.legs[2].set_state("sit")
         self.legs[3].set_state("sit")
@@ -193,17 +192,16 @@ class EstructuraPotes:
 
         for th in threads:
             th.join()
-        '''
+        
             
     def strech(self, t=0.2):
         """Sit using only the hind legs while front legs are raised."""
-        '''
         # hind legs
         self.legs[2].set_state("up")
         self.legs[3].set_state("up")
         # raise front legs
-        self.legs[0].set_state("sit")
-        self.legs[1].set_state("sit")
+        self.legs[0].set_state("strech")
+        self.legs[1].set_state("strech")
 
         threads = []
         for leg in self.legs:
@@ -213,7 +211,7 @@ class EstructuraPotes:
 
         for th in threads:
             th.join()
-        '''
+        
     
     #set_positions
     def get_states(self):
