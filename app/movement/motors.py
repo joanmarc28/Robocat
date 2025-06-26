@@ -315,7 +315,7 @@ def new_angles(servo,angles, delay):
         time.sleep(delay)
 
 def uneven():
-    return True
+    return False
 
 
 
