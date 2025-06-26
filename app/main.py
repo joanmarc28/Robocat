@@ -211,6 +211,8 @@ def main():
                 estructura.strech()
             elif accio == "up":
                 estructura.set_position("up")
+            elif accio == "calibrar":
+                estructura.init_bot()
 
             elif accio == "happy":
                 agent.set_mode("human")
@@ -225,9 +227,8 @@ def main():
 
             elif accio == "patrol":
                 #Provisional
-                agent.set_mode("human")
+                agent.set_mode("police")
                 agent.set_submode("patrol")
-                estructura.init_bot()
             elif accio == "autonom":
                 """if slam_controller is None:
                     try:
