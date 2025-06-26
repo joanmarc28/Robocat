@@ -64,3 +64,4 @@ STATES = {"default":{
         "disgusted":{
             "sounds": ["sick_1_clean.wav"],
     }
+}

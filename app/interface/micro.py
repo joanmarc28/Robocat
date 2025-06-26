@@ -34,18 +34,32 @@ class Micro:
         self._setup_micro()
 
     def _setup_micro(self):
-        # Ajustar soroll ambiental una sola vegada
+        # Si no s'ha especificat dispositiu, busca el primer amb canal d'entrada vàlid
+        if self.device_index is None:
+            try:
+                for i, name in enumerate(sr.Microphone.list_microphone_names()):
+                    with sr.Microphone(device_index=i) as source:
+                        if source.CHUNK:
+                            self.device_index = i
+                            if self.debug:
+                                print(f"🎙️ Micròfon detectat: {name} (index: {i})")
+                            break
+            except Exception as e:
+                if self.debug:
+                    print(f"[ERROR DETECCIÓ MICRO] {e}")
+                return
+
+        # Ajusta al soroll ambiental
         try:
             with sr.Microphone(device_index=self.device_index) as source:
                 if self.debug:
                     print("🎙️ Ajustant al soroll ambiental...")
                 self.recognizer.adjust_for_ambient_noise(source, duration=1)
-                # Improve recognition sensitivity
                 self.recognizer.dynamic_energy_threshold = True
                 self.recognizer.dynamic_energy_adjustment_ratio = 1.5
         except Exception as e:
             if self.debug:
-                print(f"[ERROR MICRÒFON] {e}")
+                print(f"[ERROR CONFIGURACIÓ MICRO] {e}")
 
     def stop(self):
         self._running = False
@@ -76,22 +90,34 @@ class Micro:
                 if self.debug:
                     print("🎧 Escoltant...")
                 audio = self.recognizer.listen(source, timeout=timeout, phrase_time_limit=phrase_time_limit)
-                # Retorna la millor transcripció i registra totes les opcions
-                result = self.recognizer.recognize_google(audio, language=self.language, show_all=True)
-                if isinstance(result, dict) and "alternative" in result:
-                    text = result["alternative"][0].get("transcript", "").lower()
-                    self.logger.info(f"Escoltat: {text}")
-                    if self.debug:
-                        print(f"[Escoltat] {text}")
-                        for alt in result["alternative"]:
-                            if "transcript" in alt:
-                                print(f" - Possible: {alt['transcript']}")
-                    return text
-                return None
+
+            result = self.recognizer.recognize_google(audio, language=self.language, show_all=True)
+
+            if isinstance(result, dict) and "alternative" in result:
+                text = result["alternative"][0].get("transcript", "").lower()
+                self.logger.info(f"Escoltat: {text}")
+                if self.debug:
+                    print(f"[Escoltat] {text}")
+                    for alt in result["alternative"]:
+                        if "transcript" in alt:
+                            print(f" - Possible: {alt['transcript']}")
+                return text
+
+            return None
+
+        except sr.UnknownValueError:
+            if self.debug:
+                print("[Error] No s’ha entès cap veu.")
+            return None
+        except sr.RequestError as e:
+            if self.debug:
+                print(f"[Error Google API] {e}")
+            return None
         except Exception as e:
             if self.debug:
                 print(f"[Listen Error] {e}")
             return None
+
 
     def match_wake_word(self, text):
         ratio = difflib.SequenceMatcher(None, text, self.wake_word).ratio()

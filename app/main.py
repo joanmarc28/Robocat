@@ -214,7 +214,7 @@ def main():
             elif accio == "angry":
                 agent.set_mode("human")
                 agent.set_submode("angry")
-                #mou_cap()
+                mou_cap()
 
             elif accio == "patrol":
                 #Provisional

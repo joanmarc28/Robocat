@@ -117,7 +117,7 @@ class Pota:
     
     def set_state(self, new_state):
         """Estableix un nou estat per a la pota."""
-        assert new_state in positions.keys(), "Invalid state"
+        assert new_state in position_states.keys(), "Invalid state"
         self.old_state = self.state
         self.state = new_state
     
