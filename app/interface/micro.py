@@ -14,7 +14,7 @@ os.environ["ALSA_CARD"] = "default"
 os.environ["SDL_AUDIODRIVER"] = "dsp"
 
 class Micro:
-    def __init__(self, agent: Agent = None, wake_word="hola", language="ca-ES",
+    """def __init__(self, agent: Agent = None, wake_word="hola", language="ca-ES",
                  device_index=None, debug=True, log_file="logs/micro.log"):
         self.agent = agent
         self.wake_word = wake_word.lower()
@@ -155,4 +155,4 @@ class Micro:
                 # else:
                 #     self.say("Can you repeat, please?")
 
-            time.sleep(0.3)
+            time.sleep(0.3)"""

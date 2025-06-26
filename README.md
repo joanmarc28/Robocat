@@ -169,7 +169,27 @@ For text extraction from license plates, RoboCat uses Gemini AI, a multimodal sy
 However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassifications.
 
 ## Inverse Kinematics for Walking
- <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/inverse_kinematics_demo.gif" width="300">
+<table style="border: none;" >
+<tr>
+<td width="40%">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/inverse_kinematics_demo.gif" width="100%">
+</td>
+<td>
+
+RoboCat's locomotion is based on an Inverse Kinematics system, which allows precise control of the robot's legs to perform complex movements such as walking or interacting with its environment. Unlike forward kinematics, where joint angles are known and the resulting position is computed, inverse kinematics solves the opposite problem: determining the necessary joint angles to achieve a desired position or orientation of the legs.
+
+The inverse kinematics models and animations have been designed and tested using CoppeliaSim, a robotics simulation environment, allowing us to prototype and optimize the movements before deployment on the real robot.
+
+Currently, RoboCat supports the following pre-programmed movement modes using inverse kinematics.
+
+</td>
+</tr>
+</table>
+
+
+ | Walk | Sit | Playful |
+ |------|-----|---------|
+ | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walk_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/sit_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/paw_ani.gif" width="300"> |
 
 ## Web Application
 The RoboCat system relies on a centralized relational database designed to securely manage all operational data. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
