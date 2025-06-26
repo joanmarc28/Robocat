@@ -159,14 +159,28 @@ The RoboCat software is composed of three main components:
 ## License Plate Detection Algorithm
 RoboCat integrates a computer vision system that operates in three phases to detect and process license plates:
 #### 1. Vehicle Detection
-Using YOLOv8n object detection model, RoboCat identifies vehicles present in its field of vision. Specifically, the system is trained to detect only conventional passenger cars, which is the only object class configured in the YOLO model for this detection task. This selective approach ensures optimized performance and reduces false positives from unrelated objects.
+Using YOLOv8n object detection model, RoboCat identifies vehicles present in its field of vision. Specifically, the system is trained to detect only conventional passenger cars, the only object class configured in the YOLO model for this detection task. This selective approach ensures optimized performance and reduces false positives from unrelated objects.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/car detection.jpeg" alt="RoboCat Logo" width="350">  
+</p>
 
 #### 2. License Plate Detection
-Once a vehicle is detected, a second YOLOv8n model is used to accurately locate the license plate area. The system also detects and extracts the nationality region by identifying the blue section commonly present on Spanish license plates. Since our project only focuses on Spanish license plates, the blue section is cropped for further processing.
+Once a vehicle is detected, a second YOLOv8n model is used to locate the license plate area accurately. The system also detects and extracts the nationality region by identifying the blue section commonly present on Spanish license plates. Since our project only focuses on Spanish license plates, the blue section is cropped for further processing.
+
+<p align="center">
+  <img align="middle" src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/license detection.jpeg" alt="RoboCat Logo" width="350">&nbsp;&nbsp;&nbsp;&nbsp;<img align="middle" src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/license cut.png" alt="RoboCat Logo" width="250">
+</p>
 
 #### 3. Optical Character Recognition (OCR)
 For text extraction from license plates, RoboCat uses Gemini AI, a multimodal system capable of performing OCR tasks with high accuracy, eliminating the need for manual character segmentation and traditional CNN-based recognition.
-However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassifications.
+However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassification.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/matricula.png" alt="RoboCat Logo" width="250">  
+</p>
+
+
 
 ## Inverse Kinematics for Walking
 <table style="border: none;" >
