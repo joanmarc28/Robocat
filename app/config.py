@@ -57,5 +57,10 @@ STATES = {"default":{
         },  
         "sad":{
             "sounds": ["sick_1_clean.wav"],
-        }
+        },
+        "scared":{
+            "sounds": ["sick_1_clean.wav"],
+        },
+        "disgusted":{
+            "sounds": ["sick_1_clean.wav"],
     }
