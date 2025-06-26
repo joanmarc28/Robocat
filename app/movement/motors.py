@@ -10,8 +10,6 @@ import threading
 from sensors.ultrasonic import ModulUltrasons
 from movement.simulation_data import *
 from movement.inverse_kinematics.steps import position_steps
-import movement.inverse_kinematics.position as ik_pos
-
 # Inicialització del bus I2C i la controladora PCA9685
 i2c = busio.I2C(board.SCL, board.SDA)
 pca = PCA9685(i2c)
@@ -33,73 +31,35 @@ class Pota:
         self.front = front
         self.old_state = "start"
 
-        self.y_adjust = 0
-
-        self.correction = None
-        if self.right:
-            self.correction = lambda a, b : (90 - a, b)
-        else:
-            self.correction = lambda a, b : (90 + a, 180 - b)
-        
-        self.invert_correction = None
-        if self.right:
-            self.correction = lambda a, b : (90 - a, b)
-        else:
-            self.correction = lambda a, b : (-90 + a, 180 - b)
-
-    def set_new_position(self, t, inter_method='linear'):
+    def set_new_position(self,t, inter_method='linear'):
         new_pos = position(self.state)
         old_pos = position(self.old_state)
 
+        up = 0
+        down = 0
+        if self.right:
+            up = lambda a : 90 - a
+            down = lambda a : a
+        else:
+            up = lambda a : 90 + a
+            down = lambda a : 180 - a
+        
+        correction_factor = (up, down)
         steps = int(t/0.1)
 
-        same_pos = False
-        if old_pos != new_pos:
-            pos_steps = position_steps(old_pos, new_pos, steps, inter_method)
-        else:
-            same_pos = True
-            pos_steps = [old_pos]*steps
+        pos_steps = position_steps(old_pos, new_pos, steps, inter_method, correction_factor)
 
-        for (X, Y) in pos_steps:
-            tic = time.time()
+        up_steps = [pos[0] for pos in pos_steps]
+        down_steps = [pos[1] for pos in pos_steps]
+        print(up_steps, down_steps)
+        t1 = threading.Thread(target=new_angles, args=(self.servo_up,up_steps,t/steps))
+        t1.start()
+        
+        t2 = threading.Thread(target=new_angles, args=(self.servo_down,down_steps,t/steps))
+        t2.start()
 
-            un = uneven()
-            adjusted = False
-            if(un):
-                adjusted = self.adjust()
-
-            if adjusted or not same_pos:
-                (angle_up, angle_down) = self.correction(ik_pos.coord_to_servo((X, Y + self.y_adjust)))
-                
-                self.servo_up.angle = max(0, min(180, angle_up))  # Protecció límits
-                self.servo_up.angle = max(0, min(180, angle_down))  # Protecció límits
-
-            toc = time.time()
-            delay = t/steps - (toc - tic)
-
-            if delay > 0:
-                time.sleep(delay)
-
-    def adjust(self):
-        (pitch, roll) = (0,0) #TODO
-
-        #find adjust
-        y_adjust = 0
-
-        #adjust for pitch
-        y_pitch_adjust = np.sin(pitch)
-        if not self.front: y_pitch_adjust = -y_pitch_adjust
-
-        #adjust for roll
-        y_roll_adjust = np.sin(roll)
-        if not self.right: y_roll_adjust = -y_roll_adjust
-
-        y_adjust = y_pitch_adjust + y_roll_adjust
-
-        if -0.2 < self.y_adjust+y_adjust < +0.2:
-            self.y_adjust += y_adjust
-            return True
-        return False
+        t1.join()
+        t2.join()
 
 
     def up(self):
@@ -178,6 +138,7 @@ class EstructuraPotes:
             
     def sit_hind_legs(self, t=0.2):
         """Sit using only the hind legs while front legs are raised."""
+        
         # hind legs
         self.legs[2].set_state("sit")
         self.legs[3].set_state("sit")
@@ -197,12 +158,13 @@ class EstructuraPotes:
             
     def strech(self, t=0.2):
         """Sit using only the hind legs while front legs are raised."""
+        
         # hind legs
         self.legs[2].set_state("up")
         self.legs[3].set_state("up")
         # raise front legs
-        self.legs[0].set_state("strech")
-        self.legs[1].set_state("strech")
+        self.legs[0].set_state("front_zero")
+        self.legs[1].set_state("front_zero")
 
         threads = []
         for leg in self.legs:
@@ -213,7 +175,23 @@ class EstructuraPotes:
         for th in threads:
             th.join()
         
+
+    def init_bot(self, t=0.2):
+        for leg in self.legs:
+            if leg.front:
+                leg.set_state("front_zero")
+            else:
+                leg.set_state("back_zero")
     
+        threads = []
+        for leg in self.legs:
+            th = threading.Thread(target=leg.set_new_position, args=(t,))
+            threads.append(th)
+            th.start()
+
+        for th in threads:
+            th.join()
+
     #set_positions
     def get_states(self):
         return [leg.state for leg in self.legs]
@@ -281,9 +259,9 @@ class EstructuraPotes:
         
         for _ in range(cycles):
             for order in sequance["cycle"]:
-                if self.ultrasons and self.ultrasons.mesura_distancia() > config.LLINDAR_ULTRASONIC:
-                    states = self.follow_order(order, states, t)
-                    print(f"After order {order}: {states}")
+                #if self.ultrasons and self.ultrasons.mesura_distancia() > config.LLINDAR_ULTRASONIC:
+                states = self.follow_order(order, states, t)
+                print(f"After order {order}: {states}")
             
         for order in sequance["end"]:
             states = self.follow_order(order, states, t)
@@ -314,12 +292,6 @@ def new_angles(servo,angles, delay):
     for angle in angles:
         servo.angle = max(0, min(180, angle))  # Protecció límits
         time.sleep(delay)
-
-def uneven():
-    return False
-
-
-
 
 # Crear potes (ajusta els canals segons com els tinguis connectats)
 
