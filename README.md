@@ -176,9 +176,7 @@ Once a vehicle is detected, a second YOLOv8n model is used to locate the license
 For text extraction from license plates, RoboCat uses Gemini AI, a multimodal system capable of performing OCR tasks with high accuracy, eliminating the need for manual character segmentation and traditional CNN-based recognition.
 However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassification.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/matricula.png" alt="RoboCat Logo" width="250">  
-</p>
+
 
 
 
