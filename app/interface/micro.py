@@ -6,6 +6,8 @@ import logging
 from modes.agent import Agent
 from movement.motors import mou_cap
 import os
+import threading
+from interface.speaker import Speaker
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 os.environ["ALSA_CARD"] = "default"
@@ -137,10 +139,12 @@ class Micro:
                     print("✅ Wake word detectada!")
                 self.logger.info("Wake word detected")
 
-                mou_cap()
+                #mou_cap()
                 if self.agent:
                     self.agent.speaker.say_emotion("surprised")
 
+                t_speak = threading.Thread(target=speak)
+                t_speak.start()
                 # Aquí pots activar Gemini si vols
                 # command = self.listen_once(timeout=7, phrase_time_limit=6)
                 # if command:

@@ -38,6 +38,27 @@ class RobotCamera:
             # Picamera2 can return RGBA/BGRA frames. Remove the alpha channel.
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2RGB)
         return frame
+    def detecte_cars(self, frame):
+        """Detect cars in the frame and draw rectangles around them."""
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        cars = self.cars.detectMultiScale(gray, 1.1, 5)
+
+        for (x, y, w, h) in cars:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv2.putText(frame, "Cotxe", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+
+        return frame
+    
+    def detect_fullbody(self, frame):
+        """Detect full bodies in the frame and draw rectangles around them."""
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        bodies = self.fullbody.detectMultiScale(gray, 1.1, 5)
+
+        for (x, y, w, h) in bodies:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            cv2.putText(frame, "Cos complet", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
+        return frame
     
     def detect_faces(self, frame):
         """Draw rectangles around detected faces, eyes and smiles."""
@@ -71,7 +92,9 @@ class RobotCamera:
                     print("📡 Connectat al servidor")
                     while True:
                         frame = self.capture_frame()
-                        frame = self.detect_faces(frame)
+                        #frame = self.detect_faces(frame)
+                        frame = self.detecte_cars(frame)
+                        frame = self.detect_fullbody(frame)
                         _, jpeg = cv2.imencode(".jpg", frame)
                         await websocket.send(jpeg.tobytes())
                         await asyncio.sleep(1 / self.fps)

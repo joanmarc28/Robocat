@@ -7,9 +7,10 @@ from datetime import datetime
 from interface.speaker import Speaker
 import cv2
 from vision.camera import RobotCamera
+from interface.display import clear_displays, displays_show_frames
 
 class PoliceBehavior:
-    def __init__(self, speaker, camera):
+    def __init__(self, speaker:Speaker, camera):
         self.speaker = speaker
         self.camera = camera
         self.detected_plates = []  # Llista d'últimes matrícules detectades
@@ -26,6 +27,7 @@ class PoliceBehavior:
         return similarity >= self.similarity_threshold
 
     def detect_license_plate(self):
+
         """try:
             frame = self.camera.capture()
             car = PlateDetection.detect_car(frame)
