@@ -282,4 +282,8 @@ However, feel free to fork the repository and experiment with it for learning an
   </tr>
 </table>
 
+Special thanks to:
+- **Pau Bofill** for collaborating with the license plate detection algorithm and make it possible.
+- **Marc Bardeli** for colaborating with the web application implementation.
+
 # Gallery
