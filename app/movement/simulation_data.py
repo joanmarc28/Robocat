@@ -177,3 +177,111 @@ rot_states["cycle"] = [
 rot_states["end"] = [   
     ('d', 4, 'l'),
 ]
+
+
+maneta_states = {
+    "start" : [],
+    "cycle" : [],
+    "end" : []
+}
+
+
+# Initial state
+maneta_states["start"] = [
+    ('u', 'A', 'l'),
+    ('center_up', [2,3], 'l'),
+    ('center_down', [0,1], 'l'),
+
+    ('back_down', [0], 'p'),
+    ('back_down', [1], 'p'),
+
+    ('front_up', [2,3], 'l'),
+    
+    ('raise_1', [0], 'l'),
+    ('long_front_up', [3], 'l'),
+]
+
+# Cycle state
+maneta_states["cycle"] = [
+    ('raise_2', [0], 'p'),
+    ('raise_1', [0], 'p'),
+]
+
+# End state
+maneta_states["end"] = [   
+    ('center_up', [0], 'l'),
+    ('d', 'A', 'l'),
+]
+
+
+
+sit_states = {
+    "start" : [],
+    "cycle" : [],
+    "end" : []
+}
+# Initial state
+sit_states["start"] = [
+    ('u', 'A', 'l'),
+    ('center_up', [2,3], 'l'),
+    ('center_down', [0,1], 'l'),
+
+    ('back_down', [0], 'p'),
+    ('back_down', [1], 'p'),
+
+    ('front_up', [2,3], 'l'),
+]
+
+# Cycle state
+sit_states["cycle"] = [
+    ('back_down', [0], 'l'),
+    ('back_down', [0], 'l'),
+    ('back_down', [0], 'l'),
+    ('back_down', [0], 'l'),
+    ('back_down', [0], 'l')
+]
+
+# End state
+sit_states["end"] = [   
+    ('d', 'A', 'l'),
+]
+
+
+
+
+
+
+
+walk_back_states = {
+    "start" : [],
+    "cycle" : [],
+    "end" : []
+}
+
+# Initial state for walking back
+walk_back_states["start"] = [
+    ('u', 'A', 'l'),
+    ('f', 'A', 'l'),
+    ('b', 3, 'p'),
+    ('b', 'A', 'l'),
+    ('b', 0, 'p'),
+]
+
+# Cycle state for walking back
+walk_back_states["cycle"] = [
+    ('bb', 2, 'p'),
+    ('b', 'A', 'l'),
+    ('bb', 1, 'p'),
+
+    ('bb', 3, 'p'),
+    ('b', 'A', 'l'),
+    ('bb', 0, 'p'),
+]
+
+# End state for walking back
+walk_back_states["end"] = [
+    ('b', 2, 'p'),
+    ('b', 'A', 'l'),
+    ('b', 2, 'p'),
+    ('u', 'A', 'l'),
+]
