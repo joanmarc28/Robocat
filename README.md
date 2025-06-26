@@ -49,6 +49,12 @@ The project's main goals are to:
   - Integrate urban robotics with a friendly and non-threatening design
   - Demonstrate the application of robotics in real-world city environments
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walking_uni.gif" alt="RoboCat Logo" width="500">
+  
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/eyes_head.gif" alt="RoboCat Logo" width="240">
+</p>
+  
 # How to use
 
 To set up and run RoboCat on your system, follow these simple steps:
@@ -316,7 +322,16 @@ However, feel free to fork the repository and experiment with it for learning an
 </table>
 
 Special thanks to:
-- **Pau Bofill** for collaborating with the license plate detection algorithm and make it possible.
-- **Marc Bardeli** for colaborating with the web application implementation.
+- **Pau Bofill** for collaborating with the license plate detection algorithm and making it possible.
+- **Marc Bardeli** for collaborating with the web application implementation.
 
 # Gallery
+<p>
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/stretch.jpeg" alt="RoboCat Logo" width="500">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/poser.jpeg" alt="RoboCat Logo" width="500">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/legs_assembly.jpeg" alt="RoboCat Logo" width="500">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/legs_testing.gif" alt="RoboCat Logo" width="500">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/spread_legged.jpeg" alt="RoboCat Logo" width="400">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/first_body.jpeg" alt="RoboCat Logo" width="500">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/pcb.jpeg" alt="RoboCat Logo" width="500">
+</p>
