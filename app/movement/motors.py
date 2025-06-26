@@ -63,12 +63,13 @@ class Pota:
         for (X, Y) in pos_steps:
             tic = time.time()
 
-            uneven = uneven()
-            if(uneven):
+            un = uneven()
+            adjusted = False
+            if(un):
                 adjusted = self.adjust()
 
             if adjusted or not same_pos:
-                (angle_up, angle_down) = self.correction(ik_pos.coord_to_polar(X, Y + self.y_adjust))
+                (angle_up, angle_down) = self.correction(ik_pos.coord_to_servo((X, Y + self.y_adjust)))
                 
                 self.servo_up.angle = max(0, min(180, angle_up))  # Protecció límits
                 self.servo_up.angle = max(0, min(180, angle_down))  # Protecció límits
@@ -274,7 +275,7 @@ class EstructuraPotes:
         states = self.get_states()
         print(f"Initial states: {states}")
 
-        for order in sequance["initial"]:
+        for order in sequance["start"]:
             states = self.follow_order(order, states, t)
             print(f"After order {order}: {states}")
         

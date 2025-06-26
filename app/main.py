@@ -130,7 +130,8 @@ def main():
         agent = None
         
     try:
-        micro = Micro(agent=agent, device_index=2)
+        """micro = Micro(agent=agent, device_index=2)"""
+        micro = None
     except Exception as e:
         print(f"[ERROR] Motors: {e}")
         micro = None

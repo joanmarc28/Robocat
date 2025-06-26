@@ -16,6 +16,6 @@ def position_steps(old_position, new_position, steps, inter_method, correction_f
         next_positions_coord = interpolation(old_position, new_position, factor, method=inter_method, height=ALTURA)
         #next_positions_servo = correction(coord_to_servo(next_positions_coord), correction_factor)
 
-        position_steps_list.append(next_positions_servo)
+        position_steps_list.append(next_positions_coord)
     
     return position_steps_list
