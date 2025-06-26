@@ -202,7 +202,8 @@ class EstructuraPotes:
                 self.body_downward()
         
         #LEG
-        else:
+        elif type(leg_n) == int:
+
             leg = legs[leg_n]
             legs = [leg]
 
@@ -213,7 +214,11 @@ class EstructuraPotes:
             elif direction == 'ff':
                 leg.forward()
                 leg.forward()
-        
+        else:
+            legs = [legs[i] for i in leg_n]
+            for legs in legs:
+                legs.set_state(direction)
+
         new_states = self.get_states()
 
         #Function move Body

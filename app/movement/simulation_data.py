@@ -4,6 +4,7 @@ import math
 # 1^2 = Y_PLANE^2 + X_PLANE^2
 Y_PLANE = -0.85
 X_PLANE = math.sqrt(1 - Y_PLANE**2)
+Y_UP = -1/2
 
 position_states = {
     #basic positions
@@ -21,7 +22,33 @@ position_states = {
     "long_front" :      ( 1/2*X_PLANE, Y_PLANE),
     "long_back" :       (-1/2*X_PLANE, Y_PLANE),
     "ll_back" :         (-3/4*X_PLANE, Y_PLANE),
+    
+    #short stand positions
+    "center_down" :          ( 0*X_PLANE,  Y_PLANE -0.1),
+    "front_down":            ( 1/4*X_PLANE,Y_PLANE -0.1),
+    "back_down" :            (-1/4*X_PLANE,Y_PLANE -0.1),
+
+    #long stand positions
+    "long_front_down" :      ( 1/2*X_PLANE, Y_PLANE -0.1),
+    "long_back_down" :       (-1/2*X_PLANE, Y_PLANE -0.1),
+
+
+
+    #short stand positions
+    "center_up" :          ( 0*X_PLANE,  Y_PLANE +0.1),
+    "front_up":            ( 1/4*X_PLANE,Y_PLANE +0.1),
+    "back_up" :            (-1/4*X_PLANE,Y_PLANE +0.1),
+
+    #long stand positions
+    "long_front_up" :      ( 1/2*X_PLANE, Y_PLANE  +0.1),
+    "long_back_up" :       (-1/2*X_PLANE, Y_PLANE  +0.1),
+
+
+    "raise_1" : (1/4*X_PLANE,Y_UP),
+    "raise_2" : ( 1/2*X_PLANE,Y_UP)
 }
+
+
 def position(state):
     if isinstance(state, list):
         return [position(substate) for substate in state]
@@ -37,7 +64,16 @@ forwards_states = {
     "center"     : "front",   
     "back"       : "center",
     "long_back"  : "back",
-    "ll_back"  : "long_back",
+
+    "front_up"      : "long_front_up",
+    "center_up"     : "front_up",   
+    "back_up"       : "center_up",
+    "long_back_up"  : "back_up",
+
+    "front_down"      : "long_front_down",
+    "center_down"     : "front_down",   
+    "back_down"       : "center_down",
+    "long_back_down"  : "back_down",    
 }
 
 backwards_states = {
@@ -45,7 +81,16 @@ backwards_states = {
     "front"      : "center",
     "center"     : "back",   
     "back"       : "long_back",
-    "long_back"  : "ll_back",
+
+    "long_front_up" : "front_up",
+    "front_up"      : "center_up",
+    "center_up"     : "back_up",   
+    "back_up"       : "long_back_up",
+
+    "long_front_down" : "front_down",
+    "front_down"      : "center_down",
+    "center_down"     : "back_down",   
+    "back_down"       : "long_back_down",
 }
 
 def forwards(old_state):
@@ -111,6 +156,8 @@ rot_states = {
 # Initial state
 rot_states["start"] = [
     ('u', 4, 'l'),
+    ("center_up", [0,1,2,3], 'l'),
+    ("center_down", [0], 'l')
 ]
 
 # Cycle state

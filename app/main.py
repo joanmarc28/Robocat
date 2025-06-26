@@ -191,6 +191,8 @@ def main():
         try:          
             if accio == "endavant":
                 estructura.follow_sequance(walk_states, cycles=6, t=0.2)
+            if accio == "rotar":
+                estructura.follow_sequance(rot_states, cycles=6, t=0.8)
             elif accio == "ajupir":
                 estructura.set_position("sit")
                 """estructura.follow_sequance(sit_sequence, cycles=1, t=0.2)"""
@@ -198,8 +200,7 @@ def main():
                 """estructura.follow_sequance(up_sequence, cycles=1, t=0.2)"""
                 estructura.set_position("normal")
             elif accio == "hind_sit":
-                estructura.follow_sequance(rot_states, cycles=6, t=0.2)
-                #estructura.sit_hind_legs()
+                """estructura.sit_hind_legs()"""
             elif accio == "up":
                 estructura.set_position("up")
             elif accio == "happy":
