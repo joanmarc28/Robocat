@@ -5,14 +5,16 @@ from interface.speaker import Speaker
 from vision.camera import RobotCamera
 import config
 from movement.motors import mou_cap
+import threading
 
 class Agent:
-    def __init__(self, camera:RobotCamera= None, speaker:Speaker= None):
+    def __init__(self, camera:RobotCamera= None, speaker:Speaker= None, time=0.1,frenquencia=5):
         self.mode = config.DEFAULT_MODE
         self.submode = "default"
         self.speaker = speaker
         self.camera = camera
-
+        self.time = time
+        self.frequencia = frenquencia
         self.human = HumanBehavior(self.speaker)
         self.police = PoliceBehavior(self.speaker, self.camera)
 
@@ -37,11 +39,25 @@ class Agent:
             now = time.time()
 
             # Limita la freqüència d'acció (ex: cada 5s)
-            if now - self.last_action_time >= 5:
+            if now - self.last_action_time >= self.frequencia:
                 self._execute_mode()
                 self.last_action_time = now
 
-            time.sleep(0.1)  # Redueix ús de CPU
+            if now - self.last_action_time >= self.frequencia*2:
+                def speak():
+                    self.speaker.say_emotion(self.submode)
+
+                t_speak = threading.Thread(target=speak)
+                t_speak.start()
+                            
+            if self.mode == "human":
+                self.time = 0.1  # Més ràpid per a interaccions humanes
+                self.frequencia = 5  # Accions humanes més freqüents
+            elif self.mode == "police":
+                self.time = 0.5  # Més lent per a accions policialsç
+                self.frequencia = 10  # Accions policials menys freqüents
+
+            time.sleep(self.time)  # Redueix ús de CPU
 
     def stop(self):
         print("Aturant Agent")

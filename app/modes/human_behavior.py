@@ -24,18 +24,11 @@ class HumanBehavior:
             print("[HUMAN] Altaveu no disponible")
             return
 
-        def speak():
-            self.speaker.say_emotion(emotion)
-
-        t_speak = threading.Thread(target=speak)
-        t_speak.start()
-
         t_inici = time.time()
         while time.time() - t_inici < duration:
             displays_show_frames(emotion)
 
-        t_speak.join()
-        clear_displays()
+        #clear_displays()
 
     def analitza_emocions(self):
         """Captura un frame i l'envia al servidor per analitzar emocions amb Gemini."""
