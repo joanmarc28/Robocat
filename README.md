@@ -255,7 +255,7 @@ However, feel free to fork the repository and experiment with it for learning an
 <table align="center">
   <tr>
     <td align="center" style="border:none;">
-      <img src="" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Martí Armengod Villar"/><br/>
+      <img src="https://drive.google.com/uc?export=view&id=182neS8AfRccrTfZxhhOWW1_33He05jec" style="width:120px; height:120px; border-radius:50%; object-fit:cover;" alt="Martí Armengod Villar"/><br/>
       <span style="font-size:14px;"><strong>Martí Armengod Villar</strong></span><br/>
       <span style="font-size:12px;"><em>SW Lead</em></span>
     </td>
