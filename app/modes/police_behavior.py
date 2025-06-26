@@ -26,7 +26,7 @@ class PoliceBehavior:
         return similarity >= self.similarity_threshold
 
     def detect_license_plate(self):
-        try:
+        """try:
             frame = self.camera.capture()
             car = PlateDetection.detect_car(frame)
             plate = PlateDetection.detect_plate(car)
@@ -54,7 +54,7 @@ class PoliceBehavior:
                 return None
         except Exception as e:
             print(f"[ERROR] Error en la detecció de matrícula: {e}")
-            return None
+            return None"""
 
     def reportar_infraccio(self):
         """Envia una imatge a la web per detectar infracció i guardar-la si s’escau."""

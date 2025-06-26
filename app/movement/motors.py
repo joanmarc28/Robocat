@@ -175,7 +175,23 @@ class EstructuraPotes:
         for th in threads:
             th.join()
         '''
+
+    def init_bot(self, t=0.2):
+        for leg in self.legs:
+            if leg.front:
+                leg.set_state("front_zero")
+            else:
+                leg.set_state("back_zero")
     
+        threads = []
+        for leg in self.legs:
+            th = threading.Thread(target=leg.set_new_position, args=(t,))
+            threads.append(th)
+            th.start()
+
+        for th in threads:
+            th.join()
+
     #set_positions
     def get_states(self):
         return [leg.state for leg in self.legs]
@@ -216,8 +232,8 @@ class EstructuraPotes:
                 leg.forward()
         else:
             legs = [legs[i] for i in leg_n]
-            for legs in legs:
-                legs.set_state(direction)
+            for leg in legs:
+                leg.set_state(direction)
 
         new_states = self.get_states()
 

@@ -2,8 +2,10 @@ import math
 #STATES POSITION
 
 # 1^2 = Y_PLANE^2 + X_PLANE^2
-Y_PLANE = -0.85
+Y_PLANE = -0.7
+ 
 X_PLANE = math.sqrt(1 - Y_PLANE**2)
+X_CENTER = 0
 Y_UP = -1/2
 
 position_states = {
@@ -11,37 +13,38 @@ position_states = {
     "start":            ( 0, -1/2),
     "sit"  :            ( 0,  -1/2),
     "normal":           (0.5, -0.5),
-    "up":               (0, Y_PLANE),
+    "recte":            (0, -1),
+    "front_zero":     (1, 0),
+    "back_zero":      (-1, 0),
+    "up":               (0+X_CENTER, Y_PLANE),
 
     #short stand positions
-    "center" :          (   0*X_PLANE,  Y_PLANE),
-    "front":            ( 1/4*X_PLANE,  Y_PLANE),
-    "back" :            (-1/4*X_PLANE,  Y_PLANE),
+    "center" :          (   0*X_PLANE+X_CENTER,  Y_PLANE),
+    "front":            ( 1/4*X_PLANE+X_CENTER,  Y_PLANE),
+    "back" :            (-1/4*X_PLANE+X_CENTER,  Y_PLANE),
 
     #long stand positions
-    "long_front" :      ( 1/2*X_PLANE, Y_PLANE),
-    "long_back" :       (-1/2*X_PLANE, Y_PLANE),
-    "ll_back" :         (-3/4*X_PLANE, Y_PLANE),
+    "long_front" :      ( 1/2*X_PLANE+X_CENTER, Y_PLANE),
+    "long_back" :       (-1/2*X_PLANE+X_CENTER, Y_PLANE),
+    "ll_back" :         (-3/4*X_PLANE+X_CENTER, Y_PLANE),
     
     #short stand positions
-    "center_down" :          ( 0*X_PLANE,  Y_PLANE -0.1),
-    "front_down":            ( 1/4*X_PLANE,Y_PLANE -0.1),
-    "back_down" :            (-1/4*X_PLANE,Y_PLANE -0.1),
+    "center_down" :          ( 0*X_PLANE+X_CENTER,  Y_PLANE -0.1),
+    "front_down":            ( 1/4*X_PLANE+X_CENTER,Y_PLANE -0.1),
+    "back_down" :            (-1/4*X_PLANE+X_CENTER,Y_PLANE -0.1),
 
     #long stand positions
-    "long_front_down" :      ( 1/2*X_PLANE, Y_PLANE -0.1),
-    "long_back_down" :       (-1/2*X_PLANE, Y_PLANE -0.1),
-
-
+    "long_front_down" :      ( 1/2*X_PLANE+X_CENTER, Y_PLANE -0.1),
+    "long_back_down" :       (-1/2*X_PLANE+X_CENTER, Y_PLANE -0.1),
 
     #short stand positions
-    "center_up" :          ( 0*X_PLANE,  Y_PLANE +0.1),
-    "front_up":            ( 1/4*X_PLANE,Y_PLANE +0.1),
-    "back_up" :            (-1/4*X_PLANE,Y_PLANE +0.1),
+    "center_up" :          ( 0*X_PLANE+X_CENTER,  Y_PLANE +0.1),
+    "front_up":            ( 1/4*X_PLANE+X_CENTER,Y_PLANE +0.1),
+    "back_up" :            (-1/4*X_PLANE+X_CENTER,Y_PLANE +0.1),
 
     #long stand positions
-    "long_front_up" :      ( 1/2*X_PLANE, Y_PLANE  +0.1),
-    "long_back_up" :       (-1/2*X_PLANE, Y_PLANE  +0.1),
+    "long_front_up" :      ( 1/2*X_PLANE+X_CENTER, Y_PLANE  +0.1),
+    "long_back_up" :       (-1/2*X_PLANE+X_CENTER, Y_PLANE  +0.1),
 
 
     "raise_1" : (1/4*X_PLANE,Y_UP),
@@ -64,6 +67,7 @@ forwards_states = {
     "center"     : "front",   
     "back"       : "center",
     "long_back"  : "back",
+    "ll_back"  : "long_back",
 
     "front_up"      : "long_front_up",
     "center_up"     : "front_up",   
@@ -81,6 +85,7 @@ backwards_states = {
     "front"      : "center",
     "center"     : "back",   
     "back"       : "long_back",
+    "long_back"  : "ll_back",
 
     "long_front_up" : "front_up",
     "front_up"      : "center_up",
@@ -135,7 +140,7 @@ sit_sequence = {
 
 # Define the walk states
 walk_states = {
-    "start" : [ ( 'u', 4, 'l'), ( 'f', 4, 'l'),
+    "start" : [ ( 'u', 4, 'l'), ('center_down',[1,3],'l'),( 'f', 4, 'l'),
                 ( 'f', 0, 'p'), ( 'f', 4, 'l'), ( 'f', 3, 'p')
     ],
     "cycle" : [ ('ff', 1, 'p'), ( 'f', 4, 'l'), ('ff', 2, 'p'), 

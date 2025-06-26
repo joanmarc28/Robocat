@@ -19,7 +19,7 @@ import json
 from movement.simulation_data import walk_states,rot_states
 #from vision.slam import start_autonomous_slam
 from queue import Queue
-#from interface.micro import Micro  # el fitxer on tens la classe de veu
+from interface.micro import Micro  # el fitxer on tens la classe de veu
 from utils.loggers import setup_logging
 
 estructura = None
@@ -31,8 +31,8 @@ slam_controller = None
 
 # Configure logging to file
 setup_logging()
-#, micro:Micro = None
-def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None):
+#
+def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None, micro:Micro = None):
     clear_displays()
     temps = 0.5
     displays_message("Loading Robocat ........")
@@ -94,13 +94,13 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
         sensors_status["speaker"] = False
     time.sleep(temps)
 
-    """if micro:
+    if micro:
         displays_message(f"  Micro ..... ok")
         sensors_status["micro"] = True
     else:
         displays_message(f"  Micro ..... Not Found")
         sensors_status["micro"] = False
-    time.sleep(temps)"""
+    time.sleep(temps)
 
     if errors == 0:
         displays_message(f"All Systems Ready")
@@ -129,11 +129,11 @@ def main():
         print(f"[ERROR] Motors: {e}")
         agent = None
         
-    """try:
+    try:
         micro = Micro(agent=agent, device_index=2)
     except Exception as e:
         print(f"[ERROR] Motors: {e}")
-        micro = None"""
+        micro = None
 
     try:
         ultrasons = ModulUltrasons()
@@ -153,8 +153,8 @@ def main():
         print(f"[ERROR] Gyroscope: {e}")
         accelerometre = None
 
-    if start_displays():#,micro
-        if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker):
+    if start_displays():
+        if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker,micro):
             print("Errors crítics detectats. Aturant el sistema.")
             return
 
@@ -175,8 +175,8 @@ def main():
     if accelerometre:
         threading.Thread(target=accelerometre.thread, daemon=True).start()
 
-    """if micro:
-        threading.Thread(target=micro.run, daemon=True).start()"""
+    if micro:
+        threading.Thread(target=micro.run, daemon=True).start()
 
 
     config.SESSION_TOKEN = get_session_token()
@@ -201,6 +201,8 @@ def main():
                 estructura.set_position("normal")
             elif accio == "hind_sit":
                 """estructura.sit_hind_legs()"""
+                estructura.set_position("recte")
+
             elif accio == "up":
                 estructura.set_position("up")
             elif accio == "happy":
@@ -219,7 +221,8 @@ def main():
                 agent.set_mode("human")
                 agent.set_submode("patrol")
             elif accio == "strech":
-                estructura.strech()
+                """estructura.strech()"""
+                estructura.init_bot()
             elif accio == "autonom":
                 """if slam_controller is None:
                     try:
