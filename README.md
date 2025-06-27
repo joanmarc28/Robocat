@@ -41,7 +41,7 @@
 # What is RoboCat?
 
 RoboCat is an autonomous quadruped robot designed to patrol public streets and monitor parking zones regulated by payment. Its structure and external appearance are inspired by a cat's shape, making it functional but also friendly and approachable for pedestrians.
-Equipped with sensors, cameras and onboard computing, RoboCat can detect whether a parked vehicle has an active parking permit or not, combining robotics, computer vision and real-time data processing to offer a smart, mobile solution for urban mobility enforcement.
+Equipped with sensors, cameras and onboard computing, RoboCat can detect whether a parked vehicle has an active parking permit, combining robotics, computer vision and real-time data processing to offer a smart, mobile solution for urban mobility enforcement.
 
 The project's main goals are to:
   - Automate parking control in regulated areas
@@ -51,7 +51,7 @@ The project's main goals are to:
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=SMAzvaqW83E" target="_blank">
-    <img src="https://img.youtube.com/vi/SMAzvaqW83E/hqdefault.jpg" alt="Miniatura del vídeo" width="600">
+    <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/app/RoboCat_miniatura.png" alt="Miniatura del vídeo" width="600">
   </a>
 </p>
 <p>
@@ -93,7 +93,7 @@ Now you can just enjoy!
 
 ## Hardware 
 
-The RoboCat prototype integrates various electronic modules connected to the Raspberry Pi 4, which serves as the central processing unit.
+The RoboCat prototype integrates various electronic modules connected to the Raspberry Pi 4, which is the central processing unit.
 
 ### Required components
 | Component | Model | Units |
