@@ -215,9 +215,7 @@ Currently, RoboCat supports the following pre-programmed movement modes using in
  | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walk_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/sit_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/paw_ani.gif" width="300"> |
 
 ## Web Application
-The RoboCat system relies on a centralized relational database designed to manage all operational data securely. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
-
-
+The RoboCat system is built on a layered software architecture that separates concerns across user interaction, server-side processing, and robot-level execution. This structured approach enhances modularity, scalability, and maintainability while enabling seamless coordination between autonomous robotic units and central control. The following diagram illustrates the core components and responsibilities distributed across the User, Server, and Robot levels.
 
 <div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/app/diagrama.png" width="800"> </div><br>
 As we can see, the web application includes two user profiles.
