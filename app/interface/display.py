@@ -84,14 +84,18 @@ display_left = None
 def start_displays():
     """Inicialitza les pantalles OLED"""
     global display_right, display_left
-
+    errors = True
     try:
         display_right = Display(width=config.OLED_WIDTH, height=config.OLED_HEIGHT, bus=config.I2C_BUS_OLED_RIGHT)
-        display_left = Display(width=config.OLED_WIDTH, height=config.OLED_HEIGHT, bus=config.I2C_BUS_OLED_LEFT)
-        return True
     except Exception as e:
-        print(f"[ERROR] Displays: {e}")
-        return False
+        print(f"[ERROR] Dreta Displays: {e}")
+        errors = False
+    try:
+        display_left = Display(width=config.OLED_WIDTH, height=config.OLED_HEIGHT, bus=config.I2C_BUS_OLED_LEFT)
+    except Exception as e:
+        print(f"[ERROR] EsquerraDisplays: {e}")
+        errors = False
+    return errors
 
 def clear_displays():
     if display_left is None or display_right is None:
@@ -109,17 +113,20 @@ def displays_message(text):
     display_right.display_message(text)
 
 def displays_show_frames(carpeta_frames, eye_delay=config.EYE_DELAY):
-    if display_left is None or display_right is None:
-        print("Displays no inicialitzats")
+    if display_left is not None or display_right is not None:
+        # Crear i iniciar els fils per cada pantalla
+        thread_left = threading.Thread(target=display_left.show_frames, args=(carpeta_frames, "left", eye_delay), daemon=True)
+        thread_right = threading.Thread(target=display_right.show_frames, args=(carpeta_frames, "right", eye_delay), daemon=True)
+
+        thread_left.start()
+        thread_right.start()
+
+        # Si vols esperar que acabin abans de continuar:
+        thread_left.join()
+        thread_right.join()
+    elif display_left is not None:
+        display_left.show_frames(carpeta_frames, "left", eye_delay)
+    elif display_right is not None:
+        display_right.show_frames(carpeta_frames, "right", eye_delay)
+    else:
         return
-
-    # Crear i iniciar els fils per cada pantalla
-    thread_left = threading.Thread(target=display_left.show_frames, args=(carpeta_frames, "left", eye_delay), daemon=True)
-    thread_right = threading.Thread(target=display_right.show_frames, args=(carpeta_frames, "right", eye_delay), daemon=True)
-
-    thread_left.start()
-    thread_right.start()
-
-    # Si vols esperar que acabin abans de continuar:
-    thread_left.join()
-    thread_right.join()

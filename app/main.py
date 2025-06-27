@@ -183,8 +183,9 @@ def main():
     config.SESSION_TOKEN = get_session_token()
     print("🔐 Sessió iniciada amb token:", config.SESSION_TOKEN)
     if agent:
+        agent.human.motors = estructura
         threading.Thread(target=agent.run, daemon=True).start()
-    
+            
 
     # Analisis d'accions desde la web
     while True:
@@ -229,6 +230,29 @@ def main():
                 #Provisional
                 agent.set_mode("police")
                 agent.set_submode("patrol")
+                
+            elif accio == "demo":
+                agent.set_mode("human")
+                agent.set_submode("happy")
+                estructura.set_position("sit")
+                time.sleep(5)
+                agent.set_mode("human")
+                agent.set_submode("disgusted")
+                estructura.set_position("normal")
+                time.sleep(5)
+                agent.set_mode("human")
+                agent.set_submode("happy")
+                estructura.set_position("up")
+                time.sleep(5)
+                agent.set_mode("human")
+                agent.set_submode("surprised")
+                estructura.sit_hind_legs()
+                time.sleep(5)
+                agent.set_mode("human")
+                agent.set_submode("sleepy")
+                estructura.strech()
+                time.sleep(5)
+
             elif accio == "autonom":
                 """if slam_controller is None:
                     try:

@@ -100,3 +100,33 @@ def parse_throttled_state(hex_string):
         emoji = "🟢" if not value else "🔴"
         print(f"{emoji} {key.replace('_', ' ').capitalize()}: {'YES' if value else 'NO'}")
 """
+
+def normalize_emocions(emocions: list[str]) -> list[str]:
+    """Normalitza les etiquetes d'emocions retornades per Gemini.
+
+    Es detecten variants i faltes d'ortografia comunes per tornar
+    sempre un conjunt d'emocions canòniques com 'happy' o 'neutral'.
+    """
+    mapping = {
+        "happy": ["happy", "felic", "feliz", "content", "alegre"],
+        "angry": ["angry", "enfadat", "rabia", "furios", "enojat"],
+        "sad": ["sad", "trist", "depressiu", "deprimit"],
+        "surprised": ["surprised", "sorpres", "sorpresa", "astorat"],
+        "scared": ["scared", "por", "espantat", "temor"],
+        "disgusted": ["disgusted", "fastig", "asco", "asquejat"],
+        "sleepy": ["sleepy", "adormit", "cansat", "son", "fatigat"],
+        "neutral": ["neutral", "neutralitat", "netral", "sense emocio", "cap emocio"],
+    }
+
+    resultat = set()
+    for emo in emocions:
+        e = emo.lower().strip()
+        trobat = False
+        for canonic, variants in mapping.items():
+            if any(e.startswith(v) or v in e for v in variants):
+                resultat.add(canonic)
+                trobat = True
+                break
+        if not trobat:
+            resultat.add(e)
+    return list(resultat)

@@ -20,12 +20,12 @@ class RobotCamera:
         self.picam2.start()
 
         self.face_cascade = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
-        self.face_cascade_alt = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt.xml")
+        #self.face_cascade_alt = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt.xml")
         self.eye_cascade = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_eye.xml")
-        self.eye_glasses = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_eye_tree_eyeglasses.xml")
+        #self.eye_glasses = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_eye_tree_eyeglasses.xml")
         self.smile_cascade = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_smile.xml")
-        self.cars = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcaschaarcascade_carade_smile.xml")
-        self.fullbody = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_fullbody.xml")
+        #self.cars = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_car.xml")
+        #self.fullbody = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_fullbody.xml")
 
     def capture_frame(self):
         """Capture a single frame from the camera."""
@@ -92,9 +92,9 @@ class RobotCamera:
                     print("📡 Connectat al servidor")
                     while True:
                         frame = self.capture_frame()
-                        #frame = self.detect_faces(frame)
-                        frame = self.detecte_cars(frame)
-                        frame = self.detect_fullbody(frame)
+                        frame = self.detect_faces(frame)
+                        #frame = self.detecte_cars(frame)
+                        #frame = self.detect_fullbody(frame)
                         _, jpeg = cv2.imencode(".jpg", frame)
                         await websocket.send(jpeg.tobytes())
                         await asyncio.sleep(1 / self.fps)

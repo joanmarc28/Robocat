@@ -26,9 +26,12 @@ class PoliceBehavior:
         similarity = matches / len(plate1)
         return similarity >= self.similarity_threshold
 
-    def detect_license_plate(self):
+    def detect_license_plate(self, state="patrol", duration=3):
 
-        """try:
+        t_inici = time.time()
+        while time.time() - t_inici < duration:
+            displays_show_frames(state)
+        try:
             frame = self.camera.capture()
             car = PlateDetection.detect_car(frame)
             plate = PlateDetection.detect_plate(car)
@@ -56,7 +59,7 @@ class PoliceBehavior:
                 return None
         except Exception as e:
             print(f"[ERROR] Error en la detecció de matrícula: {e}")
-            return None"""
+            return None
 
     def reportar_infraccio(self):
         """Envia una imatge a la web per detectar infracció i guardar-la si s’escau."""
@@ -80,7 +83,7 @@ class PoliceBehavior:
                 print(f"[POLICE] 🚫 Infracció: {data.get('infraccio', 'Cap')}")
                 return data
             else:
-                print(f"[ERROR] No s’ha pogut reportar la infracció: {res.status_code} - {res.text}")
+                print(f"[ERROR] No sha pogut reportar la infracció: {res.status_code} - {res.text}")
                 return None
         except Exception as e:
             print(f"[ERROR] Fallo reportant la infracció: {e}")

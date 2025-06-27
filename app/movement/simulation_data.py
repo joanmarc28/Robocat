@@ -142,7 +142,7 @@ sit_sequence = {
 
 # Define the walk states
 walk_states = {
-    "start" : [ ( 'u', 4, 'l'), ('center_down',[1,3],'l'),( 'f', 4, 'l'),
+    "start" : [ ( 'u', 4, 'l'),( 'f', 4, 'l'),
                 ( 'f', 0, 'p'), ( 'f', 4, 'l'), ( 'f', 3, 'p')
     ],
     "cycle" : [ ('ff', 1, 'p'), ( 'f', 4, 'l'), ('ff', 2, 'p'), 

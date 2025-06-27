@@ -318,18 +318,33 @@ def sweep_servo(index, delay=0.01):
         servos[index].angle = angle
         time.sleep(delay)
 
-def mou_cap(index=15, inici=30, pic=90, final=90, duracio=0.8, passos=40):
-    if not (0 <= index < len(servos)):
-        raise ValueError("Index de servo fora de rang.")
+def mou_cap(index=15, temps_gir=0.4, pausa=0.2, intensitat=30):
+    """
+    Mou un servo de 360° des de posició aturada cap a dreta i esquerra.
 
-    def interpolar(ang1, ang2):
-        pas = (ang2 - ang1) / passos
-        return [ang1 + i * pas for i in range(passos + 1)]
+    - intensitat: valor entre 0 i 90 (es suma/resta a 90)
+      Ex: intensitat=30 → 120 dreta, 60 esquerra
+    """
+    # DRETA
+    servos[index].angle = 94 + intensitat
+    time.sleep(temps_gir)
+    servos[index].angle = 94
+    time.sleep(pausa)
 
-    angles = interpolar(inici, pic) + interpolar(pic, final)[1:]  # Evita duplicar el pic
-    delay = duracio / len(angles)
+    # ESQUERRA
+    servos[index].angle = 94 - intensitat
+    time.sleep(temps_gir)
+    servos[index].angle = 94
+    time.sleep(pausa)
 
-    for angle in angles:
-        servos[index].angle = max(0, min(180, angle))
-        time.sleep(delay)
 
+def test_aturada(servo = servos[15]):
+    print("Buscant el punt d’aturada...")
+    for angle in range(85, 96):  # Prova valors entre 85 i 95
+        servo.angle = angle
+        print(f"Provat angle: {angle}")
+        time.sleep(1)
+        servo.angle = 94  # pausa entre intents
+        time.sleep(0.3)
+
+servos[15].angle = 94  # pausa entre intents

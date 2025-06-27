@@ -15,7 +15,7 @@ class Agent:
         self.camera = camera
         self.time = time
         self.frequencia = frenquencia
-        self.human = HumanBehavior(self.speaker)
+        self.human = HumanBehavior(self.speaker, self.camera)
         self.police = PoliceBehavior(self.speaker, self.camera)
 
         self.running = True
@@ -67,8 +67,9 @@ class Agent:
         print(f"Executant: mode={self.mode}, submode={self.submode}")
         if self.mode == "human":
             self.human.express_emotion(self.submode)
+            self.human.express_emotion(self.submode)
         elif self.mode == "police":
-            if self.submode == "default":
+            if self.submode == "patrol":
                 self.police.detect_license_plate()
             else:
                 print(f"Submode policial desconegut: {self.submode}")
@@ -91,7 +92,7 @@ class Agent:
             self.set_submode("patrol")
         elif "matrícula" in text or "detectar" in text:
             self.set_mode("police")
-            self.set_submode("detect")
+            self.set_submode("patrol")
         else:
             print(f"❓ No s’ha reconegut cap acció clara a partir del text: {text}")
             if self.speaker:
