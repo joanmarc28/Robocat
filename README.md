@@ -232,12 +232,12 @@ Authorized officers can access a control interface to monitor and manage RoboCat
 In addition, officers can manage regulated parking areas through the Parking Zone Management page, where new parking zones can be defined by specifying latitude and longitude boundaries.
 Officers also have access to the Infraction Database, where they can review all detected violations, manually validate or dismiss possible infractions, and issue fines when necessary.
 <p>
-  <a href="https://www.youtube.com/watch?v=kHLnomrDODU&list=PLP0Ndo1AxG9UajWCznbSL83sL6zrcKtt4&index=3" target="_blank">
-    <img src="https://img.youtube.com/vi/kHLnomrDODU/hqdefault.jpg" alt="Miniatura del vídeo" width="300">
+  <a href="https://www.youtube.com/watch?v=kHLnomrDODU" target="_blank">
+    <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_patrol/RoboCat_PoliceAPP_miniatura.png" alt="Miniatura del vídeo" width="300">
   </a>
 </p>
 <p>
-  <a href="https://www.youtube.com/watch?v=kHLnomrDODU&list=PLP0Ndo1AxG9UajWCznbSL83sL6zrcKtt4&index=3" target="_blank">
+  <a href="https://www.youtube.com/watch?v=kHLnomrDODU" target="_blank">
     View Video on YouTube
   </a>
 </p>
@@ -252,12 +252,12 @@ Registered users can manage their vehicles and parking sessions through the web 
 If a vehicle is parked without a valid registration in a regulated area and RoboCat scans its license plate, an infraction is automatically recorded. The system notifies the vehicle owner of the violation and provides the fine details.
 
 <p>
-  <a href="https://www.youtube.com/watch?v=OOTuV0h7_Dc&list=PLP0Ndo1AxG9UajWCznbSL83sL6zrcKtt4&index=2" target="_blank">
-    <img src="https://img.youtube.com/vi/OOTuV0h7_Dc/hqdefault.jpg" alt="Miniatura del vídeo" width="300">
+  <a href="https://www.youtube.com/watch?v=OOTuV0h7_Dc" target="_blank">
+    <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/RoboCat_CarPay_miniatura.png" alt="Miniatura del vídeo" width="300">
   </a>
 </p>
 <p>
-  <a href="https://www.youtube.com/watch?v=OOTuV0h7_Dc&list=PLP0Ndo1AxG9UajWCznbSL83sL6zrcKtt4&index=2" target="_blank">
+  <a href="https://www.youtube.com/watch?v=OOTuV0h7_Dc" target="_blank">
     View Video on YouTube
   </a>
 </p>
