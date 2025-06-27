@@ -115,7 +115,7 @@ def normalize_emocions(emocions: list[str]) -> list[str]:
         "scared": ["scared", "por", "espantat", "temor"],
         "disgusted": ["disgusted", "fastig", "asco", "asquejat"],
         "sleepy": ["sleepy", "adormit", "cansat", "son", "fatigat"],
-        "neutral": ["neutral", "neutralitat", "netral", "sense emocio", "cap emocio"],
+        "default": ["neutral", "neutralitat", "netral", "sense emocio", "cap emocio"],
     }
 
     resultat = set()

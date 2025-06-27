@@ -40,7 +40,6 @@ class Agent:
 
             # Limita la freqüència d'acció (ex: cada 5s)
             if now - self.last_action_time >= self.frequencia:
-                self._execute_mode()
 
                 self.last_action_time = now
 
@@ -50,7 +49,9 @@ class Agent:
                 t_speak = threading.Thread(target=speak)
                 t_speak.start()
                 t_speak.join()
-                            
+
+                self._execute_mode()
+         
             if self.mode == "human":
                 self.time = 0.1  # Més ràpid per a interaccions humanes
                 self.frequencia = 5  # Accions humanes més freqüents
