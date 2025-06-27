@@ -50,9 +50,14 @@ The project's main goals are to:
   - Demonstrate the application of robotics in real-world city environments
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walking_uni.gif" alt="RoboCat Logo" width="500">
-  
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/eyes_head.gif" alt="RoboCat Logo" width="240">
+  <a href="https://www.youtube.com/watch?v=SMAzvaqW83E" target="_blank">
+    <img src="https://img.youtube.com/vi/SMAzvaqW83E/hqdefault.jpg" alt="Miniatura del vídeo" width="600">
+  </a>
+</p>
+<p>
+  <a href="https://www.youtube.com/watch?v=SMAzvaqW83E" target="_blank">
+    View Video on YouTube
+  </a>
 </p>
   
 # How to use
@@ -210,11 +215,11 @@ Currently, RoboCat supports the following pre-programmed movement modes using in
  | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walk_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/sit_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/paw_ani.gif" width="300"> |
 
 ## Web Application
-The RoboCat system relies on a centralized relational database designed to securely manage all operational data. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
+The RoboCat system relies on a centralized relational database designed to manage all operational data securely. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
 
-Below are the entity-relationship and model view diagrams representing the main structure of the database:
 
-<div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="800"> </div><br>
+
+<div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/app/diagrama.png" width="800"> </div><br>
 As we can see, the web application includes two user profiles.
 
 ### Police Officer
@@ -226,6 +231,16 @@ Authorized officers can access a control interface to monitor and manage RoboCat
 
 In addition, officers can manage regulated parking areas through the Parking Zone Management page, where new parking zones can be defined by specifying latitude and longitude boundaries.
 Officers also have access to the Infraction Database, where they can review all detected violations, manually validate or dismiss possible infractions, and issue fines when necessary.
+<p>
+  <a href="https://www.youtube.com/watch?v=kHLnomrDODU&list=PLP0Ndo1AxG9UajWCznbSL83sL6zrcKtt4&index=3" target="_blank">
+    <img src="https://img.youtube.com/vi/kHLnomrDODU/hqdefault.jpg" alt="Miniatura del vídeo" width="300">
+  </a>
+</p>
+<p>
+  <a href="https://www.youtube.com/watch?v=kHLnomrDODU&list=PLP0Ndo1AxG9UajWCznbSL83sL6zrcKtt4&index=3" target="_blank">
+    View Video on YouTube
+  </a>
+</p>
 
 ### Client (Vehicle Owner)
 
@@ -235,6 +250,17 @@ Registered users can manage their vehicles and parking sessions through the web 
 - Active parking sessions are displayed on the main dashboard with a countdown timer showing the remaining time.
 
 If a vehicle is parked without a valid registration in a regulated area and RoboCat scans its license plate, an infraction is automatically recorded. The system notifies the vehicle owner of the violation and provides the fine details.
+
+<p>
+  <a href="https://www.youtube.com/watch?v=OOTuV0h7_Dc&list=PLP0Ndo1AxG9UajWCznbSL83sL6zrcKtt4&index=2" target="_blank">
+    <img src="https://img.youtube.com/vi/OOTuV0h7_Dc/hqdefault.jpg" alt="Miniatura del vídeo" width="300">
+  </a>
+</p>
+<p>
+  <a href="https://www.youtube.com/watch?v=OOTuV0h7_Dc&list=PLP0Ndo1AxG9UajWCznbSL83sL6zrcKtt4&index=2" target="_blank">
+    View Video on YouTube
+  </a>
+</p>
 
 # Tech Stack
 ### Programming & AI
@@ -330,10 +356,11 @@ Special thanks to:
 <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walking_uni.gif" alt="RoboCat Logo" width="480"> 
 <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/spread_legged.jpeg" alt="RoboCat Logo" width="300">
 <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/stretch.jpeg" alt="RoboCat Logo" width="450">
-  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/eyes_head.gif" alt="RoboCat Logo" width="270">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/eyes_head.gif" alt="RoboCat Logo" width="270">
 <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/legs_assembly.jpeg" alt="RoboCat Logo" width="310">
 <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/legs_testing.gif" alt="RoboCat Logo" width="400">
 <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/poser.jpeg" alt="RoboCat Logo" width="400">
 <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/first_body.jpeg" alt="RoboCat Logo" width="400">
-<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/pcb.jpeg" alt="RoboCat Logo" width="350">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/pcb.jpeg" alt="RoboCat Logo" width="370">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/chassis_print.jpeg" alt="RoboCat Logo" width="280">
 </p>
