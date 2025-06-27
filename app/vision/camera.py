@@ -18,6 +18,7 @@ class RobotCamera:
         self.picam2 = Picamera2()
         self.picam2.configure(self.picam2.create_video_configuration(main={"size": (width, height)}))
         self.picam2.start()
+        self._overlay_boxes = []
 
         self.face_cascade = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml")
         #self.face_cascade_alt = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt.xml")
@@ -26,6 +27,17 @@ class RobotCamera:
         self.smile_cascade = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_smile.xml")
         #self.cars = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_car.xml")
         #self.fullbody = cv2.CascadeClassifier("/usr/share/opencv4/haarcascades/haarcascade_fullbody.xml")
+
+    def add_overlay_box(self, box, label=None, color=(0, 255, 0)):
+        """Add a bounding box to be drawn on the next streamed frame."""
+        self._overlay_boxes.append((box, label, color))
+
+    def _draw_overlays(self, frame):
+        for (x1, y1, x2, y2), label, color in self._overlay_boxes:
+            cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+            if label:
+                cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+        self._overlay_boxes.clear()
 
     def capture_frame(self):
         """Capture a single frame from the camera."""
@@ -95,6 +107,7 @@ class RobotCamera:
                         frame = self.detect_faces(frame)
                         #frame = self.detecte_cars(frame)
                         #frame = self.detect_fullbody(frame)
+                        self._draw_overlays(frame)
                         _, jpeg = cv2.imencode(".jpg", frame)
                         await websocket.send(jpeg.tobytes())
                         await asyncio.sleep(1 / self.fps)

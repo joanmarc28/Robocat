@@ -113,7 +113,7 @@ def displays_message(text):
     display_right.display_message(text)
 
 def displays_show_frames(carpeta_frames, eye_delay=config.EYE_DELAY):
-    if display_left is not None or display_right is not None:
+    if display_left is not None and display_right is not None:
         # Crear i iniciar els fils per cada pantalla
         thread_left = threading.Thread(target=display_left.show_frames, args=(carpeta_frames, "left", eye_delay), daemon=True)
         thread_right = threading.Thread(target=display_right.show_frames, args=(carpeta_frames, "right", eye_delay), daemon=True)

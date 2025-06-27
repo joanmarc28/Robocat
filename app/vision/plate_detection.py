@@ -114,7 +114,9 @@ class PlateDetection:
         cnn.save(PATH+"/app/assets/models/cnn_plate.keras", save_format="keras")
 
     #funcions de deteccio
-    def detect_car(frame):
+    def detect_car(frame, camera=None):
+        """Detect a car in ``frame``. If ``camera`` is provided, draw the
+        detected box on the next streamed frame."""
         logger.info("Detectant cotxe...")
         model = YOLO(PATH+"/app/assets/yolo/car_model/runs/train_fast/yolov8n_cotxes/weights/best.pt")
         results = model.predict(frame, save=True, imgsz=416)  # 0 -> gpu, "cpu" -> cpu
@@ -122,27 +124,38 @@ class PlateDetection:
             for result in results:
                 if result.boxes:
                     logger.info("Cotxe detectat")
-                    car = PlateDetection.crop(result, frame)
-                    return car
+                    box = result.boxes[0]
+                    x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
+                    if camera is not None:
+                        camera.add_overlay_box((x1, y1, x2, y2), label="car")
+                    car = frame[y1:y2, x1:x2]
+                    return car, (x1, y1, x2, y2)
         logger.info("No s'ha detectat cap cotxe")
-        return None
+        return None, None
 
-    def detect_plate(car):
+    def detect_plate(car, car_bbox=None, camera=None):
+        """Detect a licence plate inside ``car`` image. ``car_bbox`` should be
+        the bounding box of the car relative to the original frame so the plate
+        box can be drawn correctly."""
         model = YOLO(PATH+"/app/assets/yolo/plate_model/runs/train_fast/yolov8n_plates4/weights/best.pt")
         results = model.predict(car, save=True, imgsz=416)
         if results:
             for result in results:
                 if result.boxes:
-                    plate = PlateDetection.crop(result, car)
+                    box = result.boxes[0]
+                    px1, py1, px2, py2 = map(int, box.xyxy[0].tolist())
+                    if camera is not None and car_bbox is not None:
+                        cx1, cy1, _, _ = car_bbox
+                        camera.add_overlay_box((cx1 + px1, cy1 + py1, cx1 + px2, cy1 + py2), label="plate", color=(0, 0, 255))
+                    plate = car[py1:py2, px1:px2]
                     if plate is not None:
                         logger.info("Matrícula detectada")
-                        #retalla la part de nacionalitat si es troba blau
-                        only_plate = PlateDetection.crop_nationality(plate) 
-                        return only_plate
+                        only_plate = PlateDetection.crop_nationality(plate)
+                        return only_plate, (px1, py1, px2, py2)
                     else:
                         logger.warning("No s'ha pogut retallar la matrícula")
-                        return None
-        return None
+                        return None, None
+        return None, None
 
     def detect_ocr(plate):
         logger.info("Llegint text de la matrícula...")

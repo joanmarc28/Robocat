@@ -33,33 +33,30 @@ class PoliceBehavior:
             displays_show_frames(state)
         try:
             frame = self.camera.capture()
-            car = PlateDetection.detect_car(frame)
-            plate = PlateDetection.detect_plate(car)
+            car, car_box = PlateDetection.detect_car(frame, camera=self.camera)
+            if car is None:
+                return None
 
+            plate, _ = PlateDetection.detect_plate(car, car_bbox=car_box, camera=self.camera)
             if plate is not None:
-                #plate_text, _, _ = PlateDetection.detect_ocr(plate)
                 data = self.reportar_infraccio()
                 plate_text = data.get('matricules', [None])[0] if data else None
-                # Comprovem similitud amb les últimes detectades
+
                 for previous_plate in self.detected_plates:
                     if self.plates_are_similar(plate_text, previous_plate):
                         print(f"[POLICE] Matrícula similar detectada ({plate_text}), s'ignora la detecció.")
-                        return None  # Matrícula molt semblant, probablement és la mateixa
+                        return None
 
-                # Si no és similar a cap, la guardem com a nova
                 print(f"[POLICE] Nova matrícula detectada: {plate_text}")
                 self.detected_plates.append(plate_text)
-                
-                # Limitem la mida de l'array
                 if len(self.detected_plates) > self.max_plates_stored:
                     self.detected_plates.pop(0)
-                # Retornem la matrícula detectada
                 return plate_text
-            else:
-                return None
+            return None
         except Exception as e:
             print(f"[ERROR] Error en la detecció de matrícula: {e}")
             return None
+        
 
     def reportar_infraccio(self):
         """Envia una imatge a la web per detectar infracció i guardar-la si s’escau."""

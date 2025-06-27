@@ -224,12 +224,15 @@ def main():
             elif accio == "angry":
                 agent.set_mode("human")
                 agent.set_submode("angry")
-                #mou_cap()
+            elif accio == "human":
+                agent.set_mode("human")
+            elif accio == "police":
+                agent.set_mode("police")
 
             elif accio == "patrol":
                 #Provisional
                 agent.set_mode("police")
-                agent.set_submode("patrol")
+                agent.set_submode("default")
                 
             elif accio == "demo":
                 agent.set_mode("human")

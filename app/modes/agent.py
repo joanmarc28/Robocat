@@ -41,6 +41,7 @@ class Agent:
             # Limita la freqüència d'acció (ex: cada 5s)
             if now - self.last_action_time >= self.frequencia:
                 self._execute_mode()
+
                 self.last_action_time = now
 
                 def speak():
@@ -54,7 +55,7 @@ class Agent:
                 self.time = 0.1  # Més ràpid per a interaccions humanes
                 self.frequencia = 5  # Accions humanes més freqüents
             elif self.mode == "police":
-                self.time = 0.1  # Més lent per a accions policialsç
+                self.time = 0.1  # Més lent per a accions policials
                 self.frequencia = 10  # Accions policials menys freqüents
 
             time.sleep(self.time)  # Redueix ús de CPU
@@ -67,33 +68,11 @@ class Agent:
         print(f"Executant: mode={self.mode}, submode={self.submode}")
         if self.mode == "human":
             self.human.express_emotion(self.submode)
-            self.human.express_emotion(self.submode)
+            emocions,analisis = self.human.analitza_emocions()
+            self.human.process_emocions(emocions)
         elif self.mode == "police":
-            if self.submode == "patrol":
+            if self.submode == "default":
                 self.police.detect_license_plate()
             else:
                 print(f"Submode policial desconegut: {self.submode}")
 
-    def handle_gemini_response(self, text: str):
-        text = text.lower()
-
-        # ✅ Exemple de mapping
-        if "emocionat" in text or "content" in text:
-            self.set_mode("human")
-            self.set_submode("happy")
-        elif "trist" in text:
-            self.set_mode("human")
-            self.set_submode("sad")
-        elif "enfadat" in text:
-            self.set_mode("human")
-            self.set_submode("angry")
-        elif "patrulla" in text:
-            self.set_mode("human")
-            self.set_submode("patrol")
-        elif "matrícula" in text or "detectar" in text:
-            self.set_mode("police")
-            self.set_submode("patrol")
-        else:
-            print(f"❓ No s’ha reconegut cap acció clara a partir del text: {text}")
-            if self.speaker:
-                self.speaker.say_text("Ho pots repetir? No sé què vols que faci.")
