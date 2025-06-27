@@ -41,7 +41,7 @@
 # What is RoboCat?
 
 RoboCat is an autonomous quadruped robot designed to patrol public streets and monitor parking zones regulated by payment. Its structure and external appearance are inspired by a cat's shape, making it functional but also friendly and approachable for pedestrians.
-Equipped with sensors, cameras and onboard computing, RoboCat can detect whether a parked vehicle has an active parking permit or not, combining robotics, computer vision and real-time data processing to offer a smart, mobile solution for urban mobility enforcement.
+Equipped with sensors, cameras and onboard computing, RoboCat can detect whether a parked vehicle has an active parking permit, combining robotics, computer vision and real-time data processing to offer a smart, mobile solution for urban mobility enforcement.
 
 The project's main goals are to:
   - Automate parking control in regulated areas
@@ -49,6 +49,17 @@ The project's main goals are to:
   - Integrate urban robotics with a friendly and non-threatening design
   - Demonstrate the application of robotics in real-world city environments
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=SMAzvaqW83E" target="_blank">
+    <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/app/RoboCat_miniatura.png" alt="Miniatura del vídeo" width="600">
+  </a>
+</p>
+<p>
+  <a href="https://www.youtube.com/watch?v=SMAzvaqW83E" target="_blank">
+    View Video on YouTube
+  </a>
+</p>
+  
 # How to use
 
 To set up and run RoboCat on your system, follow these simple steps:
@@ -82,7 +93,7 @@ Now you can just enjoy!
 
 ## Hardware 
 
-The RoboCat prototype integrates various electronic modules connected to the Raspberry Pi 4, which serves as the central processing unit.
+The RoboCat prototype integrates various electronic modules connected to the Raspberry Pi 4, which is the central processing unit.
 
 ### Required components
 | Component | Model | Units |
@@ -159,14 +170,26 @@ The RoboCat software is composed of three main components:
 ## License Plate Detection Algorithm
 RoboCat integrates a computer vision system that operates in three phases to detect and process license plates:
 #### 1. Vehicle Detection
-Using YOLOv8n object detection model, RoboCat identifies vehicles present in its field of vision. Specifically, the system is trained to detect only conventional passenger cars, which is the only object class configured in the YOLO model for this detection task. This selective approach ensures optimized performance and reduces false positives from unrelated objects.
+Using YOLOv8n object detection model, RoboCat identifies vehicles present in its field of vision. Specifically, the system is trained to detect only conventional passenger cars, the only object class configured in the YOLO model for this detection task. This selective approach ensures optimized performance and reduces false positives from unrelated objects.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/car detection.jpeg" alt="Car detection" width="350">  
+</p>
 
 #### 2. License Plate Detection
-Once a vehicle is detected, a second YOLOv8n model is used to accurately locate the license plate area. The system also detects and extracts the nationality region by identifying the blue section commonly present on Spanish license plates. Since our project only focuses on Spanish license plates, the blue section is cropped for further processing.
+Once a vehicle is detected, a second YOLOv8n model is used to locate the license plate area accurately. The system also detects and extracts the nationality region by identifying the blue section commonly present on Spanish license plates. Since our project only focuses on Spanish license plates, the blue section is cropped for further processing.
+
+<p align="center">
+  <img align="middle" src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/license detection.jpeg" alt="plate detection" width="350">&nbsp;&nbsp;&nbsp;&nbsp;<img align="middle" src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/license cut.png" alt="cutted plate" width="250">
+</p>
 
 #### 3. Optical Character Recognition (OCR)
 For text extraction from license plates, RoboCat uses Gemini AI, a multimodal system capable of performing OCR tasks with high accuracy, eliminating the need for manual character segmentation and traditional CNN-based recognition.
-However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassifications.
+However, the project includes a complete implementation of an OCR system based on a TensorFlow Convolutional Neural Network (CNN), which can serve as a backup or for research purposes. This CNN model performs character segmentation, individual recognition, and post-processing to ensure compliance with the Spanish license plate format (e.g., 1234 BCD), including correction mechanisms to mitigate common character misclassification.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/matricula.png" alt="Character identification" width="550">  
+</p>
 
 ## Inverse Kinematics for Walking
 <table style="border: none;" >
@@ -192,11 +215,9 @@ Currently, RoboCat supports the following pre-programmed movement modes using in
  | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walk_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/sit_ani.gif" width="300"> | <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/paw_ani.gif" width="300"> |
 
 ## Web Application
-The RoboCat system relies on a centralized relational database designed to securely manage all operational data. The database includes dedicated tables for user profiles, vehicles, parking zones, parking sessions, infractions, and RoboCat units.
+The RoboCat system is built on a layered software architecture that separates concerns across user interaction, server-side processing, and robot-level execution. This structured approach enhances modularity, scalability, and maintainability while enabling seamless coordination between autonomous robotic units and central control. The following diagram illustrates the core components and responsibilities distributed across the User, Server, and Robot levels.
 
-Below are the entity-relationship and model view diagrams representing the main structure of the database:
-
-<div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/bd/bd_entity_relation.png" width="800"> </div><br>
+<div align="center"><img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/app/diagrama.png" width="800"> </div><br>
 As we can see, the web application includes two user profiles.
 
 ### Police Officer
@@ -208,6 +229,16 @@ Authorized officers can access a control interface to monitor and manage RoboCat
 
 In addition, officers can manage regulated parking areas through the Parking Zone Management page, where new parking zones can be defined by specifying latitude and longitude boundaries.
 Officers also have access to the Infraction Database, where they can review all detected violations, manually validate or dismiss possible infractions, and issue fines when necessary.
+<p>
+  <a href="https://www.youtube.com/watch?v=kHLnomrDODU" target="_blank">
+    <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_patrol/RoboCat_PoliceAPP_miniatura.png" alt="Miniatura del vídeo" width="300">
+  </a>
+</p>
+<p>
+  <a href="https://www.youtube.com/watch?v=kHLnomrDODU" target="_blank">
+    View Video on YouTube
+  </a>
+</p>
 
 ### Client (Vehicle Owner)
 
@@ -217,6 +248,17 @@ Registered users can manage their vehicles and parking sessions through the web 
 - Active parking sessions are displayed on the main dashboard with a countdown timer showing the remaining time.
 
 If a vehicle is parked without a valid registration in a regulated area and RoboCat scans its license plate, an infraction is automatically recorded. The system notifies the vehicle owner of the violation and provides the fine details.
+
+<p>
+  <a href="https://www.youtube.com/watch?v=OOTuV0h7_Dc" target="_blank">
+    <img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/web_parking/RoboCat_CarPay_miniatura.png" alt="Miniatura del vídeo" width="300">
+  </a>
+</p>
+<p>
+  <a href="https://www.youtube.com/watch?v=OOTuV0h7_Dc" target="_blank">
+    View Video on YouTube
+  </a>
+</p>
 
 # Tech Stack
 ### Programming & AI
@@ -304,7 +346,19 @@ However, feel free to fork the repository and experiment with it for learning an
 </table>
 
 Special thanks to:
-- **Pau Bofill** for collaborating with the license plate detection algorithm and make it possible.
-- **Marc Bardeli** for colaborating with the web application implementation.
+- **Pau Bofill** for collaborating with the license plate detection algorithm and making it possible.
+- **Marc Bardeli** for collaborating with the web application implementation.
 
 # Gallery
+<p align>
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/walking_uni.gif" alt="RoboCat Logo" width="480"> 
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/spread_legged.jpeg" alt="RoboCat Logo" width="300">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/stretch.jpeg" alt="RoboCat Logo" width="450">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/eyes_head.gif" alt="RoboCat Logo" width="270">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/legs_assembly.jpeg" alt="RoboCat Logo" width="310">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/legs_testing.gif" alt="RoboCat Logo" width="400">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/poser.jpeg" alt="RoboCat Logo" width="400">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/first_body.jpeg" alt="RoboCat Logo" width="400">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/pcb.jpeg" alt="RoboCat Logo" width="370">
+<img src="https://raw.githubusercontent.com/joanmarc28/Robocat/main/gallery/chassis_print.jpeg" alt="RoboCat Logo" width="280">
+</p>
