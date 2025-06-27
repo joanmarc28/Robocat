@@ -1,3 +1,4 @@
+import config
 import speech_recognition as sr
 import requests
 import time
@@ -14,7 +15,7 @@ os.environ["ALSA_CARD"] = "default"
 os.environ["SDL_AUDIODRIVER"] = "dsp"
 
 class Micro:
-    """    def __init__(self, agent: Agent = None, wake_word="hola", language="ca-ES",
+    def __init__(self, agent: Agent = None, wake_word="hola", language="ca-ES",
                  device_index=None, debug=True, log_file="logs/micro.log"):
         self.agent = agent
         self.wake_word = wake_word.lower()
@@ -75,7 +76,7 @@ class Micro:
         self.logger.info(f"SAY: {text}")
 
     def send_to_gemini(self, text):
-        url = "https://your-google-cloud-endpoint.com/chat"
+        url = f"https://{config.SERVER_IP}/chat"
         try:
             response = requests.post(url, json={"text": text})
             reply = response.json().get("response", None)
@@ -146,13 +147,16 @@ class Micro:
                 t_speak = threading.Thread(target=speak)
                 t_speak.start()
                 # Aquí pots activar Gemini si vols
-                # command = self.listen_once(timeout=7, phrase_time_limit=6)
-                # if command:
-                #     response = self.send_to_gemini(command)
-                #     self.say(response or "Sorry, I didn't understand.")
-                #     if self.agent:
-                #         self.agent.handle_gemini_response(response or "")
-                # else:
-                #     self.say("Can you repeat, please?")
+                '''
+                command = self.listen_once(timeout=7, phrase_time_limit=6)
+                if command:
+                    response = self.send_to_gemini(command)
+                    print(f"Resposta de Gemini: {response}")
+                    self.say(response or "Sorry, I didn't understand.")
+                    if self.agent:
+                        self.agent.handle_gemini_response(response or "")
+                    else:
+                        self.say("Can you repeat, please?")
+                '''
 
-            time.sleep(0.3)"""
+            time.sleep(0.3)
