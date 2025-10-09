@@ -1,6 +1,5 @@
 # main.py
 import threading
-"""from app.vision.old_cameraweb import send_frames"""
 from modes.agent import Agent
 from interface.speaker import Speaker
 from sensors.accelerometre import ModulAccelerometer
@@ -17,9 +16,7 @@ import asyncio
 import websockets
 import json
 from movement.simulation_data import *
-#from vision.slam import start_autonomous_slam
 from queue import Queue
-from interface.micro import Micro  # el fitxer on tens la classe de veu
 from utils.loggers import setup_logging
 
 estructura = None
@@ -32,7 +29,7 @@ slam_controller = None
 # Configure logging to file
 setup_logging()
 #
-def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None, micro:Micro = None):
+def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None):
     clear_displays()
     temps = 0.5
     displays_message("Loading Robocat ........")
@@ -94,14 +91,6 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
         sensors_status["speaker"] = False
     time.sleep(temps)
 
-    if micro:
-        displays_message(f"  Micro ..... ok")
-        sensors_status["micro"] = True
-    else:
-        displays_message(f"  Micro ..... Not Found")
-        sensors_status["micro"] = False
-    time.sleep(temps)
-
     if errors == 0:
         displays_message(f"All Systems Ready")
         time.sleep(temps)
@@ -128,13 +117,6 @@ def main():
     except Exception as e:
         print(f"[ERROR] Motors: {e}")
         agent = None
-        
-    try:
-        """micro = Micro(agent=agent, device_index=2)"""
-        micro = None
-    except Exception as e:
-        print(f"[ERROR] Motors: {e}")
-        micro = None
 
     try:
         ultrasons = ModulUltrasons()
@@ -155,7 +137,7 @@ def main():
         accelerometre = None
 
     if start_displays():
-        if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker,micro):
+        if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker):
             print("Errors crítics detectats. Aturant el sistema.")
             return
 
@@ -175,10 +157,6 @@ def main():
 
     if accelerometre:
         threading.Thread(target=accelerometre.thread, daemon=True).start()
-
-    if micro:
-        threading.Thread(target=micro.run, daemon=True).start()
-
 
     config.SESSION_TOKEN = get_session_token()
     print("🔐 Sessió iniciada amb token:", config.SESSION_TOKEN)
