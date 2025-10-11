@@ -257,12 +257,6 @@ def main():
                 time.sleep(10)
                 estructura.follow_sequance(rot_states, cycles=6, t=0.8)
 
-            elif accio == "autonom":
-                """if slam_controller is None:
-                    try:
-                        slam_controller = start_autonomous_slam()
-                    except Exception as e:
-                        print(f"[ERROR] Autonomous SLAM: {e}")"""
         except Exception as e:
             print(f"[ERROR] Executant acció '{accio}': {e}")
         moviment_queue.task_done()
