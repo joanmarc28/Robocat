@@ -5,8 +5,7 @@ import base64
 import json
 import cv2
 import requests
-import time
-from typing import Any, Dict, List, Tuple, TypedDict
+from typing import Any, Dict, List, Tuple
 
 from movement.motors import EstructuraPotes
 from interface.display import clear_displays, displays_show_frames
@@ -15,6 +14,37 @@ from vision.camera import RobotCamera
 import config
 from utils.helpers import normalize_emocions
 from movement.simulation_data import *
+
+# --- helpers de coerció (eviten 500 i sorpreses del LLM) ---
+def _to_bool(x) -> bool:
+    if isinstance(x, bool):
+        return x
+    if x is None:
+        return False
+    s = str(x).strip().lower()
+    return s in {"true", "1", "yes", "si", "sí", "y", "t", "on"}
+
+def _to_float01(x) -> float:
+    try:
+        if isinstance(x, (int, float)):
+            v = float(x)
+        else:
+            s = str(x).strip().lower()
+            if s.endswith("%"):
+                v = float(s[:-1]) / 100.0
+            elif s in {"none", "null", ""}:
+                v = 0.0
+            elif s in {"low", "baixa"}:
+                v = 0.2
+            elif s in {"medium", "mitjana"}:
+                v = 0.5
+            elif s in {"high", "alta"}:
+                v = 0.8
+            else:
+                v = float(s)
+    except Exception:
+        v = 0.0
+    return max(0.0, min(1.0, v))
 
 class HumanBehavior:
     def __init__(self, speaker: Speaker = None, camera: RobotCamera = None, motors:EstructuraPotes=None):
@@ -27,88 +57,78 @@ class HumanBehavior:
         if emotion not in config.STATES:
             print(f"[HUMAN] Emoció desconeguda: {emotion}")
             return
-        if not self.speaker:
-            print("[HUMAN] Altaveu no disponible")
-            return
-
+        # Si no hi ha altaveu, igualment mostrem ulls; no sortim.
         t_inici = time.time()
         while time.time() - t_inici < duration:
             displays_show_frames(emotion)
+            time.sleep(0.03)  # cedeix CPU
 
     def determine_reaction(self, human_emotion: str, context: Dict) -> Tuple[str, List[Any]]:
         """Decideix l'emoció i les accions del gat segons l'estat humà."""
         human_emotion = human_emotion or "default"
         context = context or {}
-        aggression = bool(context.get("aggression", False))
-        attention = bool(context.get("attention", False))
-        eye_contact = bool(context.get("eye_contact", False))
-        engagement = float(context.get("engagement", 0.0) or 0.0)
+
+        # Coercions robustes
+        attention = _to_bool(context.get("attention"))
+        eye_contact = _to_bool(context.get("eye_contact"))
+        engagement = _to_float01(context.get("engagement"))
         gesture = (context.get("gesture") or "unknown").lower()
         distance = context.get("distance_m")
 
-        actions: List[Any] = []
+        # "aggression_signals" del LLM sol ser string ("none", "fist", ...).
+        aggr_raw = (context.get("aggression") or context.get("aggression_signals") or "").strip().lower()
+        aggression = aggr_raw not in {"", "none", "no", "false"}
 
         # Situacions de tensió o agressió
         if aggression:
             #if distance is None or distance < 0.8:
                 #    actions.append(deepcopy(SEQUENCE_LIBRARY["step_back"]))
-            return "scared", actions
+            return "scared"
 
         if isinstance(distance, (int, float)) and distance < 0.4:
             #actions.append(deepcopy(SEQUENCE_LIBRARY["step_back"]))
-            return "surprised", actions
+            return "surprised"
 
         if human_emotion == "angry":
-            actions.append("body_downward")
-            return "surprised", actions
+            #actions.append("body_downward")
+            self.motors.set_position("up")
+            return "surprised"
 
         if human_emotion == "disgusted":
-            return "angry", actions
+            return "angry"
 
         if human_emotion == "scared":
-            return "surprised", actions
+            return "surprised"
 
         # Gestos o actituds amigables
         friendly_gestures = {"wave", "thumbs_up", "ok", "open_hand", "peace"}
         if gesture in friendly_gestures or (human_emotion in {"happy", "surprised"} and attention and engagement > 0.6):
             self.motors.follow_sequance(maneta_states, cycles=6, t=0.8)
-            return "happy", actions
+            return "happy"
 
         if human_emotion == "sad":
-            actions.append("body_upward")
-            return "happy", actions
+            #actions.append("body_upward")
+            return "happy"
 
         head_pose = context.get("head_pose") or {}
-        pitch = float(head_pose.get("pitch", 0.0) or 0.0)
-        yaw = float(head_pose.get("yaw", 0.0) or 0.0)
+        pitch = _to_float01(head_pose.get("pitch")) * 100  # si ve 0..1, escalam a graus
+        yaw = _to_float01(head_pose.get("yaw")) * 100
 
         if attention and eye_contact:
             if abs(pitch) > 20 or abs(yaw) > 25:
                 # Persona inclinada a prop → el gat es prepara per interactuar
                 #actions.append(deepcopy(SEQUENCE_LIBRARY["sit_soft"]))
                 self.motors.set_position("sit")
-                return "surprised", actions
-            return "surprised", actions
+                return "surprised"
+            return "surprised"
 
-        return "default", actions
+        return "default"
 
     def react_to_context(self, human_emotion: str, context: Dict | None = None) -> str:
         """Calcula i executa la resposta del gat a partir del context humà."""
-        cat_emotion, actions = self.determine_reaction(human_emotion, context or {})
+        cat_emotion = self.determine_reaction(human_emotion, context or {})
         self.express_emotion(cat_emotion)
-        self.perform_actions(actions)
         return cat_emotion
-
-    # ------------------------------------------------------------------
-    # Compatibilitat amb lògica antiga basada en emocions simples
-    # ------------------------------------------------------------------
-    def process_emocions(self, emocions: List[str]) -> str | None:
-        """Manté compatibilitat amb el flux antic que només passava emocions."""
-        if not emocions:
-            return None
-
-        human_emotion = emocions[0]
-        return self.react_to_context(human_emotion, {})
 
     # ------------------------------------------------------------------
     # Obtenció i anàlisi de dades del servidor
@@ -129,9 +149,7 @@ class HumanBehavior:
         image_base64 = base64.b64encode(jpeg.tobytes()).decode("utf-8")
 
         # 2) Llista d’emocions permeses (del teu sistema STATES o custom)
-        #    Si vols controlar l’ordre de preferència, ordena aquí.
         emotions_allowed = list(config.STATES.keys())
-        # Aconsellat: limitar a les que detectes habitualment
         # emotions_allowed = ["happy","sad","angry","surprised","scared","disgusted","neutral","sleepy"]
 
         emotions_csv = ",".join(emotions_allowed)
@@ -169,12 +187,12 @@ class HumanBehavior:
         human_emotion = emocions[0]
 
         context = {
-            "attention": bool(target.get("attention", False)),
-            "eye_contact": bool(target.get("eye_contact", False)),
+            "attention": _to_bool(target.get("attention", False)),
+            "eye_contact": _to_bool(target.get("eye_contact", False)),
             "distance_m": target.get("distance_m"),
             "gesture": target.get("hand_gesture", "unknown"),
-            "aggression": bool(target.get("aggression_signals", False)),
-            "engagement": float(target.get("engagement", 0.0) or 0.0),
+            "aggression": target.get("aggression_signals", "none"),
+            "engagement": _to_float01(target.get("engagement", 0.0)),
             "gaze": target.get("gaze_dir", "unknown"),
             "head_pose": target.get("head_pose", {}),
         }
@@ -199,4 +217,4 @@ class HumanBehavior:
             "analisi": summary,
             "reaccio": cat_emotion,
             "context": context,
-        }    
+        } 
