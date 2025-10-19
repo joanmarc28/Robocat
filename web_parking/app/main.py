@@ -27,7 +27,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")  # mont
 templates = Jinja2Templates(directory="app/templates")  # carpeta on hi ha les plantilles jinja2
 
 load_dotenv()  # carrega variables d'entorn des del fitxer .env
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "app/robocat.json"  # clau api google vision
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "app/robocat-demo-409e49897926.json"  # clau api google vision
 
 Base.metadata.create_all(bind=engine)  # crea les taules de la base de dades si no existeixen
 

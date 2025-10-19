@@ -18,16 +18,27 @@ from datetime import datetime
 import uuid
 import json
 import re
+from google.oauth2 import service_account
 
 load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")  #clau de gemini des del .env
+SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")  #clau de gemini des del .env
 
 router = APIRouter()  #creem router de fastapi
 
 class PreguntaModel(BaseModel):  #model per rebre preguntes
     pregunta: str
 
-genai.configure(api_key=api_key)  #configurem gemini amb la clau
+# Scope específic de l’API de Gemini
+SCOPES = ["https://www.googleapis.com/auth/generative-language"]
+
+# Carrega la credencial
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE,
+    scopes=SCOPES
+)
+
+# Configura Gemini amb credencials explícites
+genai.configure(credentials=credentials)
 
 @router.post("/transcripcio")  #endpoint per transcripcio de veu
 async def transcripcio(audio: UploadFile = File(...)):
