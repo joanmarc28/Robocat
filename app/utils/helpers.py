@@ -101,32 +101,59 @@ def parse_throttled_state(hex_string):
         print(f"{emoji} {key.replace('_', ' ').capitalize()}: {'YES' if value else 'NO'}")
 """
 
-def normalize_emocions(emocions: list[str]) -> list[str]:
-    """Normalitza les etiquetes d'emocions retornades per Gemini.
+import unicodedata
 
-    Es detecten variants i faltes d'ortografia comunes per tornar
-    sempre un conjunt d'emocions canòniques com 'happy' o 'neutral'.
+def normalize_emocions(emocions: list[str]) -> list[str]:
     """
+    Normalitza les etiquetes d'emocions retornades per Gemini o altres models.
+    Converteix variants, sinònims i faltes d'ortografia a un conjunt canònic.
+    """
+    # Diccionari de variants conegudes
     mapping = {
         "happy": ["happy", "felic", "feliz", "content", "alegre"],
-        "angry": ["angry", "enfadat", "rabia", "furios", "enojat"],
+        "angry": ["angry", "enfadat", "rabia", "furios", "enojat", "irritat"],
         "sad": ["sad", "trist", "depressiu", "deprimit"],
-        "surprised": ["surprised", "sorpres", "sorpresa", "astorat"],
-        "scared": ["scared", "por", "espantat", "temor"],
-        "disgusted": ["disgusted", "fastig", "asco", "asquejat"],
-        "sleepy": ["sleepy", "adormit", "cansat", "son", "fatigat"],
-        "default": ["neutral", "neutralitat", "netral", "sense emocio", "cap emocio"],
+        "surprised": ["surprised", "sorpres", "sorpresa", "astorat", "impactat"],
+        "scared": ["scared", "por", "espantat", "atemorit", "temor"],
+        "disgusted": ["disgusted", "fastig", "asco", "asquejat", "repulsio"],
+        "sleepy": ["sleepy", "adormit", "cansat", "son", "fatigat", "esgotat"],
+        "default": ["neutral", "neutralitat", "netral", "sense emocio", "cap emocio", "calmat", "tranquil"],
     }
 
     resultat = set()
+
     for emo in emocions:
-        e = emo.lower().strip()
+        # Normalitza accents i caràcters
+        e = (
+            unicodedata.normalize("NFD", emo)
+            .encode("ascii", "ignore")
+            .decode("utf-8")
+            .lower()
+            .strip()
+        )
+
+        # Si conté frases, agafem paraula clau més forta
+        if " " in e:
+            parts = [p for p in e.split() if len(p) > 2]
+            e = parts[-1] if parts else e
+
         trobat = False
         for canonic, variants in mapping.items():
-            if any(e.startswith(v) or v in e for v in variants):
-                resultat.add(canonic)
-                trobat = True
+            for v in variants:
+                if v in e:
+                    resultat.add(canonic)
+                    trobat = True
+                    break
+            if trobat:
                 break
+
         if not trobat:
+            # Si no s’ha trobat, conserva l’etiqueta neta
             resultat.add(e)
-    return list(resultat)
+
+    if not resultat:
+        return ["default"]
+
+    # Retornem en ordre fix per estabilitat
+    ordre = ["happy", "angry", "sad", "surprised", "scared", "disgusted", "sleepy", "default"]
+    return sorted(resultat, key=lambda x: ordre.index(x) if x in ordre else 999)

@@ -237,6 +237,25 @@ maneta_states["end"] = [
 
 
 
+indignat_states = {
+    "start" : [
+        ('u', 4, 'l'),
+        ('center_up', [2,3], 'l'),
+        ('center_down', [0,1], 'l'),
+        ('front_up', [2,3], 'l'),
+        ('long_front_up', [3], 'l'),
+    ],
+    "cycle" : [
+        ('agressiu_2', [1], 'p'),
+        ('agressiu_1', [1], 'p'),
+    ],
+    "end" : [   
+        ('center_up', [1], 'l'),
+        ('d', 4, 'l'),
+    ]
+}
+
+
 sit_states = {
     "start" : [],
     "cycle" : [],
@@ -267,11 +286,6 @@ sit_states["cycle"] = [
 sit_states["end"] = [   
     ('d', 4, 'l'),
 ]
-
-
-
-
-
 
 
 walk_back_states = {
