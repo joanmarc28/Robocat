@@ -68,7 +68,7 @@ class Agent:
     def _execute_mode(self):
         print(f"Executant: mode={self.mode}, submode={self.submode}")
         if self.mode == "human":
-            self.human.express_emotion(self.submode)
+            #self.human.express_emotion(self.submode)
             emocions,analisis = self.human.analitza_emocions()
             self.human.process_emocions(emocions)
         elif self.mode == "police":
