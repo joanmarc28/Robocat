@@ -6,6 +6,7 @@ import json
 import cv2
 import requests
 from typing import Any, Dict, List, Tuple
+import re
 
 from movement.motors import EstructuraPotes
 from interface.display import clear_displays, displays_show_frames
@@ -16,6 +17,66 @@ from utils.helpers import normalize_emocions
 from movement.simulation_data import *
 
 # --- helpers de coerció (eviten 500 i sorpreses del LLM) ---
+def _to_degrees(x: float) -> float:
+    # Si sembla radians (petit en valor absolut), converteix; si ja és en graus, deixa-ho estar.
+    try:
+        xf = float(x)
+    except Exception:
+        return 0.0
+    return xf * 57.2957795 if -3.2 <= xf <= 3.2 else xf
+
+def _parse_head_pose(hp: Any) -> Dict[str, float]:
+    """
+    Accepta:
+      - dict: {"pitch":..., "yaw":..., "roll":...}
+      - llista/tupla: [pitch, yaw, roll?]
+      - str: "pitch: 10, yaw: -5", o "frontal", "left", "right", "up", "down"
+      - número: s'interpreta com pitch
+    Retorna sempre graus.
+    """
+    # 1) dict
+    if isinstance(hp, dict):
+        pitch = _to_degrees(_to_float01(hp.get("pitch")) * (100.0 if 0.0 <= _to_float01(hp.get("pitch")) <= 1.0 else 1.0))
+        yaw   = _to_degrees(_to_float01(hp.get("yaw"))   * (100.0 if 0.0 <= _to_float01(hp.get("yaw"))   <= 1.0 else 1.0))
+        roll  = _to_degrees(_to_float01(hp.get("roll"))  * (100.0 if 0.0 <= _to_float01(hp.get("roll"))  <= 1.0 else 1.0))
+        return {"pitch": pitch, "yaw": yaw, "roll": roll}
+
+    # 2) seqüència
+    if isinstance(hp, (list, tuple)) and len(hp) >= 2:
+        pitch = _to_degrees(_to_float01(hp[0]) * (100.0 if 0.0 <= _to_float01(hp[0]) <= 1.0 else 1.0))
+        yaw   = _to_degrees(_to_float01(hp[1]) * (100.0 if 0.0 <= _to_float01(hp[1]) <= 1.0 else 1.0))
+        roll  = _to_degrees(_to_float01(hp[2]) * (100.0 if len(hp) > 2 and 0.0 <= _to_float01(hp[2]) <= 1.0 else 1.0)) if len(hp) > 2 else 0.0
+        return {"pitch": pitch, "yaw": yaw, "roll": roll}
+
+    # 3) número sol (pitch)
+    if isinstance(hp, (int, float)):
+        pitch = _to_degrees(hp)
+        return {"pitch": pitch, "yaw": 0.0, "roll": 0.0}
+
+    # 4) string
+    if isinstance(hp, str):
+        s = hp.strip().lower()
+        # Keywords simples
+        if s in {"frontal", "front", "center", "centre"}:
+            return {"pitch": 0.0, "yaw": 0.0, "roll": 0.0}
+        if s in {"left"}:
+            return {"pitch": 0.0, "yaw": -30.0, "roll": 0.0}
+        if s in {"right"}:
+            return {"pitch": 0.0, "yaw": 30.0, "roll": 0.0}
+        if s in {"up"}:
+            return {"pitch": -20.0, "yaw": 0.0, "roll": 0.0}
+        if s in {"down"}:
+            return {"pitch": 20.0, "yaw": 0.0, "roll": 0.0}
+        # Parse tipus "pitch: 10, yaw: -5"
+        nums = {k: 0.0 for k in ("pitch", "yaw", "roll")}
+        for k in nums.keys():
+            m = re.search(rf"{k}\s*:\s*([-+]?\d+(\.\d+)?)", s)
+            if m:
+                nums[k] = _to_degrees(float(m.group(1)))
+        return nums
+
+    # fallback
+    return {"pitch": 0.0, "yaw": 0.0, "roll": 0.0}
 def _to_bool(x) -> bool:
     if isinstance(x, bool):
         return x
@@ -83,6 +144,7 @@ class HumanBehavior:
         if aggression:
             #if distance is None or distance < 0.8:
                 #    actions.append(deepcopy(SEQUENCE_LIBRARY["step_back"]))
+            self.motors.follow_sequance(walk_back_states, cycles=6, t=0.2)
             return "scared"
 
         if isinstance(distance, (int, float)) and distance < 0.4:
@@ -91,13 +153,16 @@ class HumanBehavior:
 
         if human_emotion == "angry":
             #actions.append("body_downward")
-            self.motors.set_position("up")
+            #self.motors.set_position("up")
+            self.motors.follow_sequance(indignat_states, cycles=6, t=0.8)
             return "surprised"
 
         if human_emotion == "disgusted":
+            self.motors.follow_sequance(indignat_states, cycles=6, t=0.8)
             return "angry"
 
         if human_emotion == "scared":
+
             return "surprised"
 
         # Gestos o actituds amigables
@@ -108,11 +173,12 @@ class HumanBehavior:
 
         if human_emotion == "sad":
             #actions.append("body_upward")
+            self.motors.set_position("normal")
             return "happy"
 
-        head_pose = context.get("head_pose") or {}
-        pitch = _to_float01(head_pose.get("pitch")) * 100  # si ve 0..1, escalam a graus
-        yaw = _to_float01(head_pose.get("yaw")) * 100
+        hp = _parse_head_pose(context.get("head_pose"))
+        pitch = float(hp.get("pitch", 0.0))
+        yaw   = float(hp.get("yaw", 0.0))
 
         if attention and eye_contact:
             if abs(pitch) > 20 or abs(yaw) > 25:
@@ -121,7 +187,7 @@ class HumanBehavior:
                 self.motors.set_position("sit")
                 return "surprised"
             return "surprised"
-
+        #self.motors.set_position("up")
         return "default"
 
     def react_to_context(self, human_emotion: str, context: Dict | None = None) -> str:
