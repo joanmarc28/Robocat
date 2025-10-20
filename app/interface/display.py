@@ -1,14 +1,14 @@
 # interface/display.py
-from PIL import Image, ImageDraw
+from pathlib import Path
+from PIL import Image, ImageDraw, ImageFont
 import board
 import busio
 import config
 import os
+import threading
 import time
 from luma.core.interface.serial import i2c
 from luma.oled.device import ssd1306
-from PIL import ImageFont
-import threading
 
 class Display:
     """Classe per gestionar displays"""
@@ -21,7 +21,7 @@ class Display:
         self.height = height
         self.max_lines = height // 10
         self.line_cache = []
-
+        self.frame_cache = {}
 
         # Escull la font: predeterminada o TTF
         # self.font = ImageFont.load_default()
@@ -56,25 +56,47 @@ class Display:
         # Actualitza les dues pantalles
         self.display.display(self.image)
 
-    def show_frames(self,carpeta_frames,side="left",eye_delay=config.EYE_DELAY):
-        # Llegeix i ordena els fitxers de la carpeta
-        fitxers = sorted([
-            f for f in os.listdir("assets/eyes_img/"+carpeta_frames+"/"+side)
-            if f.lower().endswith(('.png', '.bmp'))
-        ])
+    def _load_frames(self, carpeta_frames, side):
+        """Retorna una llista de frames pre-carregats per a la carpeta indicada."""
+        key = (carpeta_frames, side)
+        if key in self.frame_cache:
+            return self.frame_cache[key]
+
+        base_path = Path("assets") / "eyes_img" / carpeta_frames / side
+        try:
+            fitxers = sorted(
+                f for f in os.listdir(base_path)
+                if f.lower().endswith((".png", ".bmp"))
+            )
+        except FileNotFoundError:
+            print(f"[DISPLAY] Carpeta d'ulls inexistent: {base_path}")
+            self.frame_cache[key] = []
+            return self.frame_cache[key]
 
         if not fitxers:
-            print("No s'han trobat imatges a la carpeta.")
+            print(f"[DISPLAY] Cap imatge trobada a {base_path}")
+            self.frame_cache[key] = []
+            return self.frame_cache[key]
+
+        frames = []
+        for nom_fitxer in fitxers:
+            ruta = base_path / nom_fitxer
+            try:
+                with Image.open(ruta) as img:
+                    frames.append(img.convert("1").resize((self.width, self.height)))
+            except Exception as exc:
+                print(f"[DISPLAY] Error carregant {ruta}: {exc}")
+
+        self.frame_cache[key] = frames
+        return frames
+
+    def show_frames(self,carpeta_frames,side="left",eye_delay=config.EYE_DELAY):
+        frames = self._load_frames(carpeta_frames, side)
+
+        if not frames:
             return
 
-        #print(f"Mostrant {len(fitxers)} frames...")
-
-        for nom_fitxer in fitxers:
-            ruta = os.path.join("assets/eyes_img/"+carpeta_frames+"/"+side, nom_fitxer)
-            #print(f"{nom_fitxer}")
-
-            # Obre i redimensiona la imatge si cal
-            imatge = Image.open(ruta).convert("1").resize((self.width, self.height))
+        for imatge in frames:
             self.display.display(imatge)
             time.sleep(eye_delay)
 

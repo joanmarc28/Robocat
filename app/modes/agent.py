@@ -43,14 +43,19 @@ class Agent:
 
                 self.last_action_time = now
 
-                def speak():
-                    self.speaker.say_emotion(self.submode)
+                new_submode = self._execute_mode()
 
-                t_speak = threading.Thread(target=speak)
-                t_speak.start()
-                t_speak.join()
+                if new_submode:
+                    if new_submode != self.submode:
+                        self.set_submode(new_submode)
+                
+                if self.speaker:
+                    def speak(emotion=self.submode):
+                        self.speaker.say_emotion(emotion)
 
-                self._execute_mode()
+                    t_speak = threading.Thread(target=speak)
+                    t_speak.start()
+                    t_speak.join()
          
             if self.mode == "human":
                 self.time = 0.1  # Més ràpid per a interaccions humanes
@@ -68,13 +73,15 @@ class Agent:
     def _execute_mode(self):
         print(f"Executant: mode={self.mode}, submode={self.submode}")
         if self.mode == "human":
-            #self.human.express_emotion(self.submode)
-            #emocions,analisis = self.human.analitza_emocions()
-            self.human.analitza_emocions()
-            #self.human.process_emocions(emocions)
+            resultat = self.human.analitza_emocions()
+            if isinstance(resultat, dict):
+                nova_reaccio = resultat.get("reaccio")
+                if isinstance(nova_reaccio, str) and nova_reaccio:
+                    return nova_reaccio
+            return None
         elif self.mode == "police":
             if self.submode == "default":
                 self.police.detect_license_plate()
             else:
                 print(f"Submode policial desconegut: {self.submode}")
-
+        return None
