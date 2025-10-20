@@ -278,27 +278,65 @@ def _coerce_emocio(emocio_model: str, permeses: List[str]) -> str:
     low = {e.lower(): e for e in permeses}
     return low.get(emocio_model.lower(), permeses[0])
 
+# ---------- Helpers robustes (substitueix les teves) ----------
+def _to_bool(x) -> bool:
+    if isinstance(x, bool):
+        return x
+    if x is None:
+        return False
+    s = str(x).strip().lower()
+    return s in {"true", "1", "yes", "si", "sí", "y", "t", "on"}
+
+def _to_float01(x) -> float:
+    # Accepta numèrics, percentatges "73%", i categories "low/medium/high/none"
+    try:
+        if isinstance(x, (int, float)):
+            v = float(x)
+        else:
+            s = str(x).strip().lower()
+            if s.endswith("%"):
+                v = float(s[:-1]) / 100.0
+            elif s in {"none", "null", ""}:
+                v = 0.0
+            elif s in {"low", "baixa"}:
+                v = 0.2
+            elif s in {"medium", "mitjana"}:
+                v = 0.5
+            elif s in {"high", "alta"}:
+                v = 0.8
+            else:
+                v = float(s)
+    except Exception:
+        v = 0.0
+    # Clampa 0..1
+    return max(0.0, min(1.0, v))
+
 def _compute_focus_score(face: Dict[str, Any]) -> float:
-    attention = 1.0 if face.get("attention") else 0.0
-    eye = 1.0 if face.get("eye_contact") else 0.0
-    engagement = float(face.get("engagement", 0.0) or 0.0)
-    gaze_dir = face.get("gaze_dir", "unknown")
-    gaze_bonus = 0.2 if gaze_dir in ("towards", "unknown") else 0.0
-    score = 0.45*attention + 0.35*eye + 0.20*engagement + gaze_bonus
+    attention = 1.0 if _to_bool(face.get("attention")) else 0.0
+    eye = 1.0 if _to_bool(face.get("eye_contact")) else 0.0
+    engagement = _to_float01(face.get("engagement"))
+    gaze_dir = str(face.get("gaze_dir", "unknown")).lower()
+    gaze_bonus = 0.2 if gaze_dir in ("towards", "frontal", "unknown") else 0.0
+    score = 0.45 * attention + 0.35 * eye + 0.20 * engagement + gaze_bonus
     return max(0.0, min(1.0, score))
 
 def _build_prompt(emocions_permeses: List[str]) -> str:
     llista = ", ".join(emocions_permeses) if emocions_permeses else \
              "happy, sad, angry, surprised, disgusted, scared, neutral"
+    # Demana TIPUS explícits per evitar "low"
     return (
-        "Analitza aquesta imatge d’un vídeo per ajudar un robot social a comprendre l'estat emocional i atencional de les persones.\n"
-        "Detecta quantes cares hi ha i retorna un JSON estructurat amb:\n"
-        " - 'num_faces': nombre de persones.\n"
-        " - 'faces': llista amb camps per cada persona: attention, eye_contact, head_pose, gaze_dir, distance_m, hand_gesture, posture, aggression_signals, engagement, emotion_human (només una de la llista permesa), conf_emotion, bbox.\n"
-        " - 'scene': crowd_level i lighting.\n"
-        " - 'summary': breu descripcio sense accents.\n"
-        "Només retorna JSON, sense text addicional ni markdown.\n"
-        f"Les emocions permeses són: [{llista}]."
+        "Analitza aquesta imatge d’un vídeo per ajudar un robot social.\n"
+        "Retorna EXCLUSIVAMENT un JSON amb:\n"
+        " - 'num_faces': nombre (enter).\n"
+        " - 'faces': llista d'objectes amb camps EXACTES i tipus:\n"
+        "     attention (bool), eye_contact (bool), head_pose (string), gaze_dir (string),\n"
+        "     distance_m (number), hand_gesture (string), posture (string),\n"
+        "     aggression_signals (string), engagement (number entre 0 i 1),\n"
+        "     emotion_human (string d'entre [" + llista + "]), conf_emotion (number 0..1),\n"
+        "     bbox (llista [x1,y1,x2,y2]).\n"
+        " - 'scene': { crowd_level (string), lighting (string) }.\n"
+        " - 'summary': descripcio breu sense accents.\n"
+        "Cap text extra, cap markdown, cap comentari. Nomes JSON pla."
     )
 
 # ---------- RUTA ÚNICA ----------
@@ -339,9 +377,19 @@ async def deteccio_frames2(request: Request, frame: FrameModel2, db: Session = D
 
     faces = data.get("faces", []) or []
     for f in faces:
+        # Coercions defensives
+        f["attention"] = _to_bool(f.get("attention"))
+        f["eye_contact"] = _to_bool(f.get("eye_contact"))
+        f["engagement"] = _to_float01(f.get("engagement"))
         f["emotion_human"] = _coerce_emocio(f.get("emotion_human", "neutral"), emocions_permeses)
-        f["focus_score"] = _compute_focus_score(f)
 
+        # Calcula focus_score de forma segura
+        try:
+            f["focus_score"] = _compute_focus_score(f)
+        except Exception:
+            f["focus_score"] = 0.0
+
+    # Ordena per focus decreixent
     faces.sort(key=lambda f: f.get("focus_score", 0.0), reverse=True)
 
     result = {
