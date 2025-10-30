@@ -118,11 +118,10 @@ class HumanBehavior:
         if emotion not in config.STATES:
             print(f"[HUMAN] Emoció desconeguda: {emotion}")
             return
-        # Si no hi ha altaveu, igualment mostrem ulls; no sortim.
+
         t_inici = time.time()
         while time.time() - t_inici < duration:
             displays_show_frames(emotion)
-            time.sleep(0.03)  # cedeix CPU
 
     def determine_reaction(self, human_emotion: str, context: Dict) -> Tuple[str, List[Any]]:
         """Decideix l'emoció i les accions del gat segons l'estat humà."""
@@ -132,9 +131,7 @@ class HumanBehavior:
         # Coercions robustes
         attention = _to_bool(context.get("attention"))
         eye_contact = _to_bool(context.get("eye_contact"))
-        engagement = _to_float01(context.get("engagement"))
         gesture = (context.get("gesture") or "unknown").lower()
-        distance = context.get("distance_m")
 
         # "aggression_signals" del LLM sol ser string ("none", "fist", ...).
         aggr_raw = (context.get("aggression") or context.get("aggression_signals") or "").strip().lower()
@@ -142,39 +139,30 @@ class HumanBehavior:
 
         # Situacions de tensió o agressió
         if aggression:
-            #if distance is None or distance < 0.8:
-                #    actions.append(deepcopy(SEQUENCE_LIBRARY["step_back"]))
             self.motors.follow_sequance(walk_back_states, cycles=6, t=0.2)
             return "scared"
 
-        if isinstance(distance, (int, float)) and distance < 0.4:
-            #actions.append(deepcopy(SEQUENCE_LIBRARY["step_back"]))
-            return "surprised"
-
         if human_emotion == "angry":
-            #actions.append("body_downward")
-            #self.motors.set_position("up")
-            self.motors.follow_sequance(indignat_states, cycles=6, t=0.8)
-            return "surprised"
-
-        if human_emotion == "disgusted":
-            self.motors.follow_sequance(indignat_states, cycles=6, t=0.8)
+            self.motors.follow_sequance(angry_states, cycles=6, t=0.4)
             return "angry"
 
-        if human_emotion == "scared":
+        if human_emotion == "disgusted":
+            self.motors.follow_sequance(indignat_states, cycles=6, t=0.4)
+            return "disgusted"
 
-            return "surprised"
+        if human_emotion == "scared":
+            self.motors.follow_sequance(walk_states, cycles=2, t=0.2)
+            return "disgusted"
 
         # Gestos o actituds amigables
         friendly_gestures = {"wave", "thumbs_up", "ok", "open_hand", "peace"}
-        if gesture in friendly_gestures or (human_emotion in {"happy", "surprised"} and attention and engagement > 0.6):
+        if gesture in friendly_gestures or human_emotion in {"happy", "surprised"}:
             self.motors.follow_sequance(maneta_states, cycles=6, t=0.8)
             return "happy"
 
         if human_emotion == "sad":
-            #actions.append("body_upward")
             self.motors.set_position("normal")
-            return "happy"
+            return "sad"
 
         hp = _parse_head_pose(context.get("head_pose"))
         pitch = float(hp.get("pitch", 0.0))
@@ -183,16 +171,20 @@ class HumanBehavior:
         if attention and eye_contact:
             if abs(pitch) > 20 or abs(yaw) > 25:
                 # Persona inclinada a prop → el gat es prepara per interactuar
-                #actions.append(deepcopy(SEQUENCE_LIBRARY["sit_soft"]))
-                self.motors.set_position("sit")
+                self.motors.strech()
                 return "surprised"
             return "surprised"
-        #self.motors.set_position("up")
+        self.motors.sit_hind_legs()
         return "default"
 
     def react_to_context(self, human_emotion: str, context: Dict | None = None) -> str:
         """Calcula i executa la resposta del gat a partir del context humà."""
         cat_emotion = self.determine_reaction(human_emotion, context or {})
+        self.express_emotion(cat_emotion)
+        return cat_emotion
+
+    def direct_react(self, cat_emotion: str) -> str:
+        """Calcula i executa la resposta del gat a partir del context humà."""
         self.express_emotion(cat_emotion)
         return cat_emotion
 

@@ -255,6 +255,24 @@ indignat_states = {
     ]
 }
 
+angry_states = {
+    "start" : [
+        ('u', 4, 'l'),
+        ('center_up', [2,3], 'l'),
+        ('center_down', [0,1], 'l'),
+        ('front_up', [2,3], 'l'),
+        ('long_front_up', [3], 'l'),
+    ],
+    "cycle" : [
+        ('angry_2', [1], 'p'),
+        ('angry_1', [1], 'p'),
+    ],
+    "end" : [   
+        ('center_up', [1], 'l'),
+        ('d', 4, 'l'),
+    ]
+}
+
 
 sit_states = {
     "start" : [],

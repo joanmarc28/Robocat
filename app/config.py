@@ -37,7 +37,7 @@ SOUNDS_DIR = "assets/sounds_clean"
 AUDIO_DEVICE = "plughw:1,0"
 
 STATES = {"default":{
-            "sounds": ["purr_1_clean.wav"],
+            "sounds": ["neutral_1_clean.wav"],
             "eyes":""
         }, 
         "happy":{
@@ -59,9 +59,9 @@ STATES = {"default":{
             "sounds": ["sad_1_clean.wav"],
         },
         "scared":{
-            "sounds": ["sad_1_clean.wav"],
+            "sounds": ["hiss_1_clean.wav"],
         },
         "disgusted":{
-            "sounds": ["sick_1_clean.wav"],
+            "sounds": ["angry_2_clean.wav"],
     }
 }

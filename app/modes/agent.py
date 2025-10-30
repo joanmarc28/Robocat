@@ -79,6 +79,13 @@ class Agent:
                 if isinstance(nova_reaccio, str) and nova_reaccio:
                     return nova_reaccio
             return None
+        if self.mode == "cat":
+            resultat = self.human.direct_react(self.submode)
+            if isinstance(resultat, dict):
+                nova_reaccio = resultat.get("reaccio")
+                if isinstance(nova_reaccio, str) and nova_reaccio:
+                    return nova_reaccio
+            return None
         elif self.mode == "police":
             if self.submode == "default":
                 self.police.detect_license_plate()

@@ -215,20 +215,35 @@ def main():
             elif accio == "calibrar":
                 estructura.init_bot()
 
-            elif accio in {"happy", "sad", "angry", "human", "police", "patrol", "demo"}:
+            elif accio in {"happy", "sad", "angry", "surprised","sleepy","disgusted","scared","sad","human", "police", "patrol", "demo"}:
                 if not agent:
                     print(f"[WARN] Acció '{accio}' ignorada: agent no disponible.")
                     continue
 
                 if accio == "happy":
-                    agent.set_mode("human")
+                    agent.set_mode("cat")
                     agent.set_submode("happy")
                 elif accio == "sad":
-                    agent.set_mode("human")
+                    agent.set_mode("cat")
                     agent.set_submode("sad")
                 elif accio == "angry":
-                    agent.set_mode("human")
+                    agent.set_mode("cat")
                     agent.set_submode("angry")
+                elif accio == "surprised":
+                    agent.set_mode("cat")
+                    agent.set_submode("surprised")
+                elif accio == "sleepy":
+                    agent.set_mode("cat")
+                    agent.set_submode("sleepy")
+                elif accio == "disgusted":
+                    agent.set_mode("cat")
+                    agent.set_submode("disgusted")
+                elif accio == "scared":
+                    agent.set_mode("cat")
+                    agent.set_submode("scared")
+                elif accio == "sad":
+                    agent.set_mode("cat")
+                    agent.set_submode("sad")
                 elif accio == "human":
                     agent.set_mode("human")
                 elif accio == "police":
@@ -276,10 +291,6 @@ def main():
                     agent.set_mode("human")
                     agent.set_submode("sleepy")
                     estructura.strech()
-                    time.sleep(5)
-                    estructura.follow_sequance(walk_states, cycles=6, t=0.2)
-                    time.sleep(10)
-                    estructura.follow_sequance(rot_states, cycles=6, t=0.8)
 
         except Exception as e:
             print(f"[ERROR] Executant acció '{accio}': {e}")
