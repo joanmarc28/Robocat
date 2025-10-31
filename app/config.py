@@ -31,7 +31,7 @@ CAMERA_ROTATE = 0  # Rotació de la càmera en graus (0, 90, 180, 270)
 CAMERA_FLIP = False  # Inverteix la imatge horitzontalment
 
 # Mode de funcionament per defecte
-DEFAULT_MODE = "police"
+DEFAULT_MODE = "city" #canviar a police
 
 SOUNDS_DIR = "assets/sounds_clean"
 AUDIO_DEVICE = "plughw:1,0"
