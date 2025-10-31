@@ -14,20 +14,32 @@ from app.models import Cotxe, Estada, Usuari, Zona, PossibleInfraccio   #models 
 from app.session import get_user_from_cookie  #per obtenir usuari des de cookies
 from sqlalchemy.orm import Session  #sessio per a consultes ORM
 from dotenv import load_dotenv  #per carregar variables d'entorn
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 import json
 import re
+from google.oauth2 import service_account
+from typing import Optional, List, Dict, Any
 
 load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")  #clau de gemini des del .env
+SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")  #clau de gemini des del .env
 
 router = APIRouter()  #creem router de fastapi
 
 class PreguntaModel(BaseModel):  #model per rebre preguntes
     pregunta: str
 
-genai.configure(api_key=api_key)  #configurem gemini amb la clau
+# Scope específic de l’API de Gemini
+SCOPES = ["https://www.googleapis.com/auth/generative-language"]
+
+# Carrega la credencial
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE,
+    scopes=SCOPES
+)
+
+# Configura Gemini amb credencials explícites
+genai.configure(credentials=credentials)
 
 @router.post("/transcripcio")  #endpoint per transcripcio de veu
 async def transcripcio(audio: UploadFile = File(...)):
@@ -234,3 +246,160 @@ async def deteccio_frame(request: Request, frame: FrameModel, db: Session = Depe
             "matricules": matricules,
             "infraccio": infraccio or "Cap"
         }
+    
+
+# ---------- Model ----------
+class FrameModel2(BaseModel):
+    imatge: str
+    emotions: str  # CSV: "happy,sad,angry,neutral"
+
+# ---------- Helpers ----------
+def _parse_emotions_csv(csv_text: Optional[str]) -> List[str]:
+    if not csv_text:
+        return []
+    return [e.strip() for e in csv_text.split(",") if e.strip()]
+
+def _clean_llm_json(text: str) -> str:
+    t = (text or "").strip()
+    if t.startswith("```"):
+        t = re.sub(r"```[a-zA-Z]*", "", t)
+        t = t.replace("```", "").strip()
+    if not (t.startswith("{") and t.endswith("}")):
+        m = re.search(r"\{[\s\S]*\}$", t)
+        if m:
+            t = m.group(0)
+    return t
+
+def _coerce_emocio(emocio_model: str, permeses: List[str]) -> str:
+    if not emocio_model:
+        return permeses[0] if permeses else "neutral"
+    if not permeses:
+        return emocio_model
+    low = {e.lower(): e for e in permeses}
+    return low.get(emocio_model.lower(), permeses[0])
+
+# ---------- Helpers robustes (substitueix les teves) ----------
+def _to_bool(x) -> bool:
+    if isinstance(x, bool):
+        return x
+    if x is None:
+        return False
+    s = str(x).strip().lower()
+    return s in {"true", "1", "yes", "si", "sí", "y", "t", "on"}
+
+def _to_float01(x) -> float:
+    # Accepta numèrics, percentatges "73%", i categories "low/medium/high/none"
+    try:
+        if isinstance(x, (int, float)):
+            v = float(x)
+        else:
+            s = str(x).strip().lower()
+            if s.endswith("%"):
+                v = float(s[:-1]) / 100.0
+            elif s in {"none", "null", ""}:
+                v = 0.0
+            elif s in {"low", "baixa"}:
+                v = 0.2
+            elif s in {"medium", "mitjana"}:
+                v = 0.5
+            elif s in {"high", "alta"}:
+                v = 0.8
+            else:
+                v = float(s)
+    except Exception:
+        v = 0.0
+    # Clampa 0..1
+    return max(0.0, min(1.0, v))
+
+def _compute_focus_score(face: Dict[str, Any]) -> float:
+    attention = 1.0 if _to_bool(face.get("attention")) else 0.0
+    eye = 1.0 if _to_bool(face.get("eye_contact")) else 0.0
+    engagement = _to_float01(face.get("engagement"))
+    gaze_dir = str(face.get("gaze_dir", "unknown")).lower()
+    gaze_bonus = 0.2 if gaze_dir in ("towards", "frontal", "unknown") else 0.0
+    score = 0.45 * attention + 0.35 * eye + 0.20 * engagement + gaze_bonus
+    return max(0.0, min(1.0, score))
+
+def _build_prompt(emocions_permeses: List[str]) -> str:
+    llista = ", ".join(emocions_permeses) if emocions_permeses else \
+             "happy, sad, angry, surprised, disgusted, scared, neutral"
+    # Demana TIPUS explícits per evitar "low"
+    return (
+        "Analitza aquesta imatge d’un vídeo per ajudar un robot social.\n"
+        "Retorna EXCLUSIVAMENT un JSON amb:\n"
+        " - 'num_faces': nombre (enter).\n"
+        " - 'faces': llista d'objectes amb camps EXACTES i tipus:\n"
+        "     attention (bool), eye_contact (bool), head_pose (string), gaze_dir (string),\n"
+        "     distance_m (number), hand_gesture (string), posture (string),\n"
+        "     aggression_signals (string), engagement (number entre 0 i 1),\n"
+        "     emotion_human (string d'entre [" + llista + "]), conf_emotion (number 0..1),\n"
+        "     bbox (llista [x1,y1,x2,y2]).\n"
+        " - 'scene': { crowd_level (string), lighting (string) }.\n"
+        " - 'summary': descripcio breu sense accents.\n"
+        "Cap text extra, cap markdown, cap comentari. Nomes JSON pla."
+    )
+
+# ---------- RUTA ÚNICA ----------
+@router.post("/api/deteccio-frames2")
+async def deteccio_frames2(request: Request, frame: FrameModel2, db: Session = Depends(get_db)):
+    user_id = get_user_from_cookie(request)
+    if not user_id:
+        print("⚠️ Mode poc segur: sense autenticació")
+
+    try:
+        imatge_base64 = frame.imatge.split(",")[1]
+        image_bytes = base64.b64decode(imatge_base64)
+    except Exception as e:
+        print("❌ Error decodificant imatge:", e)
+        return {"error": "Error en decodificar la imatge"}
+
+    emocions_permeses = _parse_emotions_csv(frame.emotions) or \
+        ["happy", "sad", "angry", "surprised", "scared", "neutral"]
+    prompt = _build_prompt(emocions_permeses)
+
+    print(f"🧠 Prompt enviat a Gemini:\n{prompt}\n")
+
+    model = genai.GenerativeModel("gemini-2.0-flash-lite")
+    resposta = model.generate_content([
+        prompt,
+        {"mime_type": "image/jpeg", "data": image_bytes}
+    ])
+
+    text = _clean_llm_json(resposta.text or "")
+    print("📨 Resposta crua Gemini:")
+    print(text)
+
+    try:
+        data = json.loads(text)
+    except Exception as e:
+        print("❌ Error parsejant JSON:", e)
+        return {"error": "Error en el format de resposta de Gemini"}
+
+    faces = data.get("faces", []) or []
+    for f in faces:
+        # Coercions defensives
+        f["attention"] = _to_bool(f.get("attention"))
+        f["eye_contact"] = _to_bool(f.get("eye_contact"))
+        f["engagement"] = _to_float01(f.get("engagement"))
+        f["emotion_human"] = _coerce_emocio(f.get("emotion_human", "neutral"), emocions_permeses)
+
+        # Calcula focus_score de forma segura
+        try:
+            f["focus_score"] = _compute_focus_score(f)
+        except Exception:
+            f["focus_score"] = 0.0
+
+    # Ordena per focus decreixent
+    faces.sort(key=lambda f: f.get("focus_score", 0.0), reverse=True)
+
+    result = {
+        "version": "web-perception-1.0",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "num_faces": data.get("num_faces", len(faces)),
+        "faces": faces,
+        "scene": data.get("scene", {"crowd_level": "unknown", "lighting": "unknown"}),
+        "summary": data.get("summary", "Cap"),
+    }
+
+    print("✅ Dades processades correctament.")
+    return result

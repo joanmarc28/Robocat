@@ -9,3 +9,8 @@
 /app/utils/secret.py
 __pycache__/
 *.pyc
+/web_parking/app/__pycache__/
+/web_parking/robocat.json
+/web_parking/venv
+/web_parking/=4.25.0
+web_parking/app/robocat-demo-409e49897926.json

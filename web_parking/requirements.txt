@@ -13,3 +13,5 @@ datetime
 google-cloud-speech
 google-generativeai
 aiortc
+google-cloud-texttospeech
+flask

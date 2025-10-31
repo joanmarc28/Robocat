@@ -49,8 +49,17 @@ position_states = {
     "long_back_up" :       (-1/2*X_PLANE+X_CENTER, Y_PLANE  +0.1),
 
 
-    "raise_1" : (1/4*X_PLANE,Y_UP),
-    "raise_2" : ( 1/2*X_PLANE,Y_UP)
+    "raise_1" : (2/4*X_PLANE,0),
+    "raise_2" : ( X_PLANE,Y_UP),
+
+    "assesino_1" : (2/4*X_PLANE,1/2),
+    "assesino_2" : ( X_PLANE,1/2),
+
+    "agressiu_1" : (2/4*X_PLANE,1/2),
+    "agressiu_2" : ( X_PLANE,Y_UP),
+
+    "angry_1" : (2/4*X_PLANE,1/2),#fica a pota 1 no 0
+    "angry_2" : ( 3/4*X_PLANE,Y_UP)
 }
 
 
@@ -194,15 +203,26 @@ maneta_states["start"] = [
     ('center_up', [2,3], 'l'),
     ('center_down', [0,1], 'l'),
 
-    ('back_down', [0], 'p'),
-    ('back_down', [1], 'p'),
 
-    ('front_up', [2,3], 'l'),
+   ('front_up', [2,3], 'l'),
     
-    ('raise_1', [0], 'l'),
     ('long_front_up', [3], 'l'),
 ]
 
+# Initial state
+"""maneta_states["start"] = [
+    ('u', 4, 'l'),
+    ('center_up', [2,3], 'l'),
+    ('center_down', [0,1], 'l'),
+
+    ('back_down', [0], 'p'),
+    ('back_down', [1], 'p'),
+
+   ('front_up', [2,3], 'l'),
+    
+    ('raise_1', [0], 'l'),
+    ('long_front_up', [3], 'l'),
+]"""
 # Cycle state
 maneta_states["cycle"] = [
     ('raise_2', [0], 'p'),
@@ -215,6 +235,43 @@ maneta_states["end"] = [
     ('d', 4, 'l'),
 ]
 
+
+
+indignat_states = {
+    "start" : [
+        ('u', 4, 'l'),
+        ('center_up', [2,3], 'l'),
+        ('center_down', [0,1], 'l'),
+        ('front_up', [2,3], 'l'),
+        ('long_front_up', [3], 'l'),
+    ],
+    "cycle" : [
+        ('agressiu_2', [1], 'p'),
+        ('agressiu_1', [1], 'p'),
+    ],
+    "end" : [   
+        ('center_up', [1], 'l'),
+        ('d', 4, 'l'),
+    ]
+}
+
+angry_states = {
+    "start" : [
+        ('u', 4, 'l'),
+        ('center_up', [2,3], 'l'),
+        ('center_down', [0,1], 'l'),
+        ('front_up', [2,3], 'l'),
+        ('long_front_up', [3], 'l'),
+    ],
+    "cycle" : [
+        ('angry_2', [1], 'p'),
+        ('angry_1', [1], 'p'),
+    ],
+    "end" : [   
+        ('center_up', [1], 'l'),
+        ('d', 4, 'l'),
+    ]
+}
 
 
 sit_states = {
@@ -247,11 +304,6 @@ sit_states["cycle"] = [
 sit_states["end"] = [   
     ('d', 4, 'l'),
 ]
-
-
-
-
-
 
 
 walk_back_states = {

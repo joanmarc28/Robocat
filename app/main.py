@@ -1,6 +1,5 @@
 # main.py
 import threading
-"""from app.vision.old_cameraweb import send_frames"""
 from modes.agent import Agent
 from interface.speaker import Speaker
 from sensors.accelerometre import ModulAccelerometer
@@ -17,22 +16,21 @@ import asyncio
 import websockets
 import json
 from movement.simulation_data import *
-#from vision.slam import start_autonomous_slam
 from queue import Queue
-from interface.micro import Micro  # el fitxer on tens la classe de veu
 from utils.loggers import setup_logging
 
 estructura = None
-camera = RobotCamera()
+camera = None
 agent = None
 
+camera_ready_event = threading.Event()
 moviment_queue = Queue()
 slam_controller = None
 
 # Configure logging to file
 setup_logging()
 #
-def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None, micro:Micro = None):
+def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, accelerometre:ModulAccelerometer = None, speaker:Speaker = None):
     clear_displays()
     temps = 0.5
     displays_message("Loading Robocat ........")
@@ -94,14 +92,6 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
         sensors_status["speaker"] = False
     time.sleep(temps)
 
-    if micro:
-        displays_message(f"  Micro ..... ok")
-        sensors_status["micro"] = True
-    else:
-        displays_message(f"  Micro ..... Not Found")
-        sensors_status["micro"] = False
-    time.sleep(temps)
-
     if errors == 0:
         displays_message(f"All Systems Ready")
         time.sleep(temps)
@@ -113,57 +103,68 @@ def start_system(mode, ultrasons:ModulUltrasons=None, gps:ModulGPS=None, acceler
         displays_message(f"Please Check")
         return False
 
+def initialize_component(name, initializer):
+    """Inicialitza un component i retorna el resultat i l'error (si n'hi ha)."""
+
+    try:
+        component = initializer()
+        print(f"✅ {name} inicialitzat correctament.")
+        return component, None
+    except Exception as exc:
+        error_message = f"{type(exc).__name__}: {exc}"
+        print(f"❌ {name} no s'ha pogut inicialitzar ({error_message}).")
+        return None, error_message
+
 def main():
-    global estructura, slam_controller, agent
+    global estructura, slam_controller, agent, camera
     print("🔄 Iniciant el sistema Robocat...")
+    
+    component_errors = {}
 
-    try:
-        speaker = Speaker()
-    except Exception as e:
-        print(f"[ERROR] Speaker: {e}")
-        speaker = None
+    camera, component_errors["camera"] = initialize_component("Càmera", RobotCamera)
+    camera_ready_event.set()
 
-    try:
-        agent = Agent(camera,speaker)
-    except Exception as e:
-        print(f"[ERROR] Motors: {e}")
+    speaker, component_errors["speaker"] = initialize_component("Altaveu", Speaker)
+
+    if camera is not None:
+        agent, component_errors["agent"] = initialize_component(
+            "Agent",
+            lambda: Agent(camera, speaker),
+        )
+    else:
         agent = None
-        
-    try:
-        """micro = Micro(agent=agent, device_index=2)"""
-        micro = None
-    except Exception as e:
-        print(f"[ERROR] Motors: {e}")
-        micro = None
+        component_errors["agent"] = "Càmera no disponible"
+        print("⚠️ L'agent no s'ha creat perquè la càmera no està disponible.")
 
-    try:
-        ultrasons = ModulUltrasons()
-    except Exception as e:
-        print(f"[ERROR] Ultrasons: {e}")
-        ultrasons = None
+    ultrasons, component_errors["ultrasons"] = initialize_component(
+        "Sensor d'ultrasons",
+        ModulUltrasons,
+    )
 
-    try:
-        gps = ModulGPS()
-    except Exception as e:
-        print(f"[ERROR] GPS: {e}")
-        gps = None
+    gps, component_errors["gps"] = initialize_component("Mòdul GPS", ModulGPS)
 
-    try:
-        accelerometre = ModulAccelerometer()
-    except Exception as e:
-        print(f"[ERROR] Gyroscope: {e}")
-        accelerometre = None
+    accelerometre, component_errors["accelerometre"] = initialize_component(
+        "Acceleròmetre",
+        ModulAccelerometer,
+    )
 
     if start_displays():
-        if not start_system(config.DEFAULT_MODE, ultrasons, gps,accelerometre,speaker,micro):
-            print("Errors crítics detectats. Aturant el sistema.")
-            return
+        if not start_system(config.DEFAULT_MODE, ultrasons, gps, accelerometre, speaker):
+            print("Errors crítics detectats durant l'arrencada del sistema.")
 
-    try:
-        estructura = EstructuraPotes(ultrasons)
-    except Exception as e:
-        print(f"[ERROR] Motors: {e}")
-        estructura = None
+    estructura, component_errors["estructura"] = initialize_component(
+        "Estructura de potes",
+        lambda: EstructuraPotes(ultrasons),
+    )
+
+    # Resum dels errors detectats per poder diagnosticar múltiples incidències
+    detected_errors = {name: err for name, err in component_errors.items() if err}
+    if detected_errors:
+        print("\nResum d'errors detectats:")
+        for name, err in detected_errors.items():
+            print(f"  - {name}: {err}")
+    else:
+        print("\n✅ Tots els components s'han inicialitzat correctament.")
 
     # Creació dels multiples threads per cada senor i obtenir dades en temps real
     if ultrasons:
@@ -176,28 +177,27 @@ def main():
     if accelerometre:
         threading.Thread(target=accelerometre.thread, daemon=True).start()
 
-    if micro:
-        threading.Thread(target=micro.run, daemon=True).start()
-
-
     config.SESSION_TOKEN = get_session_token()
     print("🔐 Sessió iniciada amb token:", config.SESSION_TOKEN)
-    if agent:
+    if agent and estructura:
         agent.human.motors = estructura
+    if agent:
         threading.Thread(target=agent.run, daemon=True).start()
-            
 
     # Analisis d'accions desde la web
     while True:
         accio = moviment_queue.get()
-        try:          
+        try:   
+            if estructura is None:
+                print(f"[WARN] Acció '{accio}' ignorada: estructura no disponible.")
+                continue       
             if accio == "endavant":
                 estructura.follow_sequance(walk_states, cycles=6, t=0.2)
-            if accio == "rotar":
+            elif accio == "rotar":
                 estructura.follow_sequance(rot_states, cycles=6, t=0.8)
-            if accio == "maneta":
+            elif accio == "maneta":
                 estructura.follow_sequance(maneta_states, cycles=6, t=0.8)
-            if accio == "enrere":
+            elif accio == "enrere":
                 estructura.follow_sequance(walk_back_states, cycles=6, t=0.8)
             elif accio == "ajupir":
                 estructura.set_position("sit")
@@ -215,79 +215,87 @@ def main():
             elif accio == "calibrar":
                 estructura.init_bot()
 
-            elif accio == "happy":
-                agent.set_mode("human")
-                agent.set_submode("happy")
-            elif accio == "sad":
-                agent.set_mode("human")
-                agent.set_submode("sad")
-            elif accio == "angry":
-                agent.set_mode("human")
-                agent.set_submode("angry")
-            elif accio == "human":
-                agent.set_mode("human")
-            elif accio == "police":
-                agent.set_mode("police")
+            elif accio in {"happy", "sad", "angry", "surprised","sleepy","disgusted","scared","sad","human", "police", "patrol", "demo"}:
+                if not agent:
+                    print(f"[WARN] Acció '{accio}' ignorada: agent no disponible.")
+                    continue
 
-            elif accio == "patrol":
-                #Provisional
-                agent.set_mode("police")
-                agent.set_submode("default")
-                
-            elif accio == "demo":
-                agent.set_mode("human")
-                agent.set_submode("happy")
-                estructura.set_position("sit")
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("disgusted")
-                estructura.set_position("normal")
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("happy")
-                estructura.set_position("up")
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("surprised")
-                estructura.sit_hind_legs()
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("sleepy")
-                estructura.strech()
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("happy")
-                estructura.set_position("sit")
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("disgusted")
-                estructura.set_position("normal")
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("happy")
-                estructura.set_position("up")
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("surprised")
-                estructura.sit_hind_legs()
-                time.sleep(5)
-                agent.set_mode("human")
-                agent.set_submode("sleepy")
-                estructura.strech()
-                time.sleep(5)
-                estructura.follow_sequance(walk_states, cycles=6, t=0.2)
-                time.sleep(10)
-                estructura.follow_sequance(rot_states, cycles=6, t=0.8)
+                if accio == "happy":
+                    agent.set_mode("cat")
+                    agent.set_submode("happy")
+                elif accio == "sad":
+                    agent.set_mode("cat")
+                    agent.set_submode("sad")
+                elif accio == "angry":
+                    agent.set_mode("cat")
+                    agent.set_submode("angry")
+                elif accio == "surprised":
+                    agent.set_mode("cat")
+                    agent.set_submode("surprised")
+                elif accio == "sleepy":
+                    agent.set_mode("cat")
+                    agent.set_submode("sleepy")
+                elif accio == "disgusted":
+                    agent.set_mode("cat")
+                    agent.set_submode("disgusted")
+                elif accio == "scared":
+                    agent.set_mode("cat")
+                    agent.set_submode("scared")
+                elif accio == "sad":
+                    agent.set_mode("cat")
+                    agent.set_submode("sad")
+                elif accio == "human":
+                    agent.set_mode("human")
+                elif accio == "police":
+                    agent.set_mode("police")
+                elif accio == "patrol":
+                    agent.set_mode("police")
+                    agent.set_submode("default")
+                elif accio == "demo":
+                    agent.set_mode("human")
+                    agent.set_submode("happy")
+                    estructura.set_position("sit")
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("disgusted")
+                    estructura.set_position("normal")
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("happy")
+                    estructura.set_position("up")
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("surprised")
+                    estructura.sit_hind_legs()
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("sleepy")
+                    estructura.strech()
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("happy")
+                    estructura.set_position("sit")
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("disgusted")
+                    estructura.set_position("normal")
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("happy")
+                    estructura.set_position("up")
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("surprised")
+                    estructura.sit_hind_legs()
+                    time.sleep(5)
+                    agent.set_mode("human")
+                    agent.set_submode("sleepy")
+                    estructura.strech()
 
-            elif accio == "autonom":
-                """if slam_controller is None:
-                    try:
-                        slam_controller = start_autonomous_slam()
-                    except Exception as e:
-                        print(f"[ERROR] Autonomous SLAM: {e}")"""
         except Exception as e:
             print(f"[ERROR] Executant acció '{accio}': {e}")
-        moviment_queue.task_done()
+        finally:
+            moviment_queue.task_done()
 
 def obtenir_telemetria():
     return {
@@ -321,24 +329,25 @@ async def connectar():
                     try:
                         resposta = await asyncio.wait_for(websocket.recv(), timeout=0.5)
                         comanda = json.loads(resposta)
-                        if estructura:
-                            accio = comanda.get("moviment")
-                            print("Comanda: "+ accio)
-                            if accio:
-                                print(f"📥 Comanda rebuda: {accio}")
-                                moviment_queue.put(accio)
+                        accio = comanda.get("moviment")
+                        if accio:
+                            print(f"📥 Comanda rebuda: {accio}")
+                            moviment_queue.put(accio)
 
-                            estat = comanda.get("estat")
-                            if estat is not None:
-                                print("Estat: "+ estat)
+                        estat = comanda.get("estat")
+                        if estat is not None:
+                            print("Estat: "+ estat)
+                            if not agent:
+                                print("[WARN] Estat rebut però l'agent no està disponible.")
+                            else:
                                 if estat == "police":
                                     agent.set_mode("police")
                                 if estat == "human":
                                     agent.set_mode("human")
                                 if estat == "happy":
                                     agent.set_submode("happy")
-                            else:
-                                print("Estat: cap valor rebut")
+                        else:
+                            print("Estat: cap valor rebut")
 
 
 
@@ -351,10 +360,15 @@ async def connectar():
             continue
 
 async def main_async():
-    await asyncio.gather(
-        camera.stream_frames(),
-        connectar()
-    )
+    await asyncio.to_thread(camera_ready_event.wait)
+
+    tasks = [connectar()]
+    if camera:
+        tasks.insert(0, camera.stream_frames())
+    else:
+        print("⚠️ Streaming de càmera no disponible.")
+
+    await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
     threading.Thread(target=main, daemon=True).start()
