@@ -1,6 +1,7 @@
 import time
 from modes.human_behavior import HumanBehavior
 from modes.police_behavior import PoliceBehavior
+from modes.city_behavior import CityBehavior
 from interface.speaker import Speaker
 from vision.camera import RobotCamera
 import config
@@ -17,12 +18,13 @@ class Agent:
         self.frequencia = frenquencia
         self.human = HumanBehavior(self.speaker, self.camera)
         self.police = PoliceBehavior(self.speaker, self.camera)
+        #self.city = CityBehavior(self.speaker, self.camera)
 
         self.running = True
         self.last_action_time = 0
 
     def set_mode(self, mode):
-        if mode in ["human", "police"]:
+        if mode in ["human", "police","cat","city"]:
             print(f"Mode ➜ {mode}")
             self.mode = mode
             self.submode = "default"
@@ -43,14 +45,19 @@ class Agent:
 
                 self.last_action_time = now
 
-                def speak():
-                    self.speaker.say_emotion(self.submode)
+                new_submode = self._execute_mode()
 
-                t_speak = threading.Thread(target=speak)
-                t_speak.start()
-                t_speak.join()
+                if new_submode:
+                    if new_submode != self.submode:
+                        self.set_submode(new_submode)
+                
+                if self.speaker:
+                    def speak(emotion=self.submode):
+                        self.speaker.say_emotion(emotion)
 
-                self._execute_mode()
+                    t_speak = threading.Thread(target=speak)
+                    t_speak.start()
+                    t_speak.join()
          
             if self.mode == "human":
                 self.time = 0.1  # Més ràpid per a interaccions humanes
@@ -68,12 +75,28 @@ class Agent:
     def _execute_mode(self):
         print(f"Executant: mode={self.mode}, submode={self.submode}")
         if self.mode == "human":
-            self.human.express_emotion(self.submode)
-            emocions,analisis = self.human.analitza_emocions()
-            self.human.process_emocions(emocions)
+            resultat = self.human.analitza_emocions()
+            if isinstance(resultat, dict):
+                nova_reaccio = resultat.get("reaccio")
+                if isinstance(nova_reaccio, str) and nova_reaccio:
+                    return nova_reaccio
+            return None
+        if self.mode == "cat":
+            resultat = self.human.direct_react(self.submode)
+            if isinstance(resultat, dict):
+                nova_reaccio = resultat.get("reaccio")
+                if isinstance(nova_reaccio, str) and nova_reaccio:
+                    return nova_reaccio
+            return None
         elif self.mode == "police":
             if self.submode == "default":
                 self.police.detect_license_plate()
             else:
                 print(f"Submode policial desconegut: {self.submode}")
-
+        ##NOU -> containers
+        elif self.mode == "city":
+            if self.submode == "default":
+                self.city.detect_containers()
+            else:
+                print(f"Submode City desconegut: {self.submode}")
+        return None
