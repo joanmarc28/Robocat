@@ -344,6 +344,8 @@ async def connectar():
                                     agent.set_mode("police")
                                 if estat == "human":
                                     agent.set_mode("human")
+                                if estat == "city":
+                                    agent.set_mode("city")
                                 if estat == "happy":
                                     agent.set_submode("happy")
                         else:
