@@ -18,13 +18,13 @@ class Agent:
         self.frequencia = frenquencia
         self.human = HumanBehavior(self.speaker, self.camera)
         self.police = PoliceBehavior(self.speaker, self.camera)
-        #self.city = CityBehavior(self.speaker, self.camera)
+        self.city = CityBehavior(self.speaker, self.camera)
 
         self.running = True
         self.last_action_time = 0
 
     def set_mode(self, mode):
-        if mode in ["human", "police","cat","city"]:
+        if mode in ["human", "police", "city"]:
             print(f"Mode ➜ {mode}")
             self.mode = mode
             self.submode = "default"
@@ -65,6 +65,9 @@ class Agent:
             elif self.mode == "police":
                 self.time = 0.1  # Més lent per a accions policials
                 self.frequencia = 10  # Accions policials menys freqüents
+            elif self.mode == "city":
+                self.time = 0.1 
+                self.frequencia = 5
 
             time.sleep(self.time)  # Redueix ús de CPU
 
@@ -96,7 +99,7 @@ class Agent:
         ##NOU -> containers
         elif self.mode == "city":
             if self.submode == "default":
-                self.city.detect_containers()
+                self.city.detect_container()
             else:
                 print(f"Submode City desconegut: {self.submode}")
         return None
